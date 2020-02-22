@@ -3,55 +3,57 @@ package cellsociety.grid;
 import cellsociety.cell.Cell;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class GridModel{
-    private List<List<Cell>> grid;
+    private List<List<Cell>> cells;
 
-    public GridModel(Collection<Collection<Object>> grid) {
-        this.grid = new ArrayList<>();
-        for (Collection row : grid) {
+    public GridModel(List<List<String>> grid) {
+        this.cells = new ArrayList<>();
+        for (int row = 0; row < grid.size(); row++) {
             List<Cell> cellRow = new ArrayList<>();
-            for (Object obj : grid) {
-                cellRow.add(new Cell());
+            for (int col = 0; col < grid.get(0).size(); col++) {
+                cellRow.add(new Cell(grid.get(row).get(col), row, col));
             }
-            this.grid.add(cellRow);
+            this.cells.add(cellRow);
         }
     }
 
     public List<List<Cell>> getCells() {
-        return grid;
+        return cells;
     }
 
-    public List<Cell> getNeighbors(int row, int col) {
+    public List<Cell> getNeighbors(Cell cell) {
         List<Cell> neighbors = new ArrayList<>();
-        int topRow = grid.size()-1;
-        int topCol = grid.get(0).size()-1;
+        int row = cell.getRow();
+        int col = cell.getCol();
+        int topRow = cells.size()-1;
+        int topCol = cells.get(0).size()-1;
+
 
         if (row != 0) {
-            neighbors.add(grid.get(row-1).get(col));
+            neighbors.add(cells.get(row-1).get(col));
         }
         if (col != 0) {
-            neighbors.add(grid.get(row).get(col-1));
+            neighbors.add(cells.get(row).get(col-1));
         }
         if (row != 0 && col != 0) {
-            neighbors.add(grid.get(row-1).get(col-1));
+            neighbors.add(cells.get(row-1).get(col-1));
         }
         if (row != topRow) {
-            neighbors.add(grid.get(topRow).get(col));
+            neighbors.add(cells.get(topRow).get(col));
         }
         if (col != topCol) {
-            neighbors.add(grid.get(row).get(topCol));
+            neighbors.add(cells.get(row).get(topCol));
         }
         if (row != topRow && col != 0) {
-            neighbors.add(grid.get(topRow).get(col-1));
+            neighbors.add(cells.get(topRow).get(col-1));
         }
         if (row != 0 && col != topCol) {
-            neighbors.add(grid.get(row-1).get(topCol));
+            neighbors.add(cells.get(row-1).get(topCol));
         }
         if (row != topRow && col != topCol) {
-            neighbors.add(grid.get(topRow).get(topCol));
+            neighbors.add(cells.get(topRow).get(topCol));
         }
         return neighbors;
     }
