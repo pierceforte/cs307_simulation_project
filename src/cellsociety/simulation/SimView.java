@@ -16,7 +16,6 @@ import java.util.List;
 public class SimView {
 
     public static final Color BACKGROUND = Color.WHEAT;
-    private SimModel model;
     private SimController controller;
     private BorderPane bPane;
     private int size; //of entire grid
@@ -24,7 +23,8 @@ public class SimView {
     Button startBttn;
     Button pauseBttn;
 
-    public SimView(){
+    public SimView(SimController controller){
+        this.controller = controller;
         bPane = new BorderPane();
     }
 
@@ -32,7 +32,7 @@ public class SimView {
         return new Scene(bPane, size, size, BACKGROUND);
     }
 
-    public void createSimScene(){
+    public void createControls(){
         Group root = new Group();
         startBttn = new Button("Start");
         pauseBttn = new Button("Stop");

@@ -3,26 +3,35 @@ package cellsociety.simulation;
 
 public class SimController {
 
-    private SimModel simModel;
-    private SimView simView;
+    private SimModel model;
+    private SimView view;
     private boolean isActive;
 
-    public SimController() {
-        /*
-           Give user option to choose simulation.
-           Here we default to Game of Life.
-         */
-        simModel = new GameOfLifeSimModel();
+    public SimController(SimModel model) {
+        this.model = model;
+        view = new SimView(this);
+        view.createControls();
         isActive = true;
     }
 
     public void play() {
         if (isActive) {
-            simModel.update();
+            model.update();
         }
     }
 
     public void togglePause() {
         isActive = !isActive;
+    }
+
+
+    //called in step to call update() in SimModel
+    public void updateCellStates(){
+        model.update();
+    }
+
+    //called in step after model is updated
+    public void updateCellViews(){
+        view.updateCellGrid(model.getCells());
     }
 }

@@ -6,22 +6,16 @@ import cellsociety.grid.GridModel;
 import java.util.List;
 
 public abstract class SimModel {
-
-    private SimView simView;
-    private SimController simController;
     private GridModel gridModel;
 
-    public SimModel(List<List<Cell>> cells) {
-        simView = new SimView();
-        simController = new SimController(this);
-        this.gridModel = new GridModel(cells);
+    public SimModel(List<List<Cell>> grid) {
+        this.gridModel = new GridModel(grid);
     }
 
     public void update() {
         List<List<Cell>> cells = gridModel.getCells();
         setNextStates(cells);
         updateStates(cells);
-        simView.updateCellGrid(cells);
     }
 
     protected abstract String determineNextState(Cell cell, List<Cell> neighbors);
@@ -41,5 +35,10 @@ public abstract class SimModel {
                 cell.updateState();
             }
         }
+    }
+
+    //repetitive method here for testing MVC
+    public List<List<Cell>> getCells(){
+        return gridModel.getCells();
     }
 }
