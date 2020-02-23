@@ -3,13 +3,12 @@ package cellsociety.simulation;
 import cellsociety.cell.Cell;
 import cellsociety.grid.GridModel;
 
-import java.util.Collection;
 import java.util.List;
 
 public abstract class SimModel {
     private GridModel gridModel;
 
-    public SimModel(List<List<String>> grid) {
+    public SimModel(List<List<Cell>> grid) {
         this.gridModel = new GridModel(grid);
     }
 

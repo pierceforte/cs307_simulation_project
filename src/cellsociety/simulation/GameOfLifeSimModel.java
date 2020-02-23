@@ -14,8 +14,8 @@ public class GameOfLifeSimModel extends SimModel {
             ALIVE, (numNeighbors) -> handleDeadCell(numNeighbors),
             DEAD, (numNeighbors) -> handleLivingCell(numNeighbors));
 
-    public GameOfLifeSimModel(List<List<String>> grid) {
-        super(grid);
+    public GameOfLifeSimModel(List<List<Cell>> cells) {
+        super(cells);
     }
 
     @Override
