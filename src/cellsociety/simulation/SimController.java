@@ -1,6 +1,10 @@
 package cellsociety.simulation;
 
 
+import cellsociety.cell.Cell;
+
+import java.util.List;
+
 public class SimController {
 
     private SimModel model;
@@ -16,6 +20,12 @@ public class SimController {
 
     public void play() {
         if (isActive) {
+            List<List<Cell>> cells = model.getCells();
+            for (List<Cell> row : cells) {
+                for (Cell cell : row) {
+                    System.out.println(cell.getState());
+                }
+            }
             model.update();
         }
     }

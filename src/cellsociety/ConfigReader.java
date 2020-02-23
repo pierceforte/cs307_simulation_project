@@ -24,7 +24,7 @@ public class ConfigReader {
     @SuppressWarnings("ThrowablePrintedToSystemOut")
     public List<List<Cell>> getCellList() {
         try {
-            File file = new File(Objects.requireNonNull(Main.class.getClassLoader().getResource(simulationInitialLayout)).getFile());
+            File file = new File(Objects.requireNonNull(this.getClass().getClassLoader().getResource(simulationInitialLayout)).getFile());
             return buildListOfCellLists(file);
         } catch (FileNotFoundException e)
         {
