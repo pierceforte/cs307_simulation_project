@@ -54,7 +54,7 @@ public class ConfigReader {
 
     private List<Cell> makeCellObjects(String[] rowArray, int r) {
         List<Cell> cellRow = new ArrayList<>();
-        for(int c = 0; c < rowArray.length; ) {
+        for(int c = 0; c < rowArray.length; c++) {
             cellRow.add(new Cell(rowArray[c] , r, c));
         }
         return cellRow;
