@@ -40,7 +40,7 @@ public class MainController extends Application {
     private Scene myScene;
     private Stage myStage;
     private Pane myIntroPane = new Pane();
-    private Timeline myTimeline;
+    private Timeline myAnimation;
     private Text myPressToBeginText;
     private Text myTimeText;
     private double myTime;
@@ -79,23 +79,26 @@ public class MainController extends Application {
         stage.setScene(introScene);
         stage.setTitle(TITLE);
         stage.show();
-        setMyTimeline(stage);
+        setMyAnimation(stage);
     }
 
-    public void setMyTimeline(Stage s) {
+    public void setMyAnimation(Stage s) {
         KeyFrame frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e -> step(SECOND_DELAY));
-        myTimeline = new Timeline();
-        myTimeline.setCycleCount(Timeline.INDEFINITE);
-        myTimeline.getKeyFrames().add(frame);
+        myAnimation = new Timeline();
+        myAnimation.setCycleCount(Timeline.INDEFINITE);
+        myAnimation.getKeyFrames().add(frame);
+        myAnimation.play();
     }
 
     public Scene setupSimulation(int width, int height, Paint background, String simulationName) {
         Group root = new Group();
         myScene = new Scene(root, width, height, background);
         ConfigReader data = new ConfigReader(simulationName + "Config.csv");
+
         List<List<Cell>> listOfCells = data.getCellList();
         mySimModel = new GameOfLifeSimModel(listOfCells);
         mySimController = new SimController(mySimModel);
+
         myTimeText = screenMessage(1 * WIDTH/7, 30, "Time: " + myTime);
         myPressToBeginText = screenMessage(WIDTH / 3,  2 * HEIGHT / 3, STARTING_MESSAGE);
         addToRoot(root);
@@ -133,12 +136,12 @@ public class MainController extends Application {
 //
 //    }
 
-    private void addSimulationButtonToScene(Scene scene, int simNumber, Stage stage, double xPos, double yPos) {
+    private Button addSimulationButtonToScene(Scene scene, int simNumber, Stage stage, double xPos, double yPos) {
         Button simulationButton1 = new Button (SIMULATION_BUTTON_PREFIX + simNumber);
         simulationButton1.setOnAction(e -> stage.setScene(scene));
         simulationButton1.setTranslateX(xPos);
         simulationButton1.setTranslateY(yPos);
-        myIntroPane.getChildren().add(simulationButton1);
+        return simulationButton1;
     }
 
     public static void main(String[] args)

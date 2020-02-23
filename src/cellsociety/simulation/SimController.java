@@ -21,11 +21,14 @@ public class SimController {
     public void play() {
         if (isActive) {
             List<List<Cell>> cells = model.getCells();
+            System.out.println("\n\n\n\n");
             for (List<Cell> row : cells) {
                 for (Cell cell : row) {
-                    System.out.println(cell.getState());
+                    System.out.print(cell.getState() + ",");
                 }
+                System.out.println();
             }
+            System.out.println("\n\n\n\n");
             model.update();
         }
     }
