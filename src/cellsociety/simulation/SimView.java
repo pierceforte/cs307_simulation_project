@@ -26,6 +26,7 @@ public class SimView {
     }
 
     public Scene getSimScene(){
+
         return new Scene(root, size, size, BACKGROUND);
     }
 
