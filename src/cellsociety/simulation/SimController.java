@@ -7,7 +7,7 @@ public class SimController {
     private SimView view;
     private boolean isActive;
 
-    public SimController(SimModel model, SimView view) {
+    public SimController(SimModel model) {
         this.model = model;
         view = new SimView(this);
         view.createControls();
