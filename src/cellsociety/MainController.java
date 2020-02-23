@@ -125,7 +125,7 @@ public class MainController extends Application {
 
     private void addSimulationButtonToScene(Scene scene, int simNumber, Stage stage, double xPos, double yPos) {
         Button simulationButton1 = new Button (SIMULATION_BUTTON_PREFIX + simNumber);
-        simulationButton1.setOnAction(e -> stage.setScene(scene));
+        simulationButton1.setOnAction(e -> stage.setScene(sene));
         simulationButton1.setTranslateX(xPos);
         simulationButton1.setTranslateY(yPos);
         myIntroPane.getChildren().add(simulationButton1);
