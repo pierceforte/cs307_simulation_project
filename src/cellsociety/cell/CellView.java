@@ -15,5 +15,4 @@ public class CellView extends Rectangle {
         setFill(color);
     }
 
-
 }
