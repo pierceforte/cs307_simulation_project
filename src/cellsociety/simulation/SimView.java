@@ -15,10 +15,11 @@ import java.util.List;
 
 public class SimView {
 
+    public static final int GRID_SIZE = 400;
     public static final Color BACKGROUND = Color.WHEAT;
     private SimController controller;
     private BorderPane bPane;
-    private int size; //of entire grid
+
 
     Button startBttn;
     Button pauseBttn;
@@ -29,7 +30,8 @@ public class SimView {
     }
 
     public Scene getSimScene(){
-        return new Scene(bPane, size, size, BACKGROUND);
+        //added 50 to make room for controls, but must change this later
+        return new Scene(bPane, GRID_SIZE + 50, GRID_SIZE + 50, BACKGROUND);
     }
 
     public void createControls(){
@@ -52,20 +54,13 @@ public class SimView {
         Group root = new Group();
         for (List<Cell> row : cells) {
             for (Cell cell : row) {
-                CellView cellView = new CellView(size/row.size(), cells.indexOf(row), row.indexOf(cell));
+                CellView cellView = new CellView(GRID_SIZE/row.size(), cells.indexOf(row), row.indexOf(cell));
                 cellView.updateCellColor(cell.getState());
                 root.getChildren().add(cellView);
             }
         }
         bPane.setCenter(root);
     }
-
-    public void setGridSize(int size){
-        this.size = size;
-    }
-
-
-
 
 
 }
