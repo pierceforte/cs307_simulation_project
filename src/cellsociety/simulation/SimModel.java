@@ -22,6 +22,7 @@ public abstract class SimModel {
         List<List<Cell>> cells = gridModel.getCells();
         setNextStates(cells);
         updateStates(cells);
+        simView.updateCellGrid(cells);
     }
 
     protected abstract String determineNextState(Cell cell, List<Cell> neighbors);

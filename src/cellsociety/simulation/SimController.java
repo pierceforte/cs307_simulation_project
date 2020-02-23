@@ -1,5 +1,6 @@
 package cellsociety.simulation;
 
+
 public class SimController {
 
     private SimModel simModel;
