@@ -2,8 +2,7 @@ package cellsociety;
 
 import cellsociety.cell.Cell;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -13,6 +12,7 @@ public class ConfigReader {
     public static final int NUM_ROWS_INDEX = 0;
     public static final int NUM_COLS_INDEX = 0;
     public static final String DATA_REGEX = ",";
+    public static final String ERROR_LOG = "error_log.txt";
 
     private final String simulationInitialLayout;
     private int quantityOfRows;
@@ -28,7 +28,7 @@ public class ConfigReader {
             return buildListOfCellLists(file);
         } catch (FileNotFoundException e)
         {
-            System.out.println(e);
+            logError(e);
             System.exit(0);
         }
         return null;
@@ -57,6 +57,19 @@ public class ConfigReader {
             cellRow.add(new Cell(rowArray[c] , r, c));
         }
         return cellRow;
+    }
+
+    private void logError(Exception e) {
+        try {
+            FileWriter fStream = new FileWriter(ERROR_LOG, true);
+            BufferedWriter out = new BufferedWriter(fStream);
+            PrintWriter pw = new PrintWriter(out, true);
+            e.printStackTrace(pw);
+            fStream.close();
+        }
+        catch (Exception ie) {
+            throw new RuntimeException("Could not write Exception to file", ie);
+        }
     }
 
 }
