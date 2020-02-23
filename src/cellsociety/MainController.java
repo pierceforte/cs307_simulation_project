@@ -40,7 +40,7 @@ public class MainController extends Application {
     private Scene myScene;
     private Stage myStage;
     private Pane myIntroPane = new Pane();
-    private Timeline myTimeline;
+    private Timeline myAnimation;
     private Text myPressToBeginText;
     private Text myTimeText;
     private double myTime;
@@ -61,16 +61,8 @@ public class MainController extends Application {
 
         Scene simulation1Scene = setupSimulation(WIDTH, HEIGHT, BACKGROUND,"GOL");
         Scene simulation2Scene = setupSimulation(WIDTH, HEIGHT, BACKGROUND,"SIM2");
-
-        Button simulation1Button = new Button ("Simulation 1");
-        simulation1Button.setOnAction(e -> stage.setScene(simulation1Scene));
-        simulation1Button.setTranslateX(180);
-        simulation1Button.setTranslateY(350);
-
-        Button simulation2Button = new Button ("Simulation 2");
-        simulation2Button.setOnAction(e -> stage.setScene(simulation2Scene));
-        simulation2Button.setTranslateX(360);
-        simulation2Button.setTranslateY(350);
+        Button simulation1Button = makeButton(stage, simulation1Scene, "Simulation 1", 180, 350);
+        Button simulation2Button = makeButton(stage, simulation2Scene, "Simulation 2", 360, 350);
 
         myIntroPane.getChildren().addAll(simulation1Button, simulation2Button);
 
@@ -79,23 +71,35 @@ public class MainController extends Application {
         stage.setScene(introScene);
         stage.setTitle(TITLE);
         stage.show();
-        setMyTimeline(stage);
+        setMyAnimation(stage);
     }
 
-    public void setMyTimeline(Stage s) {
-        KeyFrame frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e -> step(SECOND_DELAY));
-        myTimeline = new Timeline();
-        myTimeline.setCycleCount(Timeline.INDEFINITE);
-        myTimeline.getKeyFrames().add(frame);
+    private Button makeButton(Stage stage, Scene simulation1Scene, String buttonName, int xLocation, double yLocation) {
+        Button simulationButton = new Button(buttonName);
+        simulationButton.setOnAction(e -> stage.setScene(simulation1Scene));
+        simulationButton.setTranslateX(xLocation);
+        simulationButton.setTranslateY(yLocation);
+        return simulationButton;
     }
+
+    public void setMyAnimation(Stage s) {
+        KeyFrame frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e -> step(SECOND_DELAY));
+        myAnimation = new Timeline();
+        myAnimation.setCycleCount(Timeline.INDEFINITE);
+        myAnimation.getKeyFrames().add(frame);
+        myAnimation.play();
+    }
+
 
     public Scene setupSimulation(int width, int height, Paint background, String simulationName) {
         Group root = new Group();
         myScene = new Scene(root, width, height, background);
         ConfigReader data = new ConfigReader(simulationName + "Config.csv");
+
         List<List<Cell>> listOfCells = data.getCellList();
         mySimModel = new GameOfLifeSimModel(listOfCells);
         mySimController = new SimController(mySimModel);
+
         myTimeText = screenMessage(1 * WIDTH/7, 30, "Time: " + myTime);
         myPressToBeginText = screenMessage(WIDTH / 3,  2 * HEIGHT / 3, STARTING_MESSAGE);
         addToRoot(root);
@@ -133,11 +137,9 @@ public class MainController extends Application {
 //
 //    }
 
+
     private void addSimulationButtonToScene(Scene scene, int simNumber, Stage stage, double xPos, double yPos) {
-        Button simulationButton1 = new Button (SIMULATION_BUTTON_PREFIX + simNumber);
-        simulationButton1.setOnAction(e -> stage.setScene(scene));
-        simulationButton1.setTranslateX(xPos);
-        simulationButton1.setTranslateY(yPos);
+        Button simulationButton1 = makeButton(stage, scene, SIMULATION_BUTTON_PREFIX + simNumber, (int) xPos, yPos);
         myIntroPane.getChildren().add(simulationButton1);
     }
 
