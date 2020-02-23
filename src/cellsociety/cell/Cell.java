@@ -2,19 +2,11 @@ package cellsociety.cell;
 
 public class Cell {
 
-    public static final String DEAD = "DEAD"; //represented in data file as 0
-    public static final String ALIVE = "ALIVE"; //represented in data file as 1
+    private String state, nextState;
+    private int row, col;
 
-    String state, nextState;
-    int row, col;
-
-    public Cell(int state, int row, int col){
-        if (state == 0){
-            this.state = DEAD;
-        } else if (state == 1){
-            this.state = ALIVE;
-        }
-
+    public Cell(String state, int row, int col){
+        this.state = state;
         this.row = row;
         this.col = col;
     }
@@ -34,6 +26,14 @@ public class Cell {
     //makes it easier to compare states
     public boolean isState(String state){
         return this.state.equals(state);
+    }
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getCol() {
+        return col;
     }
 
 }
