@@ -1,4 +1,17 @@
-package test;
+package cellsociety;
 
-public class CATest extends  {
+import org.junit.Test;
+
+public class CellSocietyTest extends DukeApplicationTest {
+
+
+    @Test
+    public void testGridPopulation() {
+
+    }
+
+    @Test
+    public void testGameOfLifeUpdate() {
+
+    }
 }

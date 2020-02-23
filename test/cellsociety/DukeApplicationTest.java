@@ -1,4 +1,4 @@
-package invader;
+package cellsociety;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
