@@ -35,11 +35,7 @@ public class SimView {
             for (Cell cell : row) {
                 CellView cellView = new CellView(size/row.size(), cells.indexOf(row), row.indexOf(cell));
                 cellViews.add(cellView);
-                if(cell.getState().equals("ALIVE")){ //change this later
-                    cellView.setFill(Color.BLACK);
-                } else {
-                    cellView.setFill(Color.WHITE);
-                }
+                cellView.updateCellColor(cell.getState());
                 root.getChildren().add(cellView);
             }
         }
