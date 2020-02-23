@@ -2,26 +2,27 @@ package cellsociety.simulation;
 
 import cellsociety.cell.Cell;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
+import java.util.function.Function;
 
 public class GameOfLifeSimModel extends SimModel {
     public static final String DEAD = "DEAD"; //represented in data file as 0
     public static final String ALIVE = "ALIVE"; //represented in data file as 1
 
+    private Map<String, Function<Integer, String>> handleCell = Map.of(
+            ALIVE, (numNeighbors) -> handleDeadCell(numNeighbors),
+            DEAD, (numNeighbors) -> handleLivingCell(numNeighbors));
+
     public GameOfLifeSimModel(List<List<String>> grid) {
         super(grid);
     }
 
-    protected String determineNextState(Cell cell, List<Cell> neighbors) throws Exception {
+    @Override
+    protected String determineNextState(Cell cell, List<Cell> neighbors) {
         int numNeighbors = getNumNeighbors(neighbors);
-        Map<String, Callable> handleCell = Map.of(
-                ALIVE, () -> handleDeadCell(numNeighbors),
-                DEAD, () -> handleLivingCell(numNeighbors));
         String curCellState = cell.getState();
-        return (String) handleCell.get(curCellState).call();
+        return handleCell.get(curCellState).apply(numNeighbors);
     }
 
     private String handleDeadCell(int numNeighbors) {

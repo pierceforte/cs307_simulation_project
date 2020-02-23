@@ -22,20 +22,16 @@ public abstract class SimModel {
         List<List<Cell>> cells = gridModel.getCells();
         setNextStates(cells);
         updateStates(cells);
+        simView.updateCellGrid(cells);
     }
 
-    protected abstract String determineNextState(Cell cell, List<Cell> neighbors) throws Exception;
+    protected abstract String determineNextState(Cell cell, List<Cell> neighbors);
 
     private void setNextStates(List<List<Cell>> cells) {
         for (List<Cell> row : cells) {
             for (Cell cell : row) {
-                try {
-                    String nextState = determineNextState(cell, gridModel.getNeighbors(cell));
-                    cell.setNextState(nextState);
-                }
-                catch (Exception e) {
-
-                }
+                String nextState = determineNextState(cell, gridModel.getNeighbors(cell));
+                cell.setNextState(nextState);
             }
         }
     }

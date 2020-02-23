@@ -8,12 +8,17 @@ import javafx.scene.shape.Rectangle;
  */
 public class CellView extends Rectangle {
     private int size;
-    private Color color;
 
-    public CellView(int size, Color color, int row, int col) {
+    public CellView(int size, int row, int col) {
         super(row * size, col * size, size, size);
-        setFill(color);
     }
 
+    public void updateCellColor(String state){
+        if(state.equals("ALIVE")) { //switch this to a constant later
+            setFill(Color.BLACK);
+        } else {
+            setFill(Color.WHITE);
+        }
+    }
 
 }
