@@ -3,7 +3,6 @@ package cellsociety.simulation;
 import cellsociety.cell.Cell;
 import cellsociety.grid.GridModel;
 
-import java.util.Collection;
 import java.util.List;
 
 public abstract class SimModel {
@@ -12,10 +11,10 @@ public abstract class SimModel {
     private SimController simController;
     private GridModel gridModel;
 
-    public SimModel(List<List<String>> grid) {
+    public SimModel(List<List<Cell>> cells) {
         simView = new SimView();
         simController = new SimController(this);
-        this.gridModel = new GridModel(grid);
+        this.gridModel = new GridModel(cells);
     }
 
     public void update() {

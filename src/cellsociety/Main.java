@@ -1,6 +1,7 @@
 package cellsociety;
 
 import cellsociety.cell.Cell;
+import cellsociety.simulation.SimController;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -44,6 +45,7 @@ public class Main extends Application {
     private Text pressToBegin;
     public Timeline animation;
     private Pane intro= new Pane();
+    private SimController mySimController;
     @Override
     public void start(Stage stage) {
 
@@ -108,6 +110,7 @@ public class Main extends Application {
         myScene = new Scene(root, width, height, background);
         ConfigReader data = new ConfigReader(simulationName + "Config.csv");
         List<List<Cell>> listOfCells = data.getCellList();
+        mySimController = new SimController();
         time = screenMessage(time, 1 * WIDTH/7, 30, "Time: " + timeSoFar);
         pressToBegin = screenMessage(pressToBegin, WIDTH / 3,  2 * HEIGHT / 3, STARTING_MESSAGE);
         addToRoot(root);
@@ -121,7 +124,7 @@ public class Main extends Application {
     }
 
     public void step(double elapsedTime) {
-
+        mySimController.play();
     }
 
     private void handleKeyInput(KeyCode code, Group root) {

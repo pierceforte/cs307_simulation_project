@@ -8,15 +8,8 @@ import java.util.List;
 public class GridModel{
     private List<List<Cell>> cells;
 
-    public GridModel(List<List<String>> grid) {
-        this.cells = new ArrayList<>();
-        for (int row = 0; row < grid.size(); row++) {
-            List<Cell> cellRow = new ArrayList<>();
-            for (int col = 0; col < grid.get(0).size(); col++) {
-                cellRow.add(new Cell(grid.get(row).get(col), row, col));
-            }
-            this.cells.add(cellRow);
-        }
+    public GridModel(List<List<Cell>> cells) {
+        this.cells = cells;
     }
 
     public List<List<Cell>> getCells() {
