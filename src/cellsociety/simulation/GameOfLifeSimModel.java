@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class GameOfLifeSimModel extends SimModel {
-    public static final String DEAD = "DEAD"; //represented in data file as 0
-    public static final String ALIVE = "ALIVE"; //represented in data file as 1
+    public static final String DEAD = "0"; //represented in data file as 0
+    public static final String ALIVE = "1"; //represented in data file as 1
 
     private Map<String, Function<Integer, String>> handleCell = Map.of(
             ALIVE, (numNeighbors) -> handleDeadCell(numNeighbors),
