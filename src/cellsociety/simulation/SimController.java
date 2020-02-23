@@ -1,6 +1,8 @@
 package cellsociety.simulation;
 
 
+import javafx.scene.Scene;
+
 public class SimController {
 
     private SimModel model;
@@ -19,6 +21,11 @@ public class SimController {
             model.update();
         }
     }
+
+    public Scene getSimScene(){
+        return view.getSimScene();
+    }
+
 
     public void togglePause() {
         isActive = !isActive;
