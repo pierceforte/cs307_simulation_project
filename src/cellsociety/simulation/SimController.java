@@ -11,7 +11,7 @@ public class SimController {
 
     public SimController(SimModel model) {
         this.model = model;
-        view = new SimView(this);
+        view = new SimView(this, model);
         view.createControls();
         isActive = true;
     }
@@ -21,11 +21,6 @@ public class SimController {
             model.update();
         }
     }
-
-    public Scene getSimScene(){
-        return view.getSimScene();
-    }
-
 
     public void togglePause() {
         isActive = !isActive;

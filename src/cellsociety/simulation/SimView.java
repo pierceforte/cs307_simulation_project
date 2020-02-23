@@ -2,6 +2,7 @@ package cellsociety.simulation;
 
 import javafx.event.ActionEvent;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import cellsociety.cell.Cell;
 import cellsociety.cell.CellView;
@@ -18,20 +19,21 @@ public class SimView {
     public static final int GRID_SIZE = 400;
     public static final Color BACKGROUND = Color.WHEAT;
     private SimController controller;
+    private SimModel model;
     private BorderPane bPane;
 
 
     Button startBttn;
     Button pauseBttn;
 
-    public SimView(SimController controller){
+    public SimView(SimController controller, SimModel model){
         this.controller = controller;
+        this.model = model;
         bPane = new BorderPane();
     }
 
-    public Scene getSimScene(){
-        //added 50 to make room for controls, but must change this later
-        return new Scene(bPane, GRID_SIZE + 50, GRID_SIZE + 50, BACKGROUND);
+    public Node getView(){
+        return bPane;
     }
 
     public void createControls(){
