@@ -50,7 +50,7 @@ public class ConfigReader {
     private List<Cell> makeCellObjects(String[] rowArray, int r) {
         List<Cell> cellRow = new ArrayList<>();
         for(int c = 0; c < rowArray.length; ) {
-            cellRow.add(new Cell(c, r, Integer.valueOf(rowArray[c])));
+            cellRow.add(new Cell(rowArray[c] , r, c));
         }
         return cellRow;
     }
