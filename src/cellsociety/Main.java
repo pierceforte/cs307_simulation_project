@@ -55,11 +55,11 @@ public class Main extends Application {
         Scene introScene =new Scene(intro, WIDTH, HEIGHT);
 
 
-        Scene simulation1Scene = setupSimulation(WIDTH, HEIGHT, BACKGROUND,"level1");
-        Scene simulation2Scene = setupSimulation(WIDTH, HEIGHT, BACKGROUND,"level2");
-        Scene simulation3Scene = setupSimulation(WIDTH, HEIGHT, BACKGROUND,"level3");
-        Scene simulation4Scene = setupSimulation(WIDTH, HEIGHT, BACKGROUND,"level2");
-        Scene simulation5Scene = setupSimulation(WIDTH, HEIGHT, BACKGROUND,"level3");
+        Scene simulation1Scene = setupSimulation(WIDTH, HEIGHT, BACKGROUND,"GOL");
+        Scene simulation2Scene = setupSimulation(WIDTH, HEIGHT, BACKGROUND,"Simulation 2");
+        Scene simulation3Scene = setupSimulation(WIDTH, HEIGHT, BACKGROUND,"Simulation 3");
+        Scene simulation4Scene = setupSimulation(WIDTH, HEIGHT, BACKGROUND,"Simulation 4");
+        Scene simulation5Scene = setupSimulation(WIDTH, HEIGHT, BACKGROUND,"Simulation 5");
 
         Button simulation1Button = new Button ("Simulation 1");
         simulation1Button.setOnAction(e -> stage.setScene(simulation1Scene));
@@ -106,8 +106,8 @@ public class Main extends Application {
     public Scene setupSimulation(int width, int height, Paint background, String simulationName) {
         Group root = new Group();
         myScene = new Scene(root, width, height, background);
-        ConfigReader data = new ConfigReader(simulationName);
-        List<List<Cell>> listOfBricks= data.getCellList();
+        ConfigReader data = new ConfigReader(simulationName + "Config.csv");
+        List<List<Cell>> listOfCells = data.getCellList();
         time = screenMessage(time, 1 * WIDTH/7, 30, "Time: " + timeSoFar);
         pressToBegin = screenMessage(pressToBegin, WIDTH / 3,  2 * HEIGHT / 3, STARTING_MESSAGE);
         addToRoot(root);
@@ -116,6 +116,7 @@ public class Main extends Application {
     }
 
     private void addToRoot(Group root) {
+
         root.getChildren().add(time);
     }
 
