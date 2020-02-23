@@ -59,11 +59,21 @@ public class MainController extends Application {
 
         //read configuration files
 
-        Scene simulationScene = setupSimulation(WIDTH, HEIGHT, BACKGROUND,"GOL");
-        Scene simulationScene2 = setupSimulation(WIDTH, HEIGHT, BACKGROUND,"SIM2");
+        Scene simulation1Scene = setupSimulation(WIDTH, HEIGHT, BACKGROUND,"GOL");
+        Scene simulation2Scene = setupSimulation(WIDTH, HEIGHT, BACKGROUND,"SIM2");
 
-        addSimulationButtonToScene(simulationScene, 1, myStage, 180, 350);
-        addSimulationButtonToScene(simulationScene2, 2, myStage, 360, 350);
+        Button simulation1Button = new Button ("Simulation 1");
+        simulation1Button.setOnAction(e -> stage.setScene(simulation1Scene));
+        simulation1Button.setTranslateX(180);
+        simulation1Button.setTranslateY(350);
+
+        Button simulation2Button = new Button ("Simulation 2");
+        simulation2Button.setOnAction(e -> stage.setScene(simulation2Scene));
+        simulation2Button.setTranslateX(360);
+        simulation2Button.setTranslateY(350);
+
+        myIntroPane.getChildren().addAll(simulation1Button, simulation2Button);
+
 
         myStage = stage;
         stage.setScene(introScene);
@@ -125,7 +135,7 @@ public class MainController extends Application {
 
     private void addSimulationButtonToScene(Scene scene, int simNumber, Stage stage, double xPos, double yPos) {
         Button simulationButton1 = new Button (SIMULATION_BUTTON_PREFIX + simNumber);
-        simulationButton1.setOnAction(e -> stage.setScene(sene));
+        simulationButton1.setOnAction(e -> stage.setScene(scene));
         simulationButton1.setTranslateX(xPos);
         simulationButton1.setTranslateY(yPos);
         myIntroPane.getChildren().add(simulationButton1);
