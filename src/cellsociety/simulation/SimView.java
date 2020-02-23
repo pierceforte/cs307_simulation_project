@@ -7,6 +7,7 @@ import cellsociety.cell.Cell;
 import cellsociety.cell.CellView;
 import cellsociety.grid.GridModel;
 import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -17,32 +18,38 @@ public class SimView {
     public static final Color BACKGROUND = Color.WHEAT;
     private SimModel model;
     private SimController controller;
-    private Group root;
+    private BorderPane bPane;
     private int size; //of entire grid
 
+    Button startBttn;
+    Button pauseBttn;
+
     public SimView(){
-        root = new Group();
+        bPane = new BorderPane();
     }
 
     public Scene getSimScene(){
-        return new Scene(root, size, size, BACKGROUND);
+        return new Scene(bPane, size, size, BACKGROUND);
     }
 
     public void createSimScene(){
-        Button startBttn = new Button("Start");
-        Button pauseBttn = new Button("Stop");
+        Group root = new Group();
+        startBttn = new Button("Start");
+        pauseBttn = new Button("Stop");
         root.getChildren().addAll(startBttn, pauseBttn);
+        bPane.setBottom(root);
     }
 
-//    private void handleButtonClick(ActionEvent event){
-//        if(event.getSource() == startBttn){
-//
-//        }
-//
-//    }
+    private void handleButtonClick(ActionEvent event){
+        if(event.getSource() == startBttn){
+            controller.play();
+        } else if (event.getSource() == pauseBttn){
+            controller.togglePause();
+        }
+    }
 
     public void updateCellGrid(List<List<Cell>> cells) {
-        root.getChildren().removeAll();
+        Group root = new Group();
         for (List<Cell> row : cells) {
             for (Cell cell : row) {
                 CellView cellView = new CellView(size/row.size(), cells.indexOf(row), row.indexOf(cell));
@@ -50,6 +57,7 @@ public class SimView {
                 root.getChildren().add(cellView);
             }
         }
+        bPane.setCenter(root);
     }
 
     public void setGridSize(int size){

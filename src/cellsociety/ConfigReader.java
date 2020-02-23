@@ -51,6 +51,7 @@ public class ConfigReader {
         String[] arrayOfInfo = row.split(DATA_REGEX);
         return makeCellObjects(arrayOfInfo, r);
     }
+
     private List<Cell> makeCellObjects(String[] rowArray, int r) {
         List<Cell> cellRow = new ArrayList<>();
         for(int c = 0; c < rowArray.length; ) {
