@@ -37,7 +37,7 @@ public class Main extends Application {
     public static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
     public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
     private static DecimalFormat df2 = new DecimalFormat("#.##");
-    public static final String STARTING_MESSAGE = "Press SPACE to Start\nPress ENTER to Pause\nPress SPACE to Resume\nPress L to Add Lives\nPress S to slow the Ball\nPress F to speed up the Ball";
+    public static final String STARTING_MESSAGE = "  ";
     private Scene myScene;
     private Text time;
     private double timeSoFar;
@@ -58,37 +58,19 @@ public class Main extends Application {
 
 
         Scene simulation1Scene = setupSimulation(WIDTH, HEIGHT, BACKGROUND,"GOL");
-        Scene simulation2Scene = setupSimulation(WIDTH, HEIGHT, BACKGROUND,"Simulation 2");
-        Scene simulation3Scene = setupSimulation(WIDTH, HEIGHT, BACKGROUND,"Simulation 3");
-        Scene simulation4Scene = setupSimulation(WIDTH, HEIGHT, BACKGROUND,"Simulation 4");
-        Scene simulation5Scene = setupSimulation(WIDTH, HEIGHT, BACKGROUND,"Simulation 5");
+        Scene simulation2Scene = setupSimulation(WIDTH, HEIGHT, BACKGROUND,"SIM2");
 
         Button simulation1Button = new Button ("Simulation 1");
         simulation1Button.setOnAction(e -> stage.setScene(simulation1Scene));
-        simulation1Button.setTranslateX(220);
+        simulation1Button.setTranslateX(180);
         simulation1Button.setTranslateY(350);
 
         Button simulation2Button = new Button ("Simulation 2");
         simulation2Button.setOnAction(e -> stage.setScene(simulation2Scene));
-        simulation2Button.setTranslateX(160);
-        simulation2Button.setTranslateY(550);
+        simulation2Button.setTranslateX(360);
+        simulation2Button.setTranslateY(350);
 
-        Button simulation3Button = new Button ("Simulation 3");
-        simulation3Button.setOnAction(e -> stage.setScene(simulation3Scene));
-        simulation3Button.setTranslateX(260);
-        simulation3Button.setTranslateY(550);
-
-        Button simulation4Button = new Button ("Simulation 4");
-        simulation4Button.setOnAction(e -> stage.setScene(simulation4Scene));
-        simulation4Button.setTranslateX(360);
-        simulation4Button.setTranslateY(550);
-
-        Button simulation5Button = new Button ("Simulation 5");
-        simulation5Button.setOnAction(e -> stage.setScene(simulation5Scene));
-        simulation5Button.setTranslateX(360);
-        simulation5Button.setTranslateY(550);
-
-        intro.getChildren().addAll(introScreenNode, simulation2Button, simulation3Button,simulation4Button,simulation2Button,simulation5Button);
+        intro.getChildren().addAll(introScreenNode, simulation1Button, simulation2Button);
 
         stage.setScene(introScene);
         stage.setTitle(TITLE);
