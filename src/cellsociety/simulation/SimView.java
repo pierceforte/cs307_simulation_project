@@ -12,6 +12,7 @@ import java.util.List;
 
 public class SimView {
 
+    public static final Color BACKGROUND = Color.WHEAT;
     private SimModel sim;
     private GridModel grid;
     private Scene myScene;
@@ -24,8 +25,12 @@ public class SimView {
         root = new Group();
     }
 
+    public Scene getSimScene(){
+        return new Scene(root, size, size, BACKGROUND);
+    }
+
     public void updateCellGrid(List<List<Cell>> cells) {
-        cellViews = new ArrayList<CellView>();
+        cellViews = new ArrayList<>();
         for (List<Cell> row : cells) {
             for (Cell cell : row) {
                 CellView cellView = new CellView(size/row.size(), cells.indexOf(row), row.indexOf(cell));
