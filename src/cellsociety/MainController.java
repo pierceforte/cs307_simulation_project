@@ -3,6 +3,7 @@ import cellsociety.cell.Cell;
 import cellsociety.simulation.GameOfLifeSimModel;
 import cellsociety.simulation.SimController;
 import cellsociety.simulation.SimModel;
+import cellsociety.simulation.SimView;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -39,6 +40,7 @@ public class MainController extends Application {
 
     private Scene myScene;
     private Stage myStage;
+    private SimView mySimView;
     private Pane myIntroPane = new Pane();
     private Timeline myAnimation;
     private Text myPressToBeginText;
@@ -93,16 +95,18 @@ public class MainController extends Application {
 
     public Scene setupSimulation(int width, int height, Paint background, String simulationName) {
         Group root = new Group();
-        myScene = new Scene(root, width, height, background);
         ConfigReader data = new ConfigReader(simulationName + "Config.csv");
 
         List<List<Cell>> listOfCells = data.getCellList();
         mySimModel = new GameOfLifeSimModel(listOfCells);
         mySimController = new SimController(mySimModel);
+        mySimView = new SimView(mySimController);
+        root.getChildren().add(mySimView.getSimScene());
 
         myTimeText = screenMessage(1 * WIDTH/7, 30, "Time: " + myTime);
         myPressToBeginText = screenMessage(WIDTH / 3,  2 * HEIGHT / 3, STARTING_MESSAGE);
         addToRoot(root);
+        myScene = new Scene(root, width, height, background);
         myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode(), root));
         return myScene;
     }
@@ -113,7 +117,11 @@ public class MainController extends Application {
     }
 
     public void step(double elapsedTime) {
-        mySimController.play();
+        //mySimController.play();
+        mySimController.updateCellStates();
+        mySimController.updateCellViews();
+
+
     }
 
     private void handleKeyInput(KeyCode code, Group root) {

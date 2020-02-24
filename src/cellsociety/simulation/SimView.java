@@ -2,6 +2,7 @@ package cellsociety.simulation;
 
 import javafx.event.ActionEvent;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import cellsociety.cell.Cell;
 import cellsociety.cell.CellView;
@@ -27,11 +28,11 @@ public class SimView {
     public SimView(SimController controller){
         this.controller = controller;
         bPane = new BorderPane();
+        createControls();
     }
 
-    public Scene getSimScene(){
-        //added 50 to make room for controls, but must change this later
-        return new Scene(bPane, GRID_SIZE + 50, GRID_SIZE + 50, BACKGROUND);
+    public Node getSimScene(){
+        return bPane;
     }
 
     public void createControls(){
@@ -50,17 +51,7 @@ public class SimView {
         }
     }
 
-    public void updateCellGrid(List<List<Cell>> cells) {
-        Group root = new Group();
-        for (List<Cell> row : cells) {
-            for (Cell cell : row) {
-                CellView cellView = new CellView(GRID_SIZE/row.size(), cells.indexOf(row), row.indexOf(cell));
-                cellView.updateCellColor(cell.getState());
-                root.getChildren().add(cellView);
-            }
-        }
-        bPane.setCenter(root);
-    }
+
 
 
 }

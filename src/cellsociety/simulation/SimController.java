@@ -33,11 +33,6 @@ public class SimController {
         }
     }
 
-    public Scene getSimScene(){
-        return view.getSimScene();
-    }
-
-
     public void togglePause() {
         isActive = !isActive;
     }
@@ -45,7 +40,9 @@ public class SimController {
 
     //called in step to call update() in SimModel
     public void updateCellStates(){
-        model.update();
+        if (isActive){
+            model.update();
+        }
     }
 
     //called in step after model is updated
