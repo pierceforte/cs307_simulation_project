@@ -1,5 +1,6 @@
 package cellsociety.simulation;
 
+import cellsociety.grid.GridView;
 import javafx.event.ActionEvent;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -19,6 +20,7 @@ public class SimView {
     public static final int GRID_SIZE = 400;
     public static final Color BACKGROUND = Color.WHEAT;
     private SimController controller;
+    private GridView grid;
     private BorderPane bPane;
 
 
@@ -31,7 +33,7 @@ public class SimView {
         createControls();
     }
 
-    public Node getSimScene(){
+    public Node getRoot(){
         return bPane;
     }
 
@@ -50,7 +52,6 @@ public class SimView {
             controller.togglePause();
         }
     }
-
 
 
 

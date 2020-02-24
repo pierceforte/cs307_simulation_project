@@ -101,7 +101,7 @@ public class MainController extends Application {
         mySimModel = new GameOfLifeSimModel(listOfCells);
         mySimController = new SimController(mySimModel);
         mySimView = new SimView(mySimController);
-        root.getChildren().add(mySimView.getSimScene());
+        root.getChildren().add(mySimView.getRoot());
 
         myTimeText = screenMessage(1 * WIDTH/7, 30, "Time: " + myTime);
         myPressToBeginText = screenMessage(WIDTH / 3,  2 * HEIGHT / 3, STARTING_MESSAGE);
