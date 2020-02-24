@@ -1,5 +1,7 @@
 package cellsociety.simulation;
 
+import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import cellsociety.cell.Cell;
 
@@ -13,8 +15,7 @@ public class SimController {
 
     public SimController(SimModel model) {
         this.model = model;
-        view = new SimView(this, model);
-        view.createControls();
+        view = new SimView(this);
         isActive = true;
     }
 
@@ -40,11 +41,19 @@ public class SimController {
 
     //called in step to call update() in SimModel
     public void updateCellStates(){
-        model.update();
+        if (isActive){
+            model.update();
+        }
     }
 
     //called in step after model is updated
     public void updateCellViews(){
-        view.updateCellGrid(model.getCells());
+        if (isActive){
+            view.update(model.getCells());
+        }
+    }
+
+    public Group getView(){
+        return view.getRoot();
     }
 }

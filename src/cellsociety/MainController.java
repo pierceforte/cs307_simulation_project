@@ -3,6 +3,7 @@ import cellsociety.cell.Cell;
 import cellsociety.simulation.GameOfLifeSimModel;
 import cellsociety.simulation.SimController;
 import cellsociety.simulation.SimModel;
+import cellsociety.simulation.SimView;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -28,7 +29,7 @@ public class MainController extends Application {
     public static final int HEIGHT = 600;
     public static final String SIMULATION_BUTTON_PREFIX = "Simulation ";
     public static final Paint BACKGROUND = Color.BEIGE;
-    public static final int FRAMES_PER_SECOND = 60;
+    public static final int FRAMES_PER_SECOND = 5;
     public static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
     public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
     public static final String INTRO_SCREEN_IMG_NAME = "StartScreen.jpg";
@@ -36,7 +37,7 @@ public class MainController extends Application {
     public static final String DEFAULT_FONT = "Verdana";
     public static final DecimalFormat df2 = new DecimalFormat("#.##");
     public static final String STARTING_MESSAGE = "  ";
-
+    private Group root;
     private Scene myScene;
     private Stage myStage;
     private Pane myIntroPane = new Pane();
@@ -60,13 +61,12 @@ public class MainController extends Application {
         //read configuration files
 
         Scene simulation1Scene = setupSimulation(WIDTH, HEIGHT, BACKGROUND,"GOL");
-        Scene simulation2Scene = setupSimulation(WIDTH, HEIGHT, BACKGROUND,"SIM2");
+        //Scene simulation2Scene = setupSimulation(WIDTH, HEIGHT, BACKGROUND,"SIM2");
         Button simulation1Button = makeButton(stage, simulation1Scene, "Simulation 1", 180, 350);
-        Button simulation2Button = makeButton(stage, simulation2Scene, "Simulation 2", 360, 350);
+        //Button simulation2Button = makeButton(stage, simulation2Scene, "Simulation 2", 360, 350);
+        myIntroPane.getChildren().add(simulation1Button);
 
-        myIntroPane.getChildren().addAll(simulation1Button, simulation2Button);
-
-
+        //myIntroPane.getChildren().addAll(simulation1Button,simulation2Button);
         myStage = stage;
         stage.setScene(introScene);
         stage.setTitle(TITLE);
@@ -88,32 +88,38 @@ public class MainController extends Application {
         myAnimation.setCycleCount(Timeline.INDEFINITE);
         myAnimation.getKeyFrames().add(frame);
         myAnimation.play();
+
     }
 
 
     public Scene setupSimulation(int width, int height, Paint background, String simulationName) {
-        Group root = new Group();
-        myScene = new Scene(root, width, height, background);
+        root = new Group();
         ConfigReader data = new ConfigReader(simulationName + "Config.csv");
 
         List<List<Cell>> listOfCells = data.getCellList();
         mySimModel = new GameOfLifeSimModel(listOfCells);
         mySimController = new SimController(mySimModel);
+        root.getChildren().add(mySimController.getView());
 
         myTimeText = screenMessage(1 * WIDTH/7, 30, "Time: " + myTime);
         myPressToBeginText = screenMessage(WIDTH / 3,  2 * HEIGHT / 3, STARTING_MESSAGE);
         addToRoot(root);
+        myScene = new Scene(root, width, height, background);
         myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode(), root));
         return myScene;
     }
 
     private void addToRoot(Group root) {
-
         root.getChildren().add(myTimeText);
     }
 
+
     public void step(double elapsedTime) {
-        mySimController.play();
+        //mySimController.play();
+        mySimController.updateCellStates();
+        mySimController.updateCellViews();
+        root.getChildren().clear();
+        root.getChildren().add(mySimController.getView());
     }
 
     private void handleKeyInput(KeyCode code, Group root) {
@@ -130,6 +136,7 @@ public class MainController extends Application {
         message.setFill(Color.BLACK);
         return message;
     }
+
 
 
 //    Scene configScene() {
