@@ -24,7 +24,6 @@ public class GridModel{
         int topRow = cells.size()-1;
         int topCol = cells.get(0).size()-1;
 
-
         if (row != 0) {
             neighbors.add(cells.get(row-1).get(col));
         }

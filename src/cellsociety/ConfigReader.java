@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class ConfigReader {
     public static final int NUM_ROWS_INDEX = 0;
-    public static final int NUM_COLS_INDEX = 0;
+    public static final int NUM_COLS_INDEX = 1;
     public static final String DATA_REGEX = ",";
     public static final String ERROR_LOG = "error_log.txt";
 
@@ -44,6 +44,8 @@ public class ConfigReader {
                 List<Cell> row = getRowInfo(input.next(), r);
                 results.add(row);
         }
+        System.out.println("expected quantity rows: " + quantityOfRows + ", actual rows: " + results.size());
+        System.out.println("expected quantity cols: " + quantityOfColumns + ", actual cols: " + results.get(0).size());
         return results;
     }
 
