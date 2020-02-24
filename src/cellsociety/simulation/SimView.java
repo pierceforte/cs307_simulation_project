@@ -1,5 +1,6 @@
 package cellsociety.simulation;
 
+import cellsociety.MainController;
 import javafx.event.ActionEvent;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -56,7 +57,7 @@ public class SimView {
         root.getChildren().clear();
         for (List<Cell> row : cells) {
             for (Cell cell : row) {
-                CellView cellView = new CellView(cell, GRID_SIZE/row.size());
+                CellView cellView = new CellView(cell, MainController.WIDTH /row.size());
                 root.getChildren().add(cellView);
             }
         }

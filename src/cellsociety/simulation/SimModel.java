@@ -3,6 +3,7 @@ package cellsociety.simulation;
 import cellsociety.cell.Cell;
 import cellsociety.grid.GridModel;
 
+import javafx.scene.paint.Color;
 import java.util.List;
 
 public abstract class SimModel {
@@ -28,6 +29,7 @@ public abstract class SimModel {
             }
         }
     }
+
 
     private void updateStates(List<List<Cell>> cells) {
         for (List<Cell> row : cells) {

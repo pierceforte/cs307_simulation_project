@@ -1,6 +1,7 @@
 package cellsociety.grid;
 
 import cellsociety.cell.Cell;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,20 +35,21 @@ public class GridModel{
             neighbors.add(cells.get(row-1).get(col-1));
         }
         if (row != topRow) {
-            neighbors.add(cells.get(topRow).get(col));
+            neighbors.add(cells.get(row+1).get(col));
         }
         if (col != topCol) {
-            neighbors.add(cells.get(row).get(topCol));
+            neighbors.add(cells.get(row).get(col+1));
         }
         if (row != topRow && col != 0) {
-            neighbors.add(cells.get(topRow).get(col-1));
+            neighbors.add(cells.get(row+1).get(col-1));
         }
         if (row != 0 && col != topCol) {
-            neighbors.add(cells.get(row-1).get(topCol));
+            neighbors.add(cells.get(row-1).get(col+1));
         }
         if (row != topRow && col != topCol) {
-            neighbors.add(cells.get(topRow).get(topCol));
+            neighbors.add(cells.get(row+1).get(col+1));
         }
+
         return neighbors;
     }
 }

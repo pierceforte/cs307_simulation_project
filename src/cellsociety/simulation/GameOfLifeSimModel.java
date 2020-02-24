@@ -11,8 +11,8 @@ public class GameOfLifeSimModel extends SimModel {
     public static final String ALIVE = "1"; //represented in data file as 1
 
     private Map<String, Function<Integer, String>> handleCell = Map.of(
-            ALIVE, (numNeighbors) -> handleDeadCell(numNeighbors),
-            DEAD, (numNeighbors) -> handleLivingCell(numNeighbors));
+            ALIVE, (numNeighbors) -> handleLivingCell(numNeighbors),
+            DEAD, (numNeighbors) -> handleDeadCell(numNeighbors));
 
     public GameOfLifeSimModel(List<List<Cell>> cells) {
         super(cells);

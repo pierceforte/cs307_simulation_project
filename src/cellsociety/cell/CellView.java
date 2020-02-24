@@ -16,6 +16,7 @@ public class CellView extends Rectangle {
         } else {
             setFill(Color.WHITE);
         }
+        setStroke(Color.STEELBLUE);
     }
 
 
