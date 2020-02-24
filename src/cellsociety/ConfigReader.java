@@ -44,8 +44,6 @@ public class ConfigReader {
                 List<Cell> row = getRowInfo(input.next(), r);
                 results.add(row);
         }
-        System.out.println("expected quantity rows: " + quantityOfRows + ", actual rows: " + results.size());
-        System.out.println("expected quantity cols: " + quantityOfColumns + ", actual cols: " + results.get(0).size());
         return results;
     }
 

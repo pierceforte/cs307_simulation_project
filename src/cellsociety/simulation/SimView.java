@@ -59,6 +59,7 @@ public class SimView {
             for (Cell cell : row) {
                 CellView cellView = new CellView(cell, MainController.WIDTH /row.size());
                 root.getChildren().add(cellView);
+                System.out.println("here");
             }
         }
     }

@@ -76,7 +76,10 @@ public class MainController extends Application {
 
     private Button makeButton(Stage stage, Scene simulation1Scene, String buttonName, int xLocation, double yLocation) {
         Button simulationButton = new Button(buttonName);
-        simulationButton.setOnAction(e -> stage.setScene(simulation1Scene));
+        simulationButton.setOnAction(e -> {
+            stage.setScene(simulation1Scene);
+            mySimController.togglePause();
+        });
         simulationButton.setTranslateX(xLocation);
         simulationButton.setTranslateY(yLocation);
         return simulationButton;
@@ -99,6 +102,7 @@ public class MainController extends Application {
         List<List<Cell>> listOfCells = data.getCellList();
         mySimModel = new GameOfLifeSimModel(listOfCells);
         mySimController = new SimController(mySimModel);
+        mySimController.togglePause();
         root.getChildren().add(mySimController.getView());
 
         myTimeText = screenMessage(1 * WIDTH/7, 30, "Time: " + myTime);
