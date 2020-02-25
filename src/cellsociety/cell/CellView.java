@@ -10,7 +10,7 @@ public class CellView extends Rectangle {
     private int size;
 
     public CellView(Cell cell, int size) {
-        super(cell.getRow() * size, cell.getCol() * size, size, size);
+        super(cell.getCol() * size, cell.getRow() * size, size, size);
         getStyleClass().add("cell");
         if(cell.getState().equals("1")) { //switch this to a constant later
             getStyleClass().add("alive");

@@ -12,7 +12,9 @@ import cellsociety.grid.GridModel;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +27,7 @@ public class SimView {
     private BorderPane bPane;
     private Button startBttn;
     private Button pauseBttn;
+    private Button backBttn;
 
     public SimView(SimController controller){
         this.controller = controller;
@@ -39,17 +42,19 @@ public class SimView {
     private void createControls(){
         startBttn = new Button("Start");
         pauseBttn = new Button("Stop");
+        backBttn = new Button("Back");
         GridPane grid = new GridPane();
         grid.add(startBttn, 1, 0);
         grid.add(pauseBttn, 2, 0);
+        grid.add(backBttn, 3, 0);
         bPane.setBottom(grid);
 
 
         startBttn.setOnAction(event -> handleButtonClick(event));
         pauseBttn.setOnAction(event -> handleButtonClick(event));
+        backBttn.setOnAction(event -> handleButtonClick(event));
 
     }
-
 
     private void handleButtonClick(ActionEvent event){
         if(event.getSource() == startBttn){
@@ -57,6 +62,9 @@ public class SimView {
             controller.start();
         } else if (event.getSource() == pauseBttn){
             controller.pause();
+        }
+        else if (event.getSource() == backBttn) {
+            controller.setIsEnded(true);
         }
     }
 

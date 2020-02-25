@@ -27,7 +27,7 @@ public class GameOfLifeSimModel extends SimModel {
     }
 
     @Override
-    protected String getConfigFilePrefix() {
+    protected String getConfigFileIdentifier() {
         return CONFIG_FILE_PREFIX;
     }
 

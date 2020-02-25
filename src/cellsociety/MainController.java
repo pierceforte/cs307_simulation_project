@@ -40,7 +40,7 @@ public class MainController extends Application {
     private Group root;
     private Scene myScene;
     private Stage myStage;
-    private Pane myIntroPane = new Pane();
+    private Pane myIntroPane;
     private Timeline myAnimation;
     private Text myPressToBeginText;
     private Text myTimeText;
@@ -55,6 +55,7 @@ public class MainController extends Application {
         ImageView introScreenNode = new ImageView(introScreenImage);
         introScreenNode.setFitHeight(HEIGHT);
         introScreenNode.setFitWidth(WIDTH);
+        myIntroPane = new Pane();
         Scene introScene = new Scene(myIntroPane, WIDTH, HEIGHT);
         myIntroPane.getChildren().add(introScreenNode);
 
@@ -104,6 +105,13 @@ public class MainController extends Application {
 
     public void step(double elapsedTime) {
         if (isSimulationActive) {
+            if (mySimController.isEnded()) {
+                isSimulationActive = false;
+                root.getChildren().clear();
+                start(myStage);
+                return;
+            }
+
             mySimController.update();
             root.getChildren().clear();
             root.getChildren().add(mySimController.getView());

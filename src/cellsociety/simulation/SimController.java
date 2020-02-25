@@ -21,6 +21,8 @@ public class SimController {
     private SimModel model;
     private SimView view;
     private boolean isActive;
+    private boolean isEnded;
+    private Group myRoot;
 
     public <T extends SimModel> SimController(Class<T> simTypeClassName, Group root) {
         ConfigReader data = new ConfigReader(GOL_FILE_IDENTIFIER + CONFIG_FILE_SUFFIX);
@@ -37,6 +39,7 @@ public class SimController {
         isActive = true;
 
         root.getChildren().add(view.getRoot());
+        myRoot = root;
     }
 
     public void start() {
@@ -64,5 +67,13 @@ public class SimController {
 
     public SimModel getModel() {
         return model;
+    }
+
+    public void setIsEnded(boolean isEnded) {
+        this.isEnded = isEnded;
+    }
+
+    public boolean isEnded() {
+        return isEnded;
     }
 }
