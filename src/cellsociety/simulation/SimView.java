@@ -2,6 +2,7 @@ package cellsociety.simulation;
 
 import cellsociety.MainController;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -21,47 +22,53 @@ public class SimView {
     public static final int GRID_SIZE = 400;
     public static final Color BACKGROUND = Color.WHEAT;
     private SimController controller;
-    private Group root;
-//    Button startBttn;
-//    Button pauseBttn;
+    private BorderPane bPane;
+    private Button startBttn;
+    private Button pauseBttn;
 
     public SimView(SimController controller){
         this.controller = controller;
-        root = new Group();
-        //createControls();
+        bPane = new BorderPane();
+        createControls();
     }
 
-    public Group getRoot(){
-        return root;
+    public Node getRoot(){
+        return bPane;
     }
 
-//    private void createControls(){
-//        startBttn = new Button("Start");
-//        pauseBttn = new Button("Stop");
-//        GridPane grid = new GridPane();
-//        grid.add(startBttn, 1, 0);
-//        grid.add(pauseBttn, 2, 0);
-//        bPane.setBottom(grid);
-//    }
-//
-//
-//    private void handleButtonClick(ActionEvent event){
-//        if(event.getSource() == startBttn){
-//            controller.play();
-//        } else if (event.getSource() == pauseBttn){
-//            controller.togglePause();
-//        }
-//    }
+    private void createControls(){
+        startBttn = new Button("Start");
+        pauseBttn = new Button("Stop");
+        GridPane grid = new GridPane();
+        grid.add(startBttn, 1, 0);
+        grid.add(pauseBttn, 2, 0);
+        bPane.setBottom(grid);
+
+
+        startBttn.setOnAction(event -> handleButtonClick(event));
+        pauseBttn.setOnAction(event -> handleButtonClick(event));
+
+    }
+
+
+    private void handleButtonClick(ActionEvent event){
+        if(event.getSource() == startBttn){
+            System.out.println("poop");
+            controller.start();
+        } else if (event.getSource() == pauseBttn){
+            controller.pause();
+        }
+    }
 
     public void update(List<List<Cell>> cells) {
-        root.getChildren().clear();
+        Group root = new Group();
         for (List<Cell> row : cells) {
             for (Cell cell : row) {
                 CellView cellView = new CellView(cell, MainController.WIDTH /row.size());
                 root.getChildren().add(cellView);
-                System.out.println("here");
             }
         }
+        bPane.setCenter(root);
     }
 
 
