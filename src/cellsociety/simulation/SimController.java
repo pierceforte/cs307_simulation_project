@@ -1,6 +1,7 @@
 package cellsociety.simulation;
 
 import cellsociety.ConfigReader;
+import cellsociety.MainController;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -19,14 +20,17 @@ public class SimController {
     //TODO: find a way to include this info in the specific SimModel
     public static final String GOL_FILE_IDENTIFIER = "GOL";
 
+    //TODO: not sure if we want this dependency
+    private MainController mainController;
     private SimModel model;
     private SimView view;
     private boolean isActive;
     private boolean isEnded;
 
     //TODO: cleanup constructor
-    public <T extends SimModel> SimController(Class<T> simTypeClassName, Group root) {
+    public <T extends SimModel> SimController(Class<T> simTypeClassName, MainController mainController) {
         view = new SimView(this);
+        this.mainController = mainController;
         String configurationFile = chooseConfigurationFile();
         ConfigReader data = new ConfigReader(configurationFile);
         List<List<Cell>> listOfCells = data.getCellList();
@@ -39,7 +43,8 @@ public class SimController {
             System.exit(0);
         }
         isActive = true;
-        root.getChildren().add(view.getRoot());
+        mainController.addToRoot(view.getRoot());
+        //root.getChildren().add(view.getRoot());
     }
 
 
@@ -51,14 +56,12 @@ public class SimController {
         isActive = false;
     }
 
-    public void togglePause() {
-        isActive = !isActive;
-    }
-
-    public void update() {
-        if (isActive){
+    public void update(boolean overrideActiveStatus) {
+        if (isActive || overrideActiveStatus){
             model.update();
             view.update(model.getCells());
+            mainController.clearRoot();
+            mainController.addToRoot(getView());
         }
     }
 

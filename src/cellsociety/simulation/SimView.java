@@ -8,7 +8,6 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import cellsociety.cell.Cell;
 import cellsociety.cell.CellView;
-import cellsociety.grid.GridModel;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -16,7 +15,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SimView {
@@ -25,9 +23,10 @@ public class SimView {
     public static final Color BACKGROUND = Color.WHEAT;
     private SimController controller;
     private BorderPane bPane;
-    private Button startBttn;
+    private Button playBttn;
     private Button pauseBttn;
-    private Button backBttn;
+    private Button stepBttn;
+    private Button exitBttn;
 
     public SimView(SimController controller){
         this.controller = controller;
@@ -40,19 +39,22 @@ public class SimView {
     }
 
     private void createControls(){
-        startBttn = new Button("Start");
-        pauseBttn = new Button("Stop");
-        backBttn = new Button("Back");
+        playBttn = new Button("Play");
+        pauseBttn = new Button("Pause");
+        stepBttn = new Button("Step");
+        exitBttn = new Button("Exit");
         GridPane grid = new GridPane();
-        grid.add(startBttn, 1, 0);
+        grid.add(playBttn, 1, 0);
         grid.add(pauseBttn, 2, 0);
-        grid.add(backBttn, 3, 0);
+        grid.add(stepBttn, 3, 0);
+        grid.add(exitBttn, 4, 0);
         bPane.setBottom(grid);
 
 
-        startBttn.setOnAction(event -> handleButtonClick(event));
+        playBttn.setOnAction(event -> handleButtonClick(event));
         pauseBttn.setOnAction(event -> handleButtonClick(event));
-        backBttn.setOnAction(event -> handleButtonClick(event));
+        stepBttn.setOnAction(event -> handleButtonClick(event));
+        exitBttn.setOnAction(event -> handleButtonClick(event));
 
     }
 
@@ -89,13 +91,16 @@ public class SimView {
 
 
     private void handleButtonClick(ActionEvent event){
-        if(event.getSource() == startBttn){
-            System.out.println("poop");
+        if(event.getSource() == playBttn){
             controller.start();
         } else if (event.getSource() == pauseBttn){
             controller.pause();
         }
-        else if (event.getSource() == backBttn) {
+        else if (event.getSource() == stepBttn) {
+            controller.update(true);
+            controller.pause();
+        }
+        else if (event.getSource() == exitBttn) {
             controller.setIsEnded(true);
         }
     }

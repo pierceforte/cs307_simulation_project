@@ -37,7 +37,7 @@ public class MainController extends Application {
     public static final String DEFAULT_FONT = "Verdana";
     public static final DecimalFormat df2 = new DecimalFormat("#.##");
     public static final String STARTING_MESSAGE = "  ";
-    private Group root;
+    private Group root = new Group();
     private Scene myScene;
     private Stage myStage;
     private Pane myIntroPane;
@@ -91,7 +91,7 @@ public class MainController extends Application {
 
     private <T extends SimModel> Scene setupSimulation(Class<T> simTypeClassName, int width, int height, Paint background) {
         root = new Group();
-        mySimController = new SimController(simTypeClassName, root);
+        mySimController = new SimController(simTypeClassName, this);
         //myTimeText = screenMessage(1 * WIDTH/7, 30, "Time: " + myTime);
         //myPressToBeginText = screenMessage(WIDTH / 3,  2 * HEIGHT / 3, STARTING_MESSAGE);
         //root.getChildren.addAll(List.of(myTimeText, myPressToBeginText);
@@ -109,12 +109,19 @@ public class MainController extends Application {
                 returnToIntroScreen();
             }
             else {
-                mySimController.update();
-                root.getChildren().clear();
-                root.getChildren().add(mySimController.getView());
+                mySimController.update(false);
             }
         }
     }
+
+    public void clearRoot() {
+        root.getChildren().clear();
+    }
+
+    public <T extends Node> void addToRoot(T node) {
+        root.getChildren().add(node);
+    }
+
 
     private void returnToIntroScreen() {
         isSimulationActive = false;

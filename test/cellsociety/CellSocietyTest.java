@@ -7,6 +7,7 @@ import cellsociety.simulation.SimModel;
 import javafx.scene.Group;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -85,8 +86,10 @@ public class CellSocietyTest extends DukeApplicationTest {
     }
 
     private <T extends SimModel> SimModel createModel(Class<T> simTypeClassName) {
-        Group root = new Group();
-        SimController mySimController = new SimController(GameOfLifeSimModel.class, root);
+        // TODO: implement handling for Continue/Restart prompt when starting a simulation from test
+
+
+        SimController mySimController = new SimController(simTypeClassName, new MainController());
         SimModel myModel = mySimController.getModel();
         return myModel;
     }

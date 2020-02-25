@@ -55,6 +55,8 @@ public abstract class SimModel {
         try {
             String currentConfigFileName = SimController.CURRENT_CONFIG_FILE_PREFIX + getConfigFileIdentifier() +
                     SimController.CONFIG_FILE_SUFFIX;
+            System.out.println(SimController.CURRENT_CONFIG_FILE_PREFIX + getConfigFileIdentifier() +
+                    SimController.CONFIG_FILE_SUFFIX);
             PrintWriter pw = new PrintWriter(new File(this.getClass().getClassLoader().getResource(currentConfigFileName).getPath()));
             pw.println(cells.size() + ConfigReader.DATA_REGEX + cells.get(0).size());
 
@@ -73,6 +75,12 @@ public abstract class SimModel {
         } catch (FileNotFoundException e) {
             //logError(e);
             System.exit(0);
+        }
+        catch (NullPointerException e) {
+            //logError(e);
+            // don't save file
+            e.printStackTrace();
+            System.out.println("here");
         }
     }
 }

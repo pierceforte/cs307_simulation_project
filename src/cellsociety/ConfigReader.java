@@ -17,6 +17,7 @@ public class ConfigReader {
     private final String simulationInitialLayout;
     private int quantityOfRows;
     private int quantityOfColumns;
+
     public ConfigReader(String fileOfCells) {
         simulationInitialLayout = fileOfCells;
     }
