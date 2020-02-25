@@ -39,19 +39,12 @@ public class SimController {
         root.getChildren().add(view.getRoot());
     }
 
-    public void play() {
-        if (isActive) {
-            List<List<Cell>> cells = model.getCells();
-            System.out.println("\n\n\n\n");
-            for (List<Cell> row : cells) {
-                for (Cell cell : row) {
-                    System.out.print(cell.getState() + ",");
-                }
-                System.out.println();
-            }
-            System.out.println("\n\n\n\n");
-            model.update();
-        }
+    public void start() {
+        isActive = true;
+    }
+
+    public void pause(){
+        isActive = false;
     }
 
     public void togglePause() {
@@ -73,7 +66,7 @@ public class SimController {
         }
     }
 
-    public Group getView(){
+    public Node getView(){
         return view.getRoot();
     }
 }

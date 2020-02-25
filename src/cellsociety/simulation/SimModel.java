@@ -2,11 +2,11 @@ package cellsociety.simulation;
 
 import cellsociety.cell.Cell;
 import cellsociety.grid.GridModel;
-
 import javafx.scene.paint.Color;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+
 import java.util.List;
 
 public abstract class SimModel {
