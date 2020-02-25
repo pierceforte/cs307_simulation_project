@@ -51,22 +51,18 @@ public class SimController {
         isActive = !isActive;
     }
 
-
-    //called in step to call update() in SimModel
-    public void updateCellStates(){
+    public void update() {
         if (isActive){
             model.update();
-        }
-    }
-
-    //called in step after model is updated
-    public void updateCellViews(){
-        if (isActive){
             view.update(model.getCells());
         }
     }
 
     public Node getView(){
         return view.getRoot();
+    }
+
+    public SimModel getModel() {
+        return model;
     }
 }

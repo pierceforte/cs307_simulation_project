@@ -101,8 +101,7 @@ public class MainController extends Application {
 
     public void step(double elapsedTime) {
         if (isSimulationActive) {
-            mySimController.updateCellStates();
-            mySimController.updateCellViews();
+            mySimController.update();
             root.getChildren().clear();
             root.getChildren().add(mySimController.getView());
         }
