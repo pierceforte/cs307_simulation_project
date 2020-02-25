@@ -1,0 +1,16 @@
+.button{
+    -fx-background-color: LightGrey;
+    -fx-font-size: 15px;
+}
+
+.cell {
+    -fx-stroke: SteelBlue;
+}
+
+.alive{
+    -fx-fill: Black;
+}
+
+.dead{
+    -fx-fill: White;
+}

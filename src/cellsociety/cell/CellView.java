@@ -11,12 +11,12 @@ public class CellView extends Rectangle {
 
     public CellView(Cell cell, int size) {
         super(cell.getRow() * size, cell.getCol() * size, size, size);
+        getStyleClass().add("cell");
         if(cell.getState().equals("1")) { //switch this to a constant later
-            setFill(Color.BLACK);
+            getStyleClass().add("alive");
         } else {
-            setFill(Color.WHITE);
+            getStyleClass().add("dead");
         }
-        setStroke(Color.STEELBLUE);
     }
 
 
