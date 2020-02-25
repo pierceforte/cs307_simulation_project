@@ -56,6 +56,38 @@ public class SimView {
 
     }
 
+    //TODO: cleanup this code
+    public boolean userRestartedSimulation() {
+        Stage input = new Stage();
+        input.setTitle("Start Simulation");
+
+        final boolean[] ret = {false};
+        Button restartBttn = createButton("Restart", 0, 0, 100, 30);
+        Button continueBttn = createButton("Continue", 100, 0, 100, 30);
+
+        restartBttn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent t) {
+                input.close();
+                ret[0] = true;
+            }
+        });
+        continueBttn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent t) {
+                input.close();
+                ret[0] = false;
+            }
+        });
+
+        Pane pane = new Pane();
+        pane.getChildren().addAll(restartBttn, continueBttn);
+
+        input.setScene(new Scene(pane, 200, 30));
+        input.showAndWait();
+
+        return ret[0];
+    }
+
+
     private void handleButtonClick(ActionEvent event){
         if(event.getSource() == startBttn){
             System.out.println("poop");
@@ -77,6 +109,15 @@ public class SimView {
             }
         }
         bPane.setCenter(root);
+    }
+
+    private Button createButton(String text, double xPos, double yPos, double width, double height) {
+        Button button = new Button(text);
+        button.setTranslateX(xPos);
+        button.setTranslateY(yPos);
+        button.setPrefWidth(width);
+        button.setPrefHeight(height);
+        return button;
     }
 
 

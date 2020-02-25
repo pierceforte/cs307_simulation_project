@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import cellsociety.cell.Cell;
 import javafx.scene.layout.Pane;
 
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -22,10 +23,12 @@ public class SimController {
     private SimView view;
     private boolean isActive;
     private boolean isEnded;
-    private Group myRoot;
 
+    //TODO: cleanup constructor and fix issue where simulation looks glitchy on continue
     public <T extends SimModel> SimController(Class<T> simTypeClassName, Group root) {
-        ConfigReader data = new ConfigReader(GOL_FILE_IDENTIFIER + CONFIG_FILE_SUFFIX);
+        view = new SimView(this);
+        String configurationFile = chooseConfigurationFile();
+        ConfigReader data = new ConfigReader(configurationFile);
         List<List<Cell>> listOfCells = data.getCellList();
 
         try {
@@ -35,12 +38,10 @@ public class SimController {
             //logError(e);
             System.exit(0);
         }
-        view = new SimView(this);
         isActive = true;
-
         root.getChildren().add(view.getRoot());
-        myRoot = root;
     }
+
 
     public void start() {
         isActive = true;
@@ -75,5 +76,17 @@ public class SimController {
 
     public boolean isEnded() {
         return isEnded;
+    }
+
+    private String chooseConfigurationFile() {
+        String fileToRead = GOL_FILE_IDENTIFIER + CONFIG_FILE_SUFFIX;
+        String currentConfigFile = CURRENT_CONFIG_FILE_PREFIX + GOL_FILE_IDENTIFIER + CONFIG_FILE_SUFFIX;
+
+        if (this.getClass().getClassLoader().getResource(currentConfigFile) != null) {
+            if (!view.userRestartedSimulation()) {
+                fileToRead = currentConfigFile;
+            }
+        }
+        return fileToRead;
     }
 }

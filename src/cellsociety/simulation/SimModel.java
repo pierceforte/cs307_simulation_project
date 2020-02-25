@@ -4,6 +4,7 @@ import cellsociety.ConfigReader;
 import cellsociety.cell.Cell;
 import cellsociety.grid.GridModel;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
@@ -52,8 +53,9 @@ public abstract class SimModel {
 
     private void saveCurrentConfig(List<List<Cell>> cells) {
         try {
-            PrintWriter pw = new PrintWriter("resources/" + SimController.CURRENT_CONFIG_FILE_PREFIX
-                    + getConfigFileIdentifier() + SimController.CONFIG_FILE_SUFFIX);
+            String currentConfigFileName = SimController.CURRENT_CONFIG_FILE_PREFIX + getConfigFileIdentifier() +
+                    SimController.CONFIG_FILE_SUFFIX;
+            PrintWriter pw = new PrintWriter(new File(this.getClass().getClassLoader().getResource(currentConfigFileName).getPath()));
             pw.println(cells.size() + ConfigReader.DATA_REGEX + cells.get(0).size());
 
             for (int row = 0; row < cells.size(); row++) {
