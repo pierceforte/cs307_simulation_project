@@ -96,6 +96,9 @@ public class MainController extends Application {
         //root.getChildren.addAll(List.of(myTimeText, myPressToBeginText);
         myScene = new Scene(root, width, height, background);
         myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode(), root));
+
+        //testing adding of css styles
+        myScene.getStylesheets().add("style.css");
         return myScene;
     }
 
