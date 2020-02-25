@@ -47,10 +47,10 @@ public class MainController extends Application {
     private double myTime;
     private SimModel mySimModel;
     private SimController mySimController;
+    private boolean isSimulationActive = false;
 
     @Override
     public void start(Stage stage) {
-
         Image introScreenImage = new Image(getClass().getClassLoader().getResourceAsStream(INTRO_SCREEN_IMG_NAME));
         ImageView introScreenNode = new ImageView(introScreenImage);
         introScreenNode.setFitHeight(HEIGHT);
@@ -58,15 +58,9 @@ public class MainController extends Application {
         Scene introScene = new Scene(myIntroPane, WIDTH, HEIGHT);
         myIntroPane.getChildren().add(introScreenNode);
 
-        //read configuration files
-
-        Scene simulation1Scene = setupSimulation(WIDTH, HEIGHT, BACKGROUND,"GOL");
-        //Scene simulation2Scene = setupSimulation(WIDTH, HEIGHT, BACKGROUND,"SIM2");
-        Button simulation1Button = makeButton(stage, simulation1Scene, "Simulation 1", 180, 350);
-        //Button simulation2Button = makeButton(stage, simulation2Scene, "Simulation 2", 360, 350);
+        Button simulation1Button = makeButton(stage, "Simulation 1", 180, 350);
         myIntroPane.getChildren().add(simulation1Button);
 
-        //myIntroPane.getChildren().addAll(simulation1Button,simulation2Button);
         myStage = stage;
         stage.setScene(introScene);
         stage.setTitle(TITLE);
@@ -74,11 +68,12 @@ public class MainController extends Application {
         setMyAnimation(stage);
     }
 
-    private Button makeButton(Stage stage, Scene simulation1Scene, String buttonName, int xLocation, double yLocation) {
+    private Button makeButton(Stage stage, String buttonName, int xLocation, double yLocation) {
         Button simulationButton = new Button(buttonName);
         simulationButton.setOnAction(e -> {
+            Scene simulation1Scene = setupSimulation(GameOfLifeSimModel.class, WIDTH, HEIGHT, BACKGROUND);
             stage.setScene(simulation1Scene);
-            mySimController.togglePause();
+            isSimulationActive = true;
         });
         simulationButton.setTranslateX(xLocation);
         simulationButton.setTranslateY(yLocation);
@@ -91,43 +86,29 @@ public class MainController extends Application {
         myAnimation.setCycleCount(Timeline.INDEFINITE);
         myAnimation.getKeyFrames().add(frame);
         myAnimation.play();
-
     }
 
-
-    public Scene setupSimulation(int width, int height, Paint background, String simulationName) {
+    private <T extends SimModel> Scene setupSimulation(Class<T> simTypeClassName, int width, int height, Paint background) {
         root = new Group();
-        ConfigReader data = new ConfigReader(simulationName + "Config.csv");
-
-        List<List<Cell>> listOfCells = data.getCellList();
-        mySimModel = new GameOfLifeSimModel(listOfCells);
-        mySimController = new SimController(mySimModel);
-        mySimController.togglePause();
-        root.getChildren().add(mySimController.getView());
-
-        myTimeText = screenMessage(1 * WIDTH/7, 30, "Time: " + myTime);
-        myPressToBeginText = screenMessage(WIDTH / 3,  2 * HEIGHT / 3, STARTING_MESSAGE);
-        addToRoot(root);
+        mySimController = new SimController(simTypeClassName, root);
+        //myTimeText = screenMessage(1 * WIDTH/7, 30, "Time: " + myTime);
+        //myPressToBeginText = screenMessage(WIDTH / 3,  2 * HEIGHT / 3, STARTING_MESSAGE);
+        //root.getChildren.addAll(List.of(myTimeText, myPressToBeginText);
         myScene = new Scene(root, width, height, background);
         myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode(), root));
         return myScene;
     }
 
-    private void addToRoot(Group root) {
-        root.getChildren().add(myTimeText);
-    }
-
-
     public void step(double elapsedTime) {
-        //mySimController.play();
-        mySimController.updateCellStates();
-        mySimController.updateCellViews();
-        root.getChildren().clear();
-        root.getChildren().add(mySimController.getView());
+        if (isSimulationActive) {
+            mySimController.updateCellStates();
+            mySimController.updateCellViews();
+            root.getChildren().clear();
+            root.getChildren().add(mySimController.getView());
+        }
     }
 
     private void handleKeyInput(KeyCode code, Group root) {
-
 
     }
 
@@ -139,19 +120,6 @@ public class MainController extends Application {
         message.setText(words);
         message.setFill(Color.BLACK);
         return message;
-    }
-
-
-
-//    Scene configScene() {
-//        Group root = new Group();
-//
-//    }
-
-
-    private void addSimulationButtonToScene(Scene scene, int simNumber, Stage stage, double xPos, double yPos) {
-        Button simulationButton1 = makeButton(stage, scene, SIMULATION_BUTTON_PREFIX + simNumber, (int) xPos, yPos);
-        myIntroPane.getChildren().add(simulationButton1);
     }
 
     public static void main(String[] args)
