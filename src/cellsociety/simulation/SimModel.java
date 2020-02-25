@@ -18,7 +18,7 @@ public abstract class SimModel {
 
     public void update() {
         List<List<Cell>> cells = gridModel.getCells();
-        //saveCurrentConfig(cells);
+        saveCurrentConfig(cells);
         setNextStates(cells);
         updateStates(cells);
     }
@@ -51,6 +51,26 @@ public abstract class SimModel {
     }
 
     private void saveCurrentConfig(List<List<Cell>> cells) {
+        try {
+            PrintWriter pw = new PrintWriter("resources/" + SimController.CURRENT_CONFIG_FILE_PREFIX
+                    + getConfigFileIdentifier() + SimController.CONFIG_FILE_SUFFIX);
+            pw.println(cells.size() + ConfigReader.DATA_REGEX + cells.get(0).size());
 
+            for (int row = 0; row < cells.size(); row++) {
+                int cols = cells.get(0).size();
+                if (cols == 0) {
+                    break;
+                }
+                String line = cells.get(row).get(0).getState();
+                for (int col = 1; col < cols; col++) {
+                    line += ConfigReader.DATA_REGEX + cells.get(row).get(col).getState();
+                }
+                pw.println(line);
+            }
+            pw.close();
+        } catch (FileNotFoundException e) {
+            //logError(e);
+            System.exit(0);
+        }
     }
 }
