@@ -106,16 +106,21 @@ public class MainController extends Application {
     public void step(double elapsedTime) {
         if (isSimulationActive) {
             if (mySimController.isEnded()) {
-                isSimulationActive = false;
-                root.getChildren().clear();
-                start(myStage);
-                return;
+                returnToIntroScreen();
             }
-
-            mySimController.update();
-            root.getChildren().clear();
-            root.getChildren().add(mySimController.getView());
+            else {
+                mySimController.update();
+                root.getChildren().clear();
+                root.getChildren().add(mySimController.getView());
+            }
         }
+    }
+
+    private void returnToIntroScreen() {
+        isSimulationActive = false;
+        root.getChildren().clear();
+        myAnimation.stop();
+        start(myStage);
     }
 
     private void handleKeyInput(KeyCode code, Group root) {

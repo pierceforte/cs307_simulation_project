@@ -24,7 +24,7 @@ public class SimController {
     private boolean isActive;
     private boolean isEnded;
 
-    //TODO: cleanup constructor and fix issue where simulation looks glitchy on continue
+    //TODO: cleanup constructor
     public <T extends SimModel> SimController(Class<T> simTypeClassName, Group root) {
         view = new SimView(this);
         String configurationFile = chooseConfigurationFile();
