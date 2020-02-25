@@ -40,16 +40,19 @@ public class SimView {
 
     private void createControls(){
         playBttn = new Button("Play");
+        playBttn.setId("playBttn");
         pauseBttn = new Button("Pause");
+        pauseBttn.setId("pauseBttn");
         stepBttn = new Button("Step");
+        stepBttn.setId("stepBttn");
         exitBttn = new Button("Exit");
+        stepBttn.setId("exitBttn");
         GridPane grid = new GridPane();
         grid.add(playBttn, 1, 0);
         grid.add(pauseBttn, 2, 0);
         grid.add(stepBttn, 3, 0);
         grid.add(exitBttn, 4, 0);
         bPane.setBottom(grid);
-
 
         playBttn.setOnAction(event -> handleButtonClick(event));
         pauseBttn.setOnAction(event -> handleButtonClick(event));
@@ -65,7 +68,9 @@ public class SimView {
 
         final boolean[] ret = {false};
         Button restartBttn = createButton("Restart", 0, 0, 100, 30);
+        restartBttn.setId("restartBttn");
         Button continueBttn = createButton("Continue", 100, 0, 100, 30);
+        continueBttn.setId("continueBttn");
 
         restartBttn.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent t) {
