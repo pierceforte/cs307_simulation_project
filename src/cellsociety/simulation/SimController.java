@@ -36,8 +36,8 @@ public class SimController {
         List<List<Cell>> listOfCells = data.getCellList();
 
         try {
-            Constructor<?> constructor = simTypeClassName.getConstructor(List.class);
-            this.model = (SimModel) constructor.newInstance(listOfCells);
+            Constructor<?> constructor = simTypeClassName.getConstructor(List.class, SimController.class);
+            this.model = (SimModel) constructor.newInstance(listOfCells, this);
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             //logError(e);
             System.exit(0);
@@ -45,6 +45,9 @@ public class SimController {
         isActive = true;
         mainController.addToRoot(view.getRoot());
         //root.getChildren().add(view.getRoot());
+        view.update(model.getCells());
+        mainController.clearRoot();
+        mainController.addToRoot(getView());
     }
 
 

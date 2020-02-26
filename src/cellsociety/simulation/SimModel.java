@@ -12,9 +12,12 @@ import java.util.List;
 
 public abstract class SimModel {
     private GridModel gridModel;
+    private SimController simController;
+    private SimView simView;
 
-    public SimModel(List<List<Cell>> grid) {
+    public SimModel(List<List<Cell>> grid, SimController simController) {
         this.gridModel = new GridModel(grid);
+        this.simController = simController;
     }
 
     public void update() {
@@ -49,6 +52,14 @@ public abstract class SimModel {
     //repetitive method here for testing MVC
     public List<List<Cell>> getCells(){
         return gridModel.getCells();
+    }
+
+    public SimController getSimController() {
+        return simController;
+    }
+
+    public SimView getSimView() {
+        return simView;
     }
 
     private void saveCurrentConfig(List<List<Cell>> cells) {

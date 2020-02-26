@@ -5,16 +5,19 @@ import cellsociety.simulation.GameOfLifeSimModel;
 import cellsociety.simulation.SimController;
 import cellsociety.simulation.SimModel;
 import javafx.event.ActionEvent;
+import javafx.scene.control.Button;
+import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class CellSocietyTest extends DukeApplicationTest {
 
+    private MainController myMainController;
     private SimModel mySimModel;
 
     @Test
@@ -68,6 +71,95 @@ public class CellSocietyTest extends DukeApplicationTest {
         testGOLCellStateChange(0, 9, GameOfLifeSimModel.DEAD, GameOfLifeSimModel.DEAD);
     }
 
+    @Test
+    public void testGOLReset() {
+        mySimModel = createModelFromStart(GameOfLifeSimModel.class);
+        List<List<Cell>> initialCellsFromModel = mySimModel.getCells();
+
+        // update simulation
+        mySimModel.update();
+
+        // exit simulation
+        javafxRun(() -> lookup("#exitBttn").query().fireEvent(new ActionEvent()));
+
+        // start simulation again and restart it
+        mySimModel = createModelFromStart(GameOfLifeSimModel.class);
+        List<List<Cell>> restartedCellsFromModel = mySimModel.getCells();
+
+        for (int row = 0; row < initialCellsFromModel.size(); row++) {
+            for (int col = 0; col < initialCellsFromModel.get(0).size(); col++) {
+                assertEquals(initialCellsFromModel.get(row).get(col).getState(), restartedCellsFromModel.get(row).get(col).getState());
+            }
+        }
+    }
+
+    @Test
+    public void testIntroPaneCreation() {
+        // assert that intro pane is not present
+        assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, () -> lookup("#introPane").query());
+        startApplication();
+        // assert that intro pane is now present
+        assertNotNull(lookup("#introPane").query());
+
+        /*
+        //mySimModel = createModelFromStart(GameOfLifeSimModel.class);
+        sleep(3, TimeUnit.SECONDS);
+        //mySimModel.getSimController().update(true);
+        sleep(3, TimeUnit.SECONDS);
+        // assert that exit button is present
+        javafxRun(() -> assertNotNull(lookup("#exitBttn").query()));
+
+
+        //javafxRun(() -> lookup("#exitBttn").query().fireEvent(new ActionEvent()));
+        */
+    }
+
+    @Test
+    public void testStartSimulationButton() {
+        // assert that start GOL simulation button is not present
+        assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, () -> lookup("#GOLSimButton").query());
+        startApplication();
+        // assert that start GOL simulation button is now present
+        assertNotNull(lookup("#GOLSimButton").query());
+        // assert that no cell view is present (here we look at the first one created: cellView0)
+        assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, () -> lookup("#cellView0").query());
+
+
+        Button GOLSimButton = lookup("#GOLSimButton").query();
+        fireButtonEvent(GOLSimButton);
+
+        Button restartSimButton = lookup("#restartBttn").query();
+        fireButtonEvent(restartSimButton);
+
+
+        sleep(3, TimeUnit.SECONDS);
+        // assert that the cell view is now presented
+        assertNotNull(lookup("#cellView0").query());
+    }
+
+    @Test
+    public void testExitSimulationButton() {
+        startApplication();
+        // assert that exit button is not present before simulation is started
+        assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, () -> lookup("#exitBttn").query());
+
+        Button GOLSimButton = lookup("#GOLSimButton").query();
+        fireButtonEvent(GOLSimButton);
+
+        Button restartSimButton = lookup("#restartBttn").query();
+        fireButtonEvent(restartSimButton);
+
+        // assert button is now present
+        assertNotNull(lookup("#exitBttn").query());
+
+        Button exitBttn = lookup("#exitBttn").query();
+
+        // press button to exit
+        fireButtonEvent(exitBttn);
+        // assert that button is no longer present
+        assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, () -> lookup("#exitBttn").query());
+    }
+
     private void testGOLCellStateChange(int row, int col, String initialState, String updatedStated) {
         createModelFromStart(GameOfLifeSimModel.class);
         List<List<Cell>> cells = mySimModel.getCells();
@@ -93,12 +185,22 @@ public class CellSocietyTest extends DukeApplicationTest {
         });
         // choose to restart simulation from initial configuration
         try {
-            javafxRun(() -> lookup("#restartBttn").query().fireEvent(new ActionEvent()));
+            javafxRun(() -> fireButtonEvent(lookup("#restartBttn").query()));
         }
         catch (NullPointerException e) {
             // logError(e);
             // if button not presented, we don't have to do anything
         }
         return mySimModel;
+    }
+
+    private void startApplication() {
+        // start application
+        myMainController= new MainController();
+        javafxRun(() -> myMainController.start(new Stage()));
+    }
+
+    private void fireButtonEvent(Button button) {
+        javafxRun(() -> button.fireEvent(new ActionEvent()));
     }
 }

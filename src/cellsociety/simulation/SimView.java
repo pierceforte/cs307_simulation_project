@@ -23,6 +23,7 @@ public class SimView {
     public static final Color BACKGROUND = Color.WHEAT;
     private SimController controller;
     private BorderPane bPane;
+    private GridPane gridPane;
     private Button playBttn;
     private Button pauseBttn;
     private Button stepBttn;
@@ -46,19 +47,18 @@ public class SimView {
         stepBttn = new Button("Step");
         stepBttn.setId("stepBttn");
         exitBttn = new Button("Exit");
-        stepBttn.setId("exitBttn");
-        GridPane grid = new GridPane();
-        grid.add(playBttn, 1, 0);
-        grid.add(pauseBttn, 2, 0);
-        grid.add(stepBttn, 3, 0);
-        grid.add(exitBttn, 4, 0);
-        bPane.setBottom(grid);
+        exitBttn.setId("exitBttn");
+        gridPane = new GridPane();
+        gridPane.add(playBttn, 1, 0);
+        gridPane.add(pauseBttn, 2, 0);
+        gridPane.add(stepBttn, 3, 0);
+        gridPane.add(exitBttn, 4, 0);
+        bPane.setBottom(gridPane);
 
         playBttn.setOnAction(event -> handleButtonClick(event));
         pauseBttn.setOnAction(event -> handleButtonClick(event));
         stepBttn.setOnAction(event -> handleButtonClick(event));
         exitBttn.setOnAction(event -> handleButtonClick(event));
-
     }
 
     //TODO: cleanup this code
@@ -112,9 +112,11 @@ public class SimView {
 
     public void update(List<List<Cell>> cells) {
         Group root = new Group();
+        int cellViewIdNum = 0;
         for (List<Cell> row : cells) {
             for (Cell cell : row) {
-                CellView cellView = new CellView(cell, MainController.WIDTH /row.size());
+                CellView cellView = new CellView(cell, MainController.WIDTH /row.size(), cellViewIdNum);
+                cellViewIdNum++;
                 root.getChildren().add(cellView);
             }
         }

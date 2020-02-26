@@ -26,7 +26,8 @@ import java.util.List;
 public class MainController extends Application {
     public static final String TITLE = "Cell Society";
     public static final int WIDTH = 600;
-    public static final int HEIGHT = 600;
+    public static final int GRID_HEIGHT = 600;
+    public static final int HEIGHT = 630;
     public static final String SIMULATION_BUTTON_PREFIX = "Simulation ";
     public static final Paint BACKGROUND = Color.BEIGE;
     public static final int FRAMES_PER_SECOND = 5;
@@ -56,11 +57,13 @@ public class MainController extends Application {
         introScreenNode.setFitHeight(HEIGHT);
         introScreenNode.setFitWidth(WIDTH);
         myIntroPane = new Pane();
+        myIntroPane.setId("introPane");
         Scene introScene = new Scene(myIntroPane, WIDTH, HEIGHT);
         myIntroPane.getChildren().add(introScreenNode);
 
-        Button simulation1Button = makeButton(stage, "Simulation 1", 180, 350);
-        myIntroPane.getChildren().add(simulation1Button);
+        Button GOLSimButton = makeButton(stage, "Game of Life", 180, 350);
+        GOLSimButton.setId("GOLSimButton");
+        myIntroPane.getChildren().add(GOLSimButton);
 
         myStage = stage;
         stage.setScene(introScene);
