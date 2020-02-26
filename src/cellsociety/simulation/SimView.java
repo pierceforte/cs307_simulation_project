@@ -112,10 +112,18 @@ public class SimView {
 
     public void update(List<List<Cell>> cells) {
         Group root = new Group();
+
+        // divide by the large dimension so everything fits on screen
+        double size = ((double) MainController.WIDTH) / Math.max(cells.get(0).size(), cells.size());
+        // TODO: get these to work (the calculations are correct, but changing xPos and yPos in cellView
+        //  doesn't do work
+        double xOffset = size * Math.max(0, cells.size() - cells.get(0).size())/2;
+        double yOffset = size * Math.max(0, cells.get(0).size() - cells.size())/2;
+
         int cellViewIdNum = 0;
         for (List<Cell> row : cells) {
             for (Cell cell : row) {
-                CellView cellView = new CellView(cell, MainController.WIDTH /row.size(), cellViewIdNum);
+                CellView cellView = new CellView(cell,size, xOffset, yOffset, cellViewIdNum);
                 cellViewIdNum++;
                 root.getChildren().add(cellView);
             }

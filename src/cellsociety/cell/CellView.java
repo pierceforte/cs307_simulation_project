@@ -9,8 +9,8 @@ import javafx.scene.shape.Rectangle;
 public class CellView extends Rectangle {
     private int size;
 
-    public CellView(Cell cell, int size, int idNum) {
-        super(cell.getCol() * size, cell.getRow() * size, size, size);
+    public CellView(Cell cell, double size, double xOffset, double yOffset, int idNum) {
+        super(xOffset + cell.getCol() * size, yOffset + cell.getRow() * size, size, size);
         setId("cellView" + idNum);
         getStyleClass().add("cell");
         if(cell.getState().equals("1")) { //switch this to a constant later

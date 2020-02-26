@@ -9,9 +9,11 @@ import cellsociety.cell.Cell;
 import javafx.scene.layout.Pane;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Scanner;
 
 public class SimController {
     public static final String CONFIG_FILE_SUFFIX = "Config.csv";
@@ -97,10 +99,39 @@ public class SimController {
         String currentConfigFile = CURRENT_CONFIG_FILE_PREFIX + GOL_FILE_IDENTIFIER + CONFIG_FILE_SUFFIX;
 
         if (this.getClass().getClassLoader().getResource(currentConfigFile) != null) {
-            if (!view.userRestartedSimulation()) {
+            if (doesCurrentConfigHaveCorrectDimensions(fileToRead, currentConfigFile) && !view.userRestartedSimulation()) {
                 fileToRead = currentConfigFile;
             }
         }
         return fileToRead;
     }
+
+    private boolean doesCurrentConfigHaveCorrectDimensions(String startFile, String currentFile) {
+        String[] startDimensions;
+        String[] currentDimensions;
+
+        try {
+            Scanner startInput = new Scanner(new File(this.getClass().getClassLoader().getResource(startFile).getPath()));
+            startDimensions = startInput.next().split(ConfigReader.DATA_REGEX);
+
+            Scanner currentInput = new Scanner(new File(this.getClass().getClassLoader().getResource(currentFile).getPath()));
+            if (currentInput.hasNextLine()) {
+                currentDimensions = currentInput.next().split(ConfigReader.DATA_REGEX);
+            }
+            else return false;
+        }
+        catch (FileNotFoundException | NullPointerException e) {
+            //logError(e)
+            return false;
+        }
+
+        for (int dimension = 0; dimension < startDimensions.length; dimension++) {
+            if (startDimensions.length != currentDimensions.length ||
+                    !startDimensions[dimension].equals(currentDimensions[dimension])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }
