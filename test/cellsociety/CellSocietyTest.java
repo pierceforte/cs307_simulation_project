@@ -160,6 +160,38 @@ public class CellSocietyTest extends DukeApplicationTest {
         assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, () -> lookup("#exitBttn").query());
     }
 
+    @Test
+    public void testContinueSimulationButton() {
+        startApplication();
+        // begin GOL simulation from beginning
+        fireButtonEvent(lookup("#GOLSimButton").query());
+        fireButtonEvent(lookup("#restartBttn").query());
+        mySimModel = myMainController.getCurSimController().getModel();
+        // step to update cells
+        step();
+        // collect updated cells
+        List<List<Cell>> updatedCellsFromModel = mySimModel.getCells();
+        // exit simulation and then choose to continue it
+        fireButtonEvent(lookup("#exitBttn").query());
+        // need to step to give buttons time to present themselves
+        step();
+        fireButtonEvent(lookup("#GOLSimButton").query());
+        fireButtonEvent(lookup("#continueBttn").query());
+        mySimModel = myMainController.getCurSimController().getModel();
+        // collect cells after continuing
+        List<List<Cell>> continuedCellsFromModel = mySimModel.getCells();
+        // check that cells after continuing are the same as the cells before exiting above
+        for (int row = 0; row < updatedCellsFromModel.size(); row++) {
+            for (int col = 0; col < updatedCellsFromModel.get(0).size(); col++) {
+                assertEquals(updatedCellsFromModel.get(row).get(col).getState(), continuedCellsFromModel.get(row).get(col).getState());
+            }
+        }
+    }
+
+    private void step() {
+        javafxRun(() -> myMainController.step(MainController.SECOND_DELAY));
+    }
+
     private void testGOLCellStateChange(int row, int col, String initialState, String updatedStated) {
         createModelFromStart(GameOfLifeSimModel.class);
         List<List<Cell>> cells = mySimModel.getCells();

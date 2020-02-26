@@ -125,6 +125,9 @@ public class MainController extends Application {
         root.getChildren().add(node);
     }
 
+    public SimController getCurSimController() {
+        return mySimController;
+    }
 
     private void returnToIntroScreen() {
         isSimulationActive = false;
