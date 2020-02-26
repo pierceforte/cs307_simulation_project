@@ -72,22 +72,30 @@ public class CellSocietyTest extends DukeApplicationTest {
         testGOLCellStateChange(0, 9, GameOfLifeSimModel.DEAD, GameOfLifeSimModel.DEAD);
     }
 
+    // TODO: get this working with frame rate of 5 (it works with frame rate of 1, but not 5)
+    //  Sometimes works, but not consistently
     @Test
     public void testGOLReset() {
-        mySimModel = createModelFromStart(GameOfLifeSimModel.class);
-        List<List<Cell>> initialCellsFromModel = mySimModel.getCells();
-
+        startApplication();
+        // begin GOL simulation from beginning
+        fireButtonEvent(lookup("#GOLSimButton").query());
+        fireButtonEvent(lookup("#restartBttn").query());
+        // get initial configuration
+        List<List<Cell>> initialCellsFromModel = myMainController.getCurSimController().getModel().getCells();
         // update simulation
-        mySimModel.update();
-
+        step();
         // exit simulation
-        javafxRun(() -> lookup("#exitBttn").query().fireEvent(new ActionEvent()));
-
-        // start simulation again and restart it
-        mySimModel = createModelFromStart(GameOfLifeSimModel.class);
-        List<List<Cell>> restartedCellsFromModel = mySimModel.getCells();
+        fireButtonEvent(lookup("#exitBttn").query());
+        // step to properly present GOL simulation button
+        step();
+        // begin GOL simulation from beginning
+        fireButtonEvent(lookup("#GOLSimButton").query());
+        fireButtonEvent(lookup("#restartBttn").query());
+        step();
+        List<List<Cell>> restartedCellsFromModel = myMainController.getCurSimController().getModel().getCells();
 
         for (int row = 0; row < initialCellsFromModel.size(); row++) {
+            System.out.println();
             for (int col = 0; col < initialCellsFromModel.get(0).size(); col++) {
                 assertEquals(initialCellsFromModel.get(row).get(col).getState(), restartedCellsFromModel.get(row).get(col).getState());
             }
@@ -101,18 +109,6 @@ public class CellSocietyTest extends DukeApplicationTest {
         startApplication();
         // assert that intro pane is now present
         assertNotNull(lookup("#introPane").query());
-
-        /*
-        //mySimModel = createModelFromStart(GameOfLifeSimModel.class);
-        sleep(3, TimeUnit.SECONDS);
-        //mySimModel.getSimController().update(true);
-        sleep(3, TimeUnit.SECONDS);
-        // assert that exit button is present
-        javafxRun(() -> assertNotNull(lookup("#exitBttn").query()));
-
-
-        //javafxRun(() -> lookup("#exitBttn").query().fireEvent(new ActionEvent()));
-        */
     }
 
     @Test
@@ -157,6 +153,8 @@ public class CellSocietyTest extends DukeApplicationTest {
 
         // press button to exit
         fireButtonEvent(exitBttn);
+        // let controller clear root by stepping
+        step();
         // assert that button is no longer present
         assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, () -> lookup("#exitBttn").query());
     }
@@ -288,7 +286,7 @@ public class CellSocietyTest extends DukeApplicationTest {
 
     private void startApplication() {
         // start application
-        myMainController= new MainController();
+        myMainController = new MainController();
         javafxRun(() -> myMainController.start(new Stage()));
     }
 
