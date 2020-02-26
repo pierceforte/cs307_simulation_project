@@ -1,10 +1,16 @@
 package cellsociety.simulation;
 
+import cellsociety.MainController;
+import javafx.event.ActionEvent;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import cellsociety.cell.Cell;
 import cellsociety.cell.CellView;
 import cellsociety.grid.GridModel;
+import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -12,40 +18,51 @@ import java.util.List;
 
 public class SimView {
 
+    public static final int GRID_SIZE = 400;
     public static final Color BACKGROUND = Color.WHEAT;
-    private SimModel sim;
-    private GridModel grid;
-    private Scene myScene;
+    private SimController controller;
     private Group root;
-    private List<CellView> cellViews;
+//    Button startBttn;
+//    Button pauseBttn;
 
-    private int size; //of grid
-
-    public SimView(){
+    public SimView(SimController controller){
+        this.controller = controller;
         root = new Group();
+        //createControls();
     }
 
-    public Scene getSimScene(){
-        return new Scene(root, size, size, BACKGROUND);
+    public Group getRoot(){
+        return root;
     }
 
-    public void updateCellGrid(List<List<Cell>> cells) {
-        cellViews = new ArrayList<>();
+//    private void createControls(){
+//        startBttn = new Button("Start");
+//        pauseBttn = new Button("Stop");
+//        GridPane grid = new GridPane();
+//        grid.add(startBttn, 1, 0);
+//        grid.add(pauseBttn, 2, 0);
+//        bPane.setBottom(grid);
+//    }
+//
+//
+//    private void handleButtonClick(ActionEvent event){
+//        if(event.getSource() == startBttn){
+//            controller.play();
+//        } else if (event.getSource() == pauseBttn){
+//            controller.togglePause();
+//        }
+//    }
+
+    public void update(List<List<Cell>> cells) {
+        root.getChildren().clear();
         for (List<Cell> row : cells) {
             for (Cell cell : row) {
-                CellView cellView = new CellView(size/row.size(), cells.indexOf(row), row.indexOf(cell));
-                cellViews.add(cellView);
-                cellView.updateCellColor(cell.getState());
+                CellView cellView = new CellView(cell, MainController.WIDTH /row.size());
                 root.getChildren().add(cellView);
+                System.out.println("here");
             }
         }
     }
-
-    public void setGridSize(int size){
-        this.size = size;
-    }
-
-
 
 
 

@@ -3,18 +3,12 @@ package cellsociety.simulation;
 import cellsociety.cell.Cell;
 import cellsociety.grid.GridModel;
 
-import java.util.Collection;
 import java.util.List;
 
 public abstract class SimModel {
-
-    private SimView simView;
-    private SimController simController;
     private GridModel gridModel;
 
-    public SimModel(List<List<String>> grid) {
-        simView = new SimView();
-        simController = new SimController(this);
+    public SimModel(List<List<Cell>> grid) {
         this.gridModel = new GridModel(grid);
     }
 
@@ -22,7 +16,6 @@ public abstract class SimModel {
         List<List<Cell>> cells = gridModel.getCells();
         setNextStates(cells);
         updateStates(cells);
-        simView.updateCellGrid(cells);
     }
 
     protected abstract String determineNextState(Cell cell, List<Cell> neighbors);
@@ -42,5 +35,10 @@ public abstract class SimModel {
                 cell.updateState();
             }
         }
+    }
+
+    //repetitive method here for testing MVC
+    public List<List<Cell>> getCells(){
+        return gridModel.getCells();
     }
 }

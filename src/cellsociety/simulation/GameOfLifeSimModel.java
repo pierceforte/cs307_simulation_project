@@ -14,12 +14,12 @@ public class GameOfLifeSimModel extends SimModel {
             ALIVE, (numNeighbors) -> handleDeadCell(numNeighbors),
             DEAD, (numNeighbors) -> handleLivingCell(numNeighbors));
 
-    public GameOfLifeSimModel(List<List<String>> grid) {
-        super(grid);
+    public GameOfLifeSimModel(List<List<Cell>> cells) {
+        super(cells);
     }
 
     @Override
-    protected String determineNextState(Cell cell, List<Cell> neighbors) {
+    public String determineNextState(Cell cell, List<Cell> neighbors) {
         int numNeighbors = getNumNeighbors(neighbors);
         String curCellState = cell.getState();
         return handleCell.get(curCellState).apply(numNeighbors);
