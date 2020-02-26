@@ -76,6 +76,10 @@ public class SimController {
         return model;
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+
     public void setIsEnded(boolean isEnded) {
         this.isEnded = isEnded;
     }

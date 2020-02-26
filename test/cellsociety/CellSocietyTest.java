@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CellSocietyTest extends DukeApplicationTest {
 
     private MainController myMainController;
+    private SimController mySimController;
     private SimModel mySimModel;
 
     @Test
@@ -186,6 +187,65 @@ public class CellSocietyTest extends DukeApplicationTest {
                 assertEquals(updatedCellsFromModel.get(row).get(col).getState(), continuedCellsFromModel.get(row).get(col).getState());
             }
         }
+    }
+
+    @Test
+    public void testPauseAndPlaySimulationButtons() {
+        startApplication();
+        // assert that pause and play buttons are not yet present
+        assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, () -> lookup("#pauseBttn").query());
+        assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, () -> lookup("#playBttn").query());
+        // begin GOL simulation from beginning
+        fireButtonEvent(lookup("#GOLSimButton").query());
+        fireButtonEvent(lookup("#restartBttn").query());
+        // assert that pause and play buttons are now present
+        assertNotNull(lookup("#pauseBttn").query());
+        assertNotNull(lookup("#playBttn").query());
+
+        Button pauseButton = lookup("#pauseBttn").query();
+        Button playButton = lookup("#playBttn").query();
+
+        // check that simulation is active before pause
+        assertTrue(myMainController.getCurSimController().isActive());
+        // pause and check that simulation is inactive
+        fireButtonEvent(pauseButton);
+        assertFalse(myMainController.getCurSimController().isActive());
+        // play and check that simulation is active
+        fireButtonEvent(playButton);
+        assertTrue(myMainController.getCurSimController().isActive());
+
+        /*
+        Couldn't get this stuff working (the model didn't actually update – maybe I wasn't accessing correct version).
+        Nonetheless, we don't need to implement this stuff but it could be useful.
+
+        mySimModel = myMainController.getCurSimController().getModel();
+        // collect cells during pause
+        List<List<Cell>> pausedCellsFromModel = mySimModel.getCells();
+        // check that cells during the pause are the same as the cells before the pause
+
+
+        for (int row = 0; row < prePauseCellsFromModel.size(); row++) {
+            System.out.println();
+            for (int col = 0; col < prePauseCellsFromModel.get(0).size(); col++) {
+                assertEquals(prePauseCellsFromModel.get(row).get(col).getState(), pausedCellsFromModel.get(row).get(col).getState());
+            }
+        }
+
+        fireButtonEvent(playButton);
+        step();
+
+        boolean notTheSame = false;
+        for (int row = 0; row < prePauseCellsFromModel.size(); row++) {
+            System.out.println();
+            for (int col = 0; col < prePauseCellsFromModel.get(0).size(); col++) {
+                if (!prePauseCellsFromModel.get(row).get(col).getState().equals(pausedCellsFromModel.get(row).get(col).getState())) {
+                    notTheSame = true;
+                    break;
+                }
+            }
+        }
+        assertTrue(notTheSame);
+         */
     }
 
     private void step() {
