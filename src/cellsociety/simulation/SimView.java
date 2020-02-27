@@ -16,9 +16,11 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class SimView {
-
+    public ResourceBundle myResources;
     public static final int GRID_SIZE = 400;
     public static final Color BACKGROUND = Color.WHEAT;
     private SimController controller;
@@ -30,6 +32,8 @@ public class SimView {
     private Button exitBttn;
 
     public SimView(SimController controller){
+        Locale locale = new Locale("en", "US");
+        myResources = ResourceBundle.getBundle("default", locale);
         this.controller = controller;
         bPane = new BorderPane();
         createControls();
@@ -40,13 +44,13 @@ public class SimView {
     }
 
     private void createControls(){
-        playBttn = new Button("Play");
+        playBttn = new Button(myResources.getString("PlayBttn"));
         playBttn.setId("playBttn");
-        pauseBttn = new Button("Pause");
+        pauseBttn = new Button(myResources.getString("PauseBttn"));
         pauseBttn.setId("pauseBttn");
-        stepBttn = new Button("Step");
+        stepBttn = new Button(myResources.getString("StepBttn"));
         stepBttn.setId("stepBttn");
-        exitBttn = new Button("Exit");
+        exitBttn = new Button(myResources.getString("ExitBttn"));
         exitBttn.setId("exitBttn");
         gridPane = new GridPane();
         gridPane.add(playBttn, 1, 0);
@@ -60,16 +64,14 @@ public class SimView {
         stepBttn.setOnAction(event -> handleButtonClick(event));
         exitBttn.setOnAction(event -> handleButtonClick(event));
     }
-
     //TODO: cleanup this code
     public boolean userRestartedSimulation() {
         Stage input = new Stage();
-        input.setTitle("Start Simulation");
-
+        input.setTitle(myResources.getString("StartSim"));
         final boolean[] ret = {false};
-        Button restartBttn = createButton("Restart", 0, 0, 100, 30);
+        Button restartBttn = createButton(myResources.getString("RestartBttn"), 0, 0, 100, 30);
         restartBttn.setId("restartBttn");
-        Button continueBttn = createButton("Continue", 100, 0, 100, 30);
+        Button continueBttn = createButton(myResources.getString("ContinueBttn"), 100, 0, 100, 30);
         continueBttn.setId("continueBttn");
 
         restartBttn.setOnAction(new EventHandler<ActionEvent>() {
