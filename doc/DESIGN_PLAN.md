@@ -96,11 +96,11 @@ Describe at least two design issues your team encountered (even if you have not 
 ## Team Responsibilities
 List the parts of the project each team member plans to take primary and secondary responsibility for and a high-level plan of how the team will complete the program.  
 
-In general, we plan to each pursue our individual roles defined below; however, we will certainly work together and be willing to help each other implement features, especially those are particularly challenging.
+In general, we plan to each pursue our individual roles defined below; however, we will certainly work together and be willing to help each other implement features, especially those that are particularly challenging.
 Our high-level plan of completing the program is as follows:
-1) Set up the MainController: this process will involve setting up the application (starting the application, setting up scene, etc.) and building the game engine (implementing the step function)
+1) Set up the MainController: this process will involve setting up the application (starting the application, setting up scene, etc.) and building the game engine (implementing the step function).
 2) Build the specific simulation backend. For a given simulation type, set up the rules, create the necessary subclasses (through polymorphism), and connect these features to SimController.
-3) Build the simulation front end. For this simulation's specific implementation, create the view, write the css stylesheet, and ensure that the simulation backend (primarily in SimModel) is connected to the SimView and SimController.
+3) Build the simulation frontend. For this simulation's specific implementation, create the view, write the css stylesheet, and ensure that the simulation backend (primarily in SimModel) is connected to the SimView and SimController.
 4) Test each feature as it is implemented, while also adding exception handling.
 
 - Suomo Ammah (sna19)  
