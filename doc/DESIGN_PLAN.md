@@ -42,7 +42,7 @@ Describe the packages and classes you intend to create, without revealing any sp
    
    
 Here are some initial CRC cards from the beginning of our design discussion, although our design has evolved slightly since creating them:
-![CRC]("designImages/interfaceSketch.jpg")
+![crc]("designImages/interfaceSketch.jpg")
 
 
 ## Design Details
@@ -97,8 +97,13 @@ Describe at least two design issues your team encountered (even if you have not 
 List the parts of the project each team member plans to take primary and secondary responsibility for and a high-level plan of how the team will complete the program.  
 
 - Suomo Ammah (sna19)  
+    - I wrote tests for the methods.
+    - simulation visualization: display realtime graph data on the simulation, running multiple simulations at a time, and style.
 - Pierce Forte (phf7)  
 - Donald Groh (dkg16)  
+    - Primarily responsible for making the files, reading files.
+    - Secondary Responsibility in handling UI aspects as well as building the next simulations that are going to need to be added. 
+      I would also like to work on the management of the MVC pattern and building tests in the following sections. 
 - Mary Jiang (mvj6) 
     - Primarily responsible for implementing Cells and view classes as necessary (Cell, Simulation, possibly Grid).
     - Secondary responsibility in applying MVC pattern in packages (making sure code between view and model are connected by

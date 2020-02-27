@@ -21,6 +21,10 @@ public class CellSocietyTest extends DukeApplicationTest {
     private SimController mySimController;
     private SimModel mySimModel;
 
+
+
+
+
     @Test
     public void testGOLGridPopulation() {
         mySimModel = createModelFromStart(GameOfLifeSimModel.class);
@@ -28,12 +32,21 @@ public class CellSocietyTest extends DukeApplicationTest {
 
         ConfigReader data = new ConfigReader(SimController.GOL_FILE_IDENTIFIER + SimController.CONFIG_FILE_SUFFIX);
         List<List<Cell>> cellsFromFile = data.getCellList();
-
+        assertEquals(data.getManualQuantityOfColumns(),data.getQuantityOfColumns());
+        assertEquals(data.getManualQuantityOfRows(),data.getQuantityOfRows());
         for (int row = 0; row < cellsFromModel.size(); row++) {
             for (int col = 0; col < cellsFromModel.get(0).size(); col++) {
                 assertEquals(cellsFromFile.get(row).get(col).getState(), cellsFromModel.get(row).get(col).getState());
             }
         }
+    }
+    @Test
+    public void testException() {
+        ConfigReader data = new ConfigReader("BAD_FILE" + SimController.CONFIG_FILE_SUFFIX);
+//        List<List<Cell>> cellsFromFile = data.getCellList();
+//        assertEquals("Could not write Exception to file",data.getCellList());
+        assertThrows(java.lang.Exception.class, () -> data.getCellList());
+
     }
 
     @Test

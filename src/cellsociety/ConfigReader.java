@@ -5,7 +5,6 @@ import cellsociety.cell.Cell;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class ConfigReader {
@@ -17,6 +16,8 @@ public class ConfigReader {
     private final String simulationInitialLayout;
     private int quantityOfRows;
     private int quantityOfColumns;
+    private int manualQuantityOfRows;
+    private int manualQuantityOfColumns;
 
     public ConfigReader(String fileOfCells) {
         simulationInitialLayout = fileOfCells;
@@ -25,10 +26,11 @@ public class ConfigReader {
     @SuppressWarnings("ThrowablePrintedToSystemOut")
     public List<List<Cell>> getCellList() {
         try {
-            File file = new File(Objects.requireNonNull(this.getClass().getClassLoader().getResource(simulationInitialLayout)).getFile());
+            File file = new File(this.getClass().getClassLoader().getResource(simulationInitialLayout).getFile());
             return buildListOfCellLists(file);
         } catch (FileNotFoundException e)
         {
+//            System.out.println("Could not write Exception to file");
             logError(e);
             System.exit(0);
         }
@@ -45,8 +47,23 @@ public class ConfigReader {
                 List<Cell> row = getRowInfo(input.next(), r);
                 results.add(row);
         }
+        manualQuantityOfRows = results.size();
+        manualQuantityOfColumns = results.get(0).size();
         return results;
+
     }
+
+    int getQuantityOfColumns(){
+        return quantityOfColumns;
+    }
+
+    int getQuantityOfRows(){
+        return quantityOfRows;
+    }
+
+    public int getManualQuantityOfRows(){ return manualQuantityOfRows; }
+
+    public int getManualQuantityOfColumns(){ return manualQuantityOfColumns; }
 
     private List<Cell> getRowInfo(String row, int r) {
         String[] arrayOfInfo = row.split(DATA_REGEX);
