@@ -61,7 +61,7 @@ public class ConfigReader {
         return cellRow;
     }
 
-    private void logError(Exception e) {
+    public void logError(Exception e) {
         try {
             FileWriter fStream = new FileWriter(ERROR_LOG, true);
             BufferedWriter out = new BufferedWriter(fStream);
