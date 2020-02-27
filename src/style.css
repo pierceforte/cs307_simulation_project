@@ -7,11 +7,15 @@
     -fx-stroke: SteelBlue;
 }
 
-.alive{
-    -fx-fill: Black;
+.state0{
+    -fx-fill: White;
 }
 
-.dead{
-    -fx-fill: White;
+.state1{
+    -fx-fill: Blue;
+}
+
+.state2{
+    -fx-fill: Green;
 }
 

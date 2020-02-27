@@ -1,9 +1,9 @@
 package cellsociety.simulation;
 
 import cellsociety.cell.Cell;
+import cellsociety.cell.WaTorCell;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 public class WaTorSimModel extends SimModel {
@@ -12,17 +12,28 @@ public class WaTorSimModel extends SimModel {
     public static final String SHARK = "2"; //represented in data file as 1
     public static final String CONFIG_FILE_PREFIX = "WaTor";
 
-    private Map<String, String> handleCell = Map.of(
-            EMPTY, handleEmptyCell(),
-            FISH, handleFishCell(),
-            SHARK, handleSharkCell());
 
-    public WaTorSimModel(List<List<Cell>> cells, SimController simController) {
+    private Map<String, Function<List<Cell>, String>> handleCell = Map.of(
+            EMPTY, (neighbors) -> handleEmptyCell(neighbors),
+            FISH, (neighbors) -> handleFishCell(neighbors),
+            SHARK, (neighbors) -> handleSharkCell(neighbors));
+
+    private List<List<String>> nextStates = new ArrayList<>();
+
+    public WaTorSimModel(List<List<WaTorCell>> cells, SimController simController) {
         super(cells, simController);
     }
 
     @Override
     protected String determineNextState(Cell cell, List<Cell> neighbors) {
+        int rows = getCells().size();
+        int cols = getCells().get(0).size();
+        for (int row = 0; row < rows; row++) {
+            nextStates.add(new ArrayList<>());
+            for (int col = 0; col < cols; col++) {
+                nextStates.get(row).add(EMPTY);
+            }
+        }
         int numNeighbors = getNumNeighbors(neighbors);
         String curCellState = cell.getState();
         //return handleCell.get(curCellState).apply(numNeighbors);
@@ -35,16 +46,20 @@ public class WaTorSimModel extends SimModel {
     }
 
     // TODO: properly implement the methods below
-    private String handleEmptyCell() {
+    private String handleEmptyCell(List<Cell> neighbors) {
+
         return "";
     }
 
+    private String handleFishCell(List<Cell> neighbors) {
+        List<List<Integer>> potentialDirections = new ArrayList<>();
 
-    private String handleFishCell() {
+
         return "";
     }
 
-    private String handleSharkCell() {
+    private String handleSharkCell(List<Cell> neighbors) {
+
         return "";
     }
 
@@ -59,6 +74,11 @@ public class WaTorSimModel extends SimModel {
     private boolean isCellAlive(Cell cell) {
         return false;
         //return cell.getState().equals(ALIVE);
+    }
+
+    private int chooseRandomDirection(List<Integer> directions) {
+        Collections.shuffle(directions);
+        return directions.get(0);
     }
 }
 

@@ -15,7 +15,7 @@ public abstract class SimModel {
     private SimController simController;
     private SimView simView;
 
-    public SimModel(List<List<Cell>> grid, SimController simController) {
+    public <T extends  Cell> SimModel(List<List<T>> grid, SimController simController) {
         this.gridModel = new GridModel(grid);
         this.simController = simController;
     }

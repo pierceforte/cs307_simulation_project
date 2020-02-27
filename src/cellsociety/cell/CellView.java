@@ -13,11 +13,7 @@ public class CellView extends Rectangle {
         super(xOffset + cell.getCol() * size, yOffset + cell.getRow() * size, size, size);
         setId("cellView" + idNum);
         getStyleClass().add("cell");
-        if(cell.getState().equals("1")) { //switch this to a constant later
-            getStyleClass().add("alive");
-        } else {
-            getStyleClass().add("dead");
-        }
+        getStyleClass().add("state" + cell.getState());
     }
 
 

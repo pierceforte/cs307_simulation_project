@@ -140,15 +140,12 @@ public class CellSocietyTest extends DukeApplicationTest {
         // assert that no cell view is present (here we look at the first one created: cellView0)
         assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, () -> lookup("#cellView0").query());
 
-
         Button GOLSimButton = lookup("#GOLSimButton").query();
         fireButtonEvent(GOLSimButton);
 
         Button restartSimButton = lookup("#restartBttn").query();
         fireButtonEvent(restartSimButton);
 
-
-        sleep(3, TimeUnit.SECONDS);
         // assert that the cell view is now presented
         assertNotNull(lookup("#cellView0").query());
     }

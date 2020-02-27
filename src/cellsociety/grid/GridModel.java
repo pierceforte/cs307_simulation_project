@@ -6,19 +6,19 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GridModel{
-    private List<List<Cell>> cells;
+public class GridModel<T extends Cell> {
+    private List<List<T>> cells;
 
-    public GridModel(List<List<Cell>> cells) {
+    public GridModel(List<List<T>> cells) {
         this.cells = cells;
     }
 
-    public List<List<Cell>> getCells() {
+    public List<List<T>> getCells() {
         return cells;
     }
 
-    public List<Cell> getNeighbors(Cell cell) {
-        List<Cell> neighbors = new ArrayList<>();
+    public List<T> getNeighbors(T cell) {
+        List<T> neighbors = new ArrayList<>();
         int row = cell.getRow();
         int col = cell.getCol();
         int topRow = cells.size()-1;
