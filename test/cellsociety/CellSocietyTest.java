@@ -227,6 +227,7 @@ public class CellSocietyTest extends DukeApplicationTest {
         assertTrue(updatedNumLines > initialNumLines);
     }
 
+    // TODO: refactor
     @Test
     public void testPauseAndPlaySimulationButtons() {
         startApplication();
@@ -245,50 +246,44 @@ public class CellSocietyTest extends DukeApplicationTest {
 
         // check that simulation is active before pause
         assertTrue(myMainController.getCurSimController().isActive());
+        // collect cells
+        List<List<Cell>> cells = myMainController.getCurSimController().getModel().getCells();
+        List<List<String>> prePauseCellStates = getListOfCellStates(cells);
         // pause and check that simulation is inactive
         fireButtonEvent(pauseButton);
         assertFalse(myMainController.getCurSimController().isActive());
-        // play and check that simulation is active
-        fireButtonEvent(playButton);
-        assertTrue(myMainController.getCurSimController().isActive());
 
-        /*
-        Couldn't get this stuff working (the model didn't actually update – maybe I wasn't accessing correct version).
-        Nonetheless, we don't need to implement this stuff but it could be useful.
-
-        mySimModel = myMainController.getCurSimController().getModel();
-        // collect cells during pause
-        List<List<Cell>> pausedCellsFromModel = mySimModel.getCells();
         // check that cells during the pause are the same as the cells before the pause
-
-
-        for (int row = 0; row < prePauseCellsFromModel.size(); row++) {
+        for (int row = 0; row < cells.size(); row++) {
             System.out.println();
-            for (int col = 0; col < prePauseCellsFromModel.get(0).size(); col++) {
-                assertEquals(prePauseCellsFromModel.get(row).get(col).getState(), pausedCellsFromModel.get(row).get(col).getState());
+            for (int col = 0; col < cells.get(0).size(); col++) {
+                assertEquals(prePauseCellStates.get(row).get(col), cells.get(row).get(col).getState());
             }
         }
 
+        // play and check that simulation is active
         fireButtonEvent(playButton);
+        assertTrue(myMainController.getCurSimController().isActive());
         step();
 
         boolean notTheSame = false;
-        for (int row = 0; row < prePauseCellsFromModel.size(); row++) {
+        for (int row = 0; row < cells.size(); row++) {
             System.out.println();
-            for (int col = 0; col < prePauseCellsFromModel.get(0).size(); col++) {
-                if (!prePauseCellsFromModel.get(row).get(col).getState().equals(pausedCellsFromModel.get(row).get(col).getState())) {
+            for (int col = 0; col < cells.get(0).size(); col++) {
+                if (!prePauseCellStates.get(row).get(col).equals(cells.get(row).get(col).getState())) {
                     notTheSame = true;
                     break;
                 }
             }
         }
         assertTrue(notTheSame);
-         */
     }
 
     /*
+
     Below are the initial configuration tests for Game of Life.
     There are 5 Still Lifes, 1 Oscillator (Blinker), and 1 Spaceship (Glider)
+    
      */
     @Test
     public void testGOLBeehiveConfig() {
