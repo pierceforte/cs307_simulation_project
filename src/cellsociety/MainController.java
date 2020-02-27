@@ -59,6 +59,7 @@ public class MainController extends Application {
         myIntroPane = new Pane();
         myIntroPane.setId("introPane");
         Scene introScene = new Scene(myIntroPane, WIDTH, HEIGHT);
+        introScene.getStylesheets().add("style.css");
         myIntroPane.getChildren().add(introScreenNode);
 
         Button GOLSimButton = makeButton(stage, "Game of Life", 180, 350);
