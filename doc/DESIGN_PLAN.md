@@ -28,6 +28,7 @@ Describe the packages and classes you intend to create, without revealing any sp
 - Grid
     - Keeps track of all cells in a grid and can determine neighbours of a cell
 - Cell
+    - Abstract class with subclasses specific to each type of simulation
     - Sets and gets state information and knows about row and column position for the cell
 - CellView
     - Inherits a shape class to render individual cells (may become an abstract class to accomodate cells of different shapes)
