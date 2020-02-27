@@ -13,44 +13,42 @@ Describe the packages and classes you intend to create, without revealing any sp
 
 - MainController  
 	- Main class that has the main() method that allows user to choose a simulation to run
+	- Contains the step() function to run the selected simulation in the scene
 - ConfigReader  
 	- Reads in the configuration file to create a grid
-- Simulation  
-	- Abstract class that sets up the basic framework for each simulation (has things like a step function and a create grid function)
+- SimulationController
+    - Connects SimulationModel and SimulationView
+    - Contains controls for starting/stopping a simulation and updating the model and view
+- SimulationModel  
+	- Abstract class that sets up the basic framework for each simulation
+	- Checks and updates cells according to the rules for that simulation.
     - Has subclasses that must override methods for updating cells, creating the grid, determining simulation state (like end of simulation), etc.
-- GridModel
-	- Abstract class that keeps track of all cells in the grid. Checks and updates cells according to the rules for that simulation.
-    
-- GridView
-	- Renders Shape objects based on the type of the GridModel
-- CellModel  
+- SimulationView
+	- Updates simulation grid and contains methods to instantiate buttons for simulation controls
+- Grid
+    - Keeps track of all cells in a grid and can determine neighbours of a cell
+- Cell
+    - Sets and gets state information and knows about row and column position for the cell
 - CellView
-
-
+    - Inherits a shape class to render individual cells (may become an abstract class to accomodate cells of different shapes)
+    
+   
+Here are some initial CRC cards from the beginning of our design discussion, although our design has evolved slightly since creating them:
+![CRC]("designImages/interfaceSketch.jpg")
 
 
 ## Design Details
 
-Describe how your packages and classes work together to handle specific features (like collaborating with other classes, using resource files, or serving as an abstraction that could be extended). Using Use Cases can be a very useful way to help make your descriptions more concrete.  
-
-[Use Cases](http://agilemodeling.com/artifacts/systemUseCase.htm)
-
 Apply the rules to a cell: set the next state of a cell to dead by counting its number of neighbors using the Game of Life rules for a cell in the middle (i.e., with all of its neighbors)
-
 
 
 1. Grid determines Cell neighbours
 
 2. For each neighbouring Cell, see if it is occupied or not
 
-3. Grid determines if Cell needs to die or live based on number of occupied Cell objects
+3. SimulationModel determines if Cell needs to die or live based on number of occupied Cell objects
 
-4. Grid tells Cell it needs to update its "next" state
-
-
-
-
-
+4. SimulationModel tells Cell it needs to update its "next" state
 
 
 
@@ -61,9 +59,7 @@ Move to the next generation: update all cells in a simulation from their current
 2. The grid will then tell each cell to set the "current" state equal to the "next" state
 
 
-
 Switch simulations: load a new simulation from a data file, replacing the current running simulation with the newly loaded one
-
 
 1. 	ConfigurationReader classes parses data file
 
@@ -79,9 +75,9 @@ Describe at least two design issues your team encountered (even if you have not 
 	- Another issue we were concerned about is how to represent the grid in the backend vs. the frontend. For example, if the grid is made up of hexagons instead of squares on the frontend, can we still represent it with a basic 2D array on the backend? Our goal is to worry about the structure and appearance of the grid entirely on the frontend and simply use a 2D grid on the backend for all simulations (that follows different rules but with the same structure), but we still have some worries about the implementation of this design.
 
 ## User Interface
-Show the overall appearance of program's user interface components and how users interact with these components.  
+![UI_sketch]("designImages/interfaceSketch.jpg")
 
-- Buttons
+- Buttons in simulation view:
 	- Exit simulation
 	- Speed up simulation
     - Slow down simulation
