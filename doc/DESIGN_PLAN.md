@@ -16,6 +16,8 @@ Describe the packages and classes you intend to create, without revealing any sp
 	- Contains the step() function to run the selected simulation in the scene
 - ConfigReader  
 	- Reads in the configuration file to create a grid
+	
+####Simulation Package
 - SimulationController
     - Connects SimulationModel and SimulationView
     - Contains controls for starting/stopping a simulation and updating the model and view
@@ -25,14 +27,19 @@ Describe the packages and classes you intend to create, without revealing any sp
     - Has subclasses that must override methods for updating cells, creating the grid, determining simulation state (like end of simulation), etc.
 - SimulationView
 	- Updates simulation grid and contains methods to instantiate buttons for simulation controls
+	
+####Grid Package
 - Grid
     - Keeps track of all cells in a grid and can determine neighbours of a cell
+    
+####Cell Package
 - Cell
     - Abstract class with subclasses specific to each type of simulation
     - Sets and gets state information and knows about row and column position for the cell
 - CellView
     - Inherits a shape class to render individual cells (may become an abstract class to accomodate cells of different shapes)
     
+   
    
 Here are some initial CRC cards from the beginning of our design discussion, although our design has evolved slightly since creating them:
 ![CRC]("designImages/interfaceSketch.jpg")
@@ -93,3 +100,7 @@ List the parts of the project each team member plans to take primary and seconda
 - Pierce Forte (phf7)  
 - Donald Groh (dkg16)  
 - Mary Jiang (mvj6) 
+    - Primarily responsible for implementing Cells and view classes as necessary (Cell, Simulation, possibly Grid).
+    - Secondary responsibility in applying MVC pattern in packages (making sure code between view and model are connected by
+    implementing Controller methods e.g. in the Simulation package)
+    
