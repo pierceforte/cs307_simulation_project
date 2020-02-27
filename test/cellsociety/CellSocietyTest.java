@@ -7,9 +7,15 @@ import cellsociety.simulation.SimModel;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,6 +27,10 @@ public class CellSocietyTest extends DukeApplicationTest {
     private SimController mySimController;
     private SimModel mySimModel;
 
+
+
+
+
     @Test
     public void testGOLGridPopulation() {
         mySimModel = createModelFromStart(GameOfLifeSimModel.class);
@@ -28,12 +38,21 @@ public class CellSocietyTest extends DukeApplicationTest {
 
         ConfigReader data = new ConfigReader(SimController.GOL_FILE_IDENTIFIER + SimController.CONFIG_FILE_SUFFIX);
         List<List<Cell>> cellsFromFile = data.getCellList();
-
+        assertEquals(data.getManualQuantityOfColumns(),data.getQuantityOfColumns());
+        assertEquals(data.getManualQuantityOfRows(),data.getQuantityOfRows());
         for (int row = 0; row < cellsFromModel.size(); row++) {
             for (int col = 0; col < cellsFromModel.get(0).size(); col++) {
                 assertEquals(cellsFromFile.get(row).get(col).getState(), cellsFromModel.get(row).get(col).getState());
             }
         }
+    }
+    @Test
+    public void testException() {
+        ConfigReader data = new ConfigReader("BAD_FILE" + SimController.CONFIG_FILE_SUFFIX);
+//        List<List<Cell>> cellsFromFile = data.getCellList();
+//        assertEquals("Could not write Exception to file",data.getCellList());
+        assertThrows(java.lang.Exception.class, () -> data.getCellList());
+
     }
 
     @Test
@@ -188,6 +207,22 @@ public class CellSocietyTest extends DukeApplicationTest {
     }
 
     @Test
+    public void testLogErrorFunction() {
+        // create a new config reader (doesn't matter what the file is called since constructor doesn't do any reading in)
+        ConfigReader data = new ConfigReader("FILE_ID" + SimController.CONFIG_FILE_SUFFIX);
+        // get initial number of lines in error log
+        long initialNumLines = getNumLinesFromFile(ConfigReader.ERROR_LOG);
+        // write an exception to error log
+        data.logError(new Exception("My test exception"));
+        // get the updated number of lines in error log
+        long updatedNumLines = getNumLinesFromFile(ConfigReader.ERROR_LOG);
+        // check that the line counter did not fail (if it did, it returns -1)
+        assertTrue(updatedNumLines > 0 && initialNumLines > 0);
+        // check that the error log has been updated with the new error (and, therefore, has more lines)
+        assertTrue(updatedNumLines > initialNumLines);
+    }
+
+    @Test
     public void testPauseAndPlaySimulationButtons() {
         startApplication();
         // assert that pause and play buttons are not yet present
@@ -292,5 +327,15 @@ public class CellSocietyTest extends DukeApplicationTest {
 
     private void fireButtonEvent(Button button) {
         javafxRun(() -> button.fireEvent(new ActionEvent()));
+    }
+
+    private long getNumLinesFromFile(String fileName) {
+        try {
+            long lineCount = Files.lines(Paths.get(ConfigReader.ERROR_LOG)).count();
+            return lineCount;
+        } catch (IOException e) {
+            Assert.fail("Exception " + e);
+        }
+        return -1;
     }
 }

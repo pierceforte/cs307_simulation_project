@@ -22,8 +22,11 @@ import javafx.util.Duration;
 
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class MainController extends Application {
+    public static final String STYLESHEET = "style.css";
     public static final String TITLE = "Cell Society";
     public static final int WIDTH = 600;
     public static final int GRID_HEIGHT = 600;
@@ -52,6 +55,7 @@ public class MainController extends Application {
 
     @Override
     public void start(Stage stage) {
+
         Image introScreenImage = new Image(getClass().getClassLoader().getResourceAsStream(INTRO_SCREEN_IMG_NAME));
         ImageView introScreenNode = new ImageView(introScreenImage);
         introScreenNode.setFitHeight(HEIGHT);
@@ -59,7 +63,7 @@ public class MainController extends Application {
         myIntroPane = new Pane();
         myIntroPane.setId("introPane");
         Scene introScene = new Scene(myIntroPane, WIDTH, HEIGHT);
-        introScene.getStylesheets().add("style.css");
+        introScene.getStylesheets().add(STYLESHEET);
         myIntroPane.getChildren().add(introScreenNode);
 
         Button GOLSimButton = makeButton(stage, "Game of Life", 180, 350);
@@ -103,7 +107,7 @@ public class MainController extends Application {
         myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode(), root));
 
         //testing adding of css styles
-        myScene.getStylesheets().add("style.css");
+        myScene.getStylesheets().add(STYLESHEET);
         return myScene;
     }
 
