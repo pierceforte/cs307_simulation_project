@@ -3,7 +3,6 @@ package cellsociety.cell.WaTor;
 import cellsociety.cell.Cell;
 
 import java.util.*;
-import java.util.function.BiFunction;
 
 public abstract class WaTorCell extends Cell {
     public static final String EMPTY = "0"; //represented in data file as 0

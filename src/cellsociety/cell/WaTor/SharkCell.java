@@ -21,6 +21,8 @@ public class SharkCell extends LivingWaTorCell{
         return posOfFishToEatNext;
     }
 
+    // TODO: clean this method up
+
     @Override
     public List<List<WaTorCell>> setWhatToDoNext(List<WaTorCell> neighbors, List<List<WaTorCell>> nextGrid) {
 
