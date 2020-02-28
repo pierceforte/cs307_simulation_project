@@ -1,7 +1,9 @@
 package cellsociety.simulation;
 
-import cellsociety.cell.Cell;
-import cellsociety.cell.WaTorCell;
+import cellsociety.cell.WaTor.EmptyCell;
+import cellsociety.cell.WaTor.FishCell;
+import cellsociety.cell.WaTor.SharkCell;
+import cellsociety.cell.WaTor.WaTorCell;
 
 import java.util.*;
 
@@ -10,29 +12,52 @@ public class WaTorSimModel extends SimModel <WaTorCell> {
 
     private List<List<WaTorCell>> nextGrid = new ArrayList<>();
 
-    public WaTorSimModel(List<List<WaTorCell>> cells, SimController simController) {
+    public WaTorSimModel(List<List<String>> cells, SimController simController) {
         super(cells, simController);
         for (int row = 0; row < cells.size(); row++) {
             nextGrid.add(new ArrayList<>());
             for (int col = 0; col < cells.get(0).size(); col++) {
-                nextGrid.get(row).add(new WaTorCell(WaTorCell.EMPTY, row, col));
+                nextGrid.get(row).add(new EmptyCell(row, col));
             }
         }
     }
 
     @Override
+    protected List<List<WaTorCell>> createGrid(List<List<String>> cellStates) {
+        List<List<WaTorCell>> grid = new ArrayList<>();
+        for (int row = 0; row < cellStates.size(); row++) {
+            grid.add(new ArrayList<>());
+            for (int col = 0; col < cellStates.size(); col++) {
+                WaTorCell cell;
+                if (cellStates.get(row).get(col).equals(WaTorCell.EMPTY)) {
+                    cell = new EmptyCell(row, col);
+                }
+                else if (cellStates.get(row).get(col).equals(WaTorCell.FISH)) {
+                    cell = new FishCell(row, col);
+                }
+                // TODO: throw error if invalid state
+                else {
+                    cell = new SharkCell(row, col);
+                }
+                grid.get(row).add(cell);
+            }
+        }
+        return grid;
+    }
+
+    @Override
     protected void setNextStates(List<List<WaTorCell>> cells) {
-        Set<WaTorCell> fishThatWillBeEaten = new HashSet<>();
+        Set<List<Integer>> posOfFishThatWillBeEaten = new HashSet<>();
         // give priority to sharks by letting them choose where to go first.
         // we do this because otherwise, a fish can only be eaten by a shark
         // if it is blocked from moving. we also would like to assume that
         // sharks are faster than fish.
         for (List<WaTorCell> row : cells) {
             for (WaTorCell cell : row) {
-                if (cell.getState().equals(WaTorCell.SHARK)) {
+                if (cell instanceof SharkCell) {
                     determineAndSetNextState(cell, getNeighbors(cell));
-                    if (cell.getFishToEatNext() != null) {
-                        fishThatWillBeEaten.add(cell.getFishToEatNext());
+                    if (((SharkCell) cell).getPosOfFishToEatNext() != null) {
+                        posOfFishThatWillBeEaten.add(((SharkCell) cell).getPosOfFishToEatNext());
                     }
                 }
             }
@@ -40,9 +65,9 @@ public class WaTorSimModel extends SimModel <WaTorCell> {
         // get rid of fish that will be eaten
         for (int row = 0; row < cells.size(); row++) {
             for (int col = 0; col < cells.get(0).size(); col++) {
-                for (WaTorCell fishToBeEaten : fishThatWillBeEaten) {
-                    if (row == fishToBeEaten.getRow() && col == fishToBeEaten.getCol()) {
-                        cells.get(row).set(col, new WaTorCell(WaTorCell.EMPTY, row, col));
+                for (List<Integer> posOfFishToBeEaten : posOfFishThatWillBeEaten) {
+                    if (row == posOfFishToBeEaten.get(0) && col == posOfFishToBeEaten.get(1)) {
+                        cells.get(row).set(col, new EmptyCell(row, col));
                     }
                 }
             }
@@ -60,25 +85,22 @@ public class WaTorSimModel extends SimModel <WaTorCell> {
 
     @Override
     protected void determineAndSetNextState(WaTorCell cell, List<WaTorCell> neighbors) {
-        nextGrid = cell.setNextState(neighbors, nextGrid);
+        nextGrid = cell.setWhatToDoNext(neighbors, nextGrid);
     }
 
     @Override
     protected void updateStates(List<List<WaTorCell>> cells) {
-        //System.out.println("\n\n\n");
         for (int row = 0; row < cells.size(); row++) {
-            //System.out.println();
             for (int col = 0; col < cells.get(0).size(); col++) {
                 WaTorCell cell = nextGrid.get(row).get(col);
                 cell.setRow(row);
                 cell.setCol(col);
                 cells.get(row).set(col, nextGrid.get(row).get(col));
-                //System.out.print("," + nextGrid.get(row).get(col).getState());
             }
         }
         for (int row = 0; row < nextGrid.size(); row++) {
             for (int col = 0; col < nextGrid.get(0).size(); col++) {
-                nextGrid.get(row).set(col, new WaTorCell(WaTorCell.EMPTY, row, col));
+                nextGrid.get(row).set(col, new EmptyCell(row, col));
             }
         }
     }

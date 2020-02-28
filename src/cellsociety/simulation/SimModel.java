@@ -15,14 +15,15 @@ public abstract class SimModel <T extends Cell>{
     private SimController simController;
     private SimView simView;
 
-    public SimModel(List<List<T>> grid, SimController simController) {
+    public SimModel(List<List<String>> cellStates, SimController simController) {
+        List<List<T>> grid = createGrid(cellStates);
         this.gridModel = new GridModel(grid);
         this.simController = simController;
     }
 
     public void update() {
         List<List<T>> cells = gridModel.getCells();
-        //saveCurrentConfig(cells);
+        saveCurrentConfig(cells);
         setNextStates(cells);
         updateStates(cells);
     }
@@ -39,6 +40,8 @@ public abstract class SimModel <T extends Cell>{
     public SimView getSimView() {
         return simView;
     }
+
+    protected abstract List<List<T>> createGrid(List<List<String>> cellStates);
 
     protected abstract void setNextStates(List<List<T>> cells);
 

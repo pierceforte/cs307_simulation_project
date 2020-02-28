@@ -2,12 +2,8 @@ package cellsociety.simulation;
 
 import cellsociety.ConfigReader;
 import cellsociety.MainController;
-import cellsociety.cell.WaTorCell;
-import javafx.scene.Group;
+import cellsociety.cell.WaTor.WaTorCell;
 import javafx.scene.Node;
-import javafx.scene.Scene;
-import cellsociety.cell.Cell;
-import javafx.scene.layout.Pane;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,7 +32,7 @@ public class SimController {
         this.mainController = mainController;
         String configurationFile = chooseConfigurationFile();
         ConfigReader data = new ConfigReader(configurationFile);
-        List<List<WaTorCell>> listOfCells = data.getCellList();
+        List<List<String>> listOfCells = data.getCellList();
 
         try {
             Constructor<?> constructor = simTypeClassName.getConstructor(List.class, SimController.class);

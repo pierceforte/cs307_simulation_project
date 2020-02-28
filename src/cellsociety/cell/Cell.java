@@ -24,7 +24,7 @@ public class Cell {
         return state;
     }
 
-    public void setNextState(List<Cell> neighbors){
+    public <T extends Cell> void setNextState(List<T> neighbors){
         int numNeighbors = getNumNeighbors(neighbors);
         String nextState = handleCell.get(state).apply(numNeighbors);
         this.nextState = nextState;

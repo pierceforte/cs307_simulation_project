@@ -1,5 +1,4 @@
 package cellsociety;
-import cellsociety.cell.Cell;
 import cellsociety.simulation.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -18,9 +17,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.text.DecimalFormat;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 public class MainController extends Application {
     public static final String STYLESHEET = "style.css";

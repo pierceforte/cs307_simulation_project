@@ -1,7 +1,6 @@
 package cellsociety;
 
-import cellsociety.cell.Cell;
-import cellsociety.cell.WaTorCell;
+import cellsociety.cell.WaTor.WaTorCell;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -25,27 +24,27 @@ public class ConfigReader {
     }
 
     @SuppressWarnings("ThrowablePrintedToSystemOut")
-    public List<List<WaTorCell>> getCellList() {
+    public List<List<String>> getCellList() {
         try {
             File file = new File(this.getClass().getClassLoader().getResource(simulationInitialLayout).getFile());
             return buildListOfCellLists(file);
         } catch (FileNotFoundException e)
         {
-//            System.out.println("Could not write Exception to file");
+            //System.out.println("Could not write Exception to file");
             logError(e);
             System.exit(0);
         }
         return null;
     }
 
-    private List<List<WaTorCell>> buildListOfCellLists(File file) throws FileNotFoundException {
-        List<List<WaTorCell>> results = new ArrayList<>();
+    private List<List<String>> buildListOfCellLists(File file) throws FileNotFoundException {
+        List<List<String>> results = new ArrayList<>();
         Scanner input = new Scanner(file);
         String[] dimensions = input.next().split(DATA_REGEX);
         quantityOfRows = Integer.valueOf(dimensions[NUM_ROWS_INDEX]);
         quantityOfColumns = Integer.valueOf(dimensions[NUM_COLS_INDEX]);
         for(int r = 0; r < quantityOfRows; r++) {
-                List<WaTorCell> row = getRowInfo(input.next(), r);
+                List<String> row = getRowInfo(input.next(), r);
                 results.add(row);
         }
         manualQuantityOfRows = results.size();
@@ -66,15 +65,15 @@ public class ConfigReader {
 
     public int getManualQuantityOfColumns(){ return manualQuantityOfColumns; }
 
-    private List<WaTorCell> getRowInfo(String row, int r) {
+    private List<String> getRowInfo(String row, int r) {
         String[] arrayOfInfo = row.split(DATA_REGEX);
         return makeCellObjects(arrayOfInfo, r);
     }
 
-    private List<WaTorCell> makeCellObjects(String[] rowArray, int r) {
-        List<WaTorCell> cellRow = new ArrayList<>();
+    private List<String> makeCellObjects(String[] rowArray, int r) {
+        List<String> cellRow = new ArrayList<>();
         for(int c = 0; c < rowArray.length; c++) {
-            cellRow.add(new WaTorCell(rowArray[c] , r, c));
+            cellRow.add(rowArray[c]);
         }
         return cellRow;
     }
