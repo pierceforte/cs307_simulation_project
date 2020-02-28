@@ -21,7 +21,7 @@ public class SimController {
     public static final String CURRENT_CONFIG_FILE_PREFIX = "current";
 
     //TODO: find a way to include this info in the specific SimModel
-    public static final String GOL_FILE_IDENTIFIER = "GOL";
+    public static final String GOL_FILE_IDENTIFIER = "WaTor";
 
     //TODO: not sure if we want this dependency
     private MainController mainController;

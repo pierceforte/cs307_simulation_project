@@ -16,6 +16,15 @@ public class GameOfLifeSimModel extends SimModel<Cell> {
     }
 
     @Override
+    protected void setNextStates(List<List<Cell>> cells) {
+        for (List<Cell> row : cells) {
+            for (Cell cell : row) {
+                determineAndSetNextState(cell, getNeighbors(cell));
+            }
+        }
+    }
+
+    @Override
     protected void determineAndSetNextState(Cell cell, List<Cell> neighbors) {
         cell.setNextState(neighbors);
     }

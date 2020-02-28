@@ -12,18 +12,8 @@ public class CellView <T extends Cell> extends Rectangle {
     public CellView(T cell, double size, double xOffset, double yOffset, int idNum) {
         super(xOffset + cell.getCol() * size, yOffset + cell.getRow() * size, size, size);
         setId("cellView" + idNum);
-        setStroke(Color.BLACK);
-        if (cell.getState().equals("0")) {
-            setFill(Color.WHITE);
-        }
-        else if (cell.getState().equals("1")) {
-            setFill(Color.BLUE);
-        }
-        else {
-            System.out.println(cell.getState() + " invalid state");
-        }
-        //getStyleClass().add("cell");
-        //getStyleClass().add("state" + cell.getState());
+        getStyleClass().add("cell");
+        getStyleClass().add("state" + cell.getState());
     }
 
 

@@ -40,6 +40,8 @@ public abstract class SimModel <T extends Cell>{
         return simView;
     }
 
+    protected abstract void setNextStates(List<List<T>> cells);
+
     protected abstract void determineAndSetNextState(T cell, List<T> neighbors);
 
     protected abstract void updateStates(List<List<T>> cells);
@@ -50,14 +52,6 @@ public abstract class SimModel <T extends Cell>{
 
     protected GridModel getGridModel(){
         return gridModel;
-    }
-
-    private void setNextStates(List<List<T>> cells) {
-        for (List<T> row : cells) {
-            for (T cell : row) {
-                determineAndSetNextState(cell, getNeighbors(cell));
-            }
-        }
     }
 
     private void saveCurrentConfig(List<List<T>> cells) {

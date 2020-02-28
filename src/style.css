@@ -4,7 +4,7 @@
 }
 
 .cell {
-    -fx-stroke: SteelBlue;
+    -fx-stroke: Black;
 }
 
 .state0{
@@ -12,10 +12,10 @@
 }
 
 .state1{
-    -fx-fill: Blue;
+    -fx-fill: Green;
 }
 
 .state2{
-    -fx-fill: Green;
+    -fx-fill: Blue;
 }
 

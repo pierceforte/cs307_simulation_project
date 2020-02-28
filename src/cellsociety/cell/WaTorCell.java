@@ -9,13 +9,16 @@ public class WaTorCell extends Cell {
     public static final String EMPTY = "0"; //represented in data file as 0
     public static final String FISH = "1"; //represented in data file as 1
     public static final String SHARK = "2"; //represented in data file as 1
-    public static final int CHRONONS_TO_REPRODUCE = 0;
+    public static final int CHRONONS_TO_REPRODUCE = 5;
+    public static final int DEFAULT_SHARK_ENERGY = 4;
+    public static final int ENERGY_FOR_EATING_FISH = 2;
     public static final Map<String, Integer> DEFAULT_ENERGY_MAP = Map.of(
-            WaTorSimModel.EMPTY, 0,
-            WaTorSimModel.FISH, 0,
-            WaTorSimModel.SHARK, 4
+            EMPTY, 0,
+            FISH, 0,
+            SHARK, DEFAULT_SHARK_ENERGY
     );
 
+    private WaTorCell fishToEatNext;
     private int nextRow;
     private int nextCol;
     private int energy;
@@ -58,6 +61,10 @@ public class WaTorCell extends Cell {
         return reproductionTimer;
     }
 
+    public WaTorCell getFishToEatNext() {
+        return fishToEatNext;
+    }
+
     public List<List<WaTorCell>> setNextState(List<WaTorCell> neighbors,  List<List<WaTorCell>> nextGrid){
         nextGrid = handleCell.get(getState()).apply(neighbors, nextGrid);
         return nextGrid;
@@ -86,18 +93,59 @@ public class WaTorCell extends Cell {
 
         nextGrid.get(nextRow).set(nextCol, this);
 
-        if (reproductionTimer == CHRONONS_TO_REPRODUCE) {
-            reproductionTimer = 0;
-            nextGrid.get(getRow()).set(getCol(), new WaTorCell(FISH, getRow(), getCol()));
-        }
-        else {
-            reproductionTimer++;
-            nextGrid.get(getRow()).set(getCol(), new WaTorCell(EMPTY, getRow(), getCol()));
-        }
+        nextGrid = handleReproduction(nextGrid);
+
         return nextGrid;
     }
 
     private List<List<WaTorCell>> handleSharkCell(List<WaTorCell> neighbors, List<List<WaTorCell>> nextGrid) {
+
+        // if shark has no energy, it dies and becomes an EMPTY cell
+        if (energy == 0) {
+            nextGrid.get(getRow()).set(getCol(), new WaTorCell(EMPTY, getRow(), getCol()));
+            return nextGrid;
+        }
+
+        List<List<Integer>> potentialNewPositions = new ArrayList<>();
+        // first look for any nearby fish
+        for (WaTorCell cell : neighbors) {
+            if (cell.getState().equals(FISH)) {
+                potentialNewPositions.add(List.of(cell.getRow(), cell.getCol()));
+            }
+        }
+        boolean willEatFish = false;
+        // if no fish, look for potential empty spaces to move to
+        if (potentialNewPositions.isEmpty()) {
+            potentialNewPositions = getAdjacentEnterableCells(neighbors, nextGrid, List.of(SHARK));
+        }
+        else {
+            willEatFish = true;
+        }
+        // if no potential empty spaces to move to, don't move
+        if (potentialNewPositions.isEmpty()) {
+            nextGrid.get(getRow()).set(getCol(), this);
+            return nextGrid;
+        }
+        // choose randomly from the potential spaces to move to from above
+        List<Integer> newPosition = getRandomNewPosition(potentialNewPositions);
+        nextRow = newPosition.get(0);
+        nextCol = newPosition.get(1);
+
+        nextGrid.get(nextRow).set(nextCol, this);
+
+        if (willEatFish) {
+            energy += ENERGY_FOR_EATING_FISH;
+            for (WaTorCell cell : neighbors) {
+                if (cell.getRow() == nextRow && cell.getCol() == nextCol) {
+                    fishToEatNext = new WaTorCell(EMPTY, nextRow, nextCol);
+                }
+            }
+        }
+        else {
+            energy--;
+        }
+        nextGrid = handleReproduction(nextGrid);
+
         return nextGrid;
     }
 
@@ -120,6 +168,18 @@ public class WaTorCell extends Cell {
         }
 
         return potentialNewPositions;
+    }
+
+    private List<List<WaTorCell>> handleReproduction(List<List<WaTorCell>> nextGrid) {
+        if (reproductionTimer == CHRONONS_TO_REPRODUCE) {
+            reproductionTimer = 0;
+            nextGrid.get(getRow()).set(getCol(), new WaTorCell(getState(), getRow(), getCol()));
+        }
+        else {
+            reproductionTimer++;
+            nextGrid.get(getRow()).set(getCol(), new WaTorCell(EMPTY, getRow(), getCol()));
+        }
+        return nextGrid;
     }
 
 }
