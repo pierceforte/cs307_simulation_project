@@ -112,7 +112,7 @@ public class SimView {
         }
     }
 
-    public void update(List<List<Cell>> cells) {
+    public <T extends Cell> void update(List<List<T>> cells) {
         Group root = new Group();
 
         // divide by the large dimension so everything fits on screen
@@ -123,8 +123,8 @@ public class SimView {
         double yOffset = size * Math.max(0, cells.get(0).size() - cells.size())/2;
 
         int cellViewIdNum = 0;
-        for (List<Cell> row : cells) {
-            for (Cell cell : row) {
+        for (List<T> row : cells) {
+            for (T cell : row) {
                 CellView cellView = new CellView(cell,size, xOffset, yOffset, cellViewIdNum);
                 cellViewIdNum++;
                 root.getChildren().add(cellView);

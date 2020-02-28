@@ -30,7 +30,7 @@ public class CellSocietyTest extends DukeApplicationTest {
 
 
 
-
+/*
     @Test
     public void testGOLGridPopulation() {
         mySimModel = createModelFromStart(GameOfLifeSimModel.class);
@@ -276,8 +276,8 @@ public class CellSocietyTest extends DukeApplicationTest {
         }
         assertTrue(notTheSame);
          */
-    }
-
+    //}
+/*
     private void step() {
         javafxRun(() -> myMainController.step(MainController.SECOND_DELAY));
     }
@@ -334,5 +334,5 @@ public class CellSocietyTest extends DukeApplicationTest {
             Assert.fail("Exception " + e);
         }
         return -1;
-    }
+    }*/
 }

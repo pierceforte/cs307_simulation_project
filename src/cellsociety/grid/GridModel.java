@@ -17,38 +17,59 @@ public class GridModel<T extends Cell> {
         return cells;
     }
 
-    public List<T> getNeighbors(T cell) {
+    public List<T> getAllNeighbors(T cell) {
         List<T> neighbors = new ArrayList<>();
+
+        neighbors.addAll(getCardinalNeighbors(cell));
+        neighbors.addAll(getDiagonalNeighbors(cell));
+
+        return neighbors;
+    }
+
+    // TODO: eliminate duplication of first 5 lines
+    public List<T> getCardinalNeighbors(T cell) {
+        List<T> cardinalNeighbors = new ArrayList<>();
         int row = cell.getRow();
         int col = cell.getCol();
         int topRow = cells.size()-1;
         int topCol = cells.get(0).size()-1;
 
         if (row != 0) {
-            neighbors.add(cells.get(row-1).get(col));
+            cardinalNeighbors.add(cells.get(row-1).get(col));
         }
         if (col != 0) {
-            neighbors.add(cells.get(row).get(col-1));
-        }
-        if (row != 0 && col != 0) {
-            neighbors.add(cells.get(row-1).get(col-1));
+            cardinalNeighbors.add(cells.get(row).get(col-1));
         }
         if (row != topRow) {
-            neighbors.add(cells.get(row+1).get(col));
+            cardinalNeighbors.add(cells.get(row+1).get(col));
         }
         if (col != topCol) {
-            neighbors.add(cells.get(row).get(col+1));
-        }
-        if (row != topRow && col != 0) {
-            neighbors.add(cells.get(row+1).get(col-1));
-        }
-        if (row != 0 && col != topCol) {
-            neighbors.add(cells.get(row-1).get(col+1));
-        }
-        if (row != topRow && col != topCol) {
-            neighbors.add(cells.get(row+1).get(col+1));
+            cardinalNeighbors.add(cells.get(row).get(col+1));
         }
 
-        return neighbors;
+        return cardinalNeighbors;
+    }
+
+    public List<T> getDiagonalNeighbors(T cell) {
+        List<T> diagonalNeighbors = new ArrayList<>();
+        int row = cell.getRow();
+        int col = cell.getCol();
+        int topRow = cells.size()-1;
+        int topCol = cells.get(0).size()-1;
+
+        if (row != 0 && col != 0) {
+            diagonalNeighbors.add(cells.get(row-1).get(col-1));
+        }
+        if (row != topRow && col != 0) {
+            diagonalNeighbors.add(cells.get(row+1).get(col-1));
+        }
+        if (row != 0 && col != topCol) {
+            diagonalNeighbors.add(cells.get(row-1).get(col+1));
+        }
+        if (row != topRow && col != topCol) {
+            diagonalNeighbors.add(cells.get(row+1).get(col+1));
+        }
+
+        return diagonalNeighbors;
     }
 }

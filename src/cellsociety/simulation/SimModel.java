@@ -10,47 +10,25 @@ import java.io.PrintWriter;
 
 import java.util.List;
 
-public abstract class SimModel {
+public abstract class SimModel <T extends Cell>{
     private GridModel gridModel;
     private SimController simController;
     private SimView simView;
 
-    public <T extends  Cell> SimModel(List<List<T>> grid, SimController simController) {
+    public SimModel(List<List<T>> grid, SimController simController) {
         this.gridModel = new GridModel(grid);
         this.simController = simController;
     }
 
     public void update() {
-        List<List<Cell>> cells = gridModel.getCells();
-        saveCurrentConfig(cells);
+        List<List<T>> cells = gridModel.getCells();
+        //saveCurrentConfig(cells);
         setNextStates(cells);
         updateStates(cells);
     }
 
-    protected abstract String determineNextState(Cell cell, List<Cell> neighbors);
-
-    protected abstract String getConfigFileIdentifier();
-
-    private void setNextStates(List<List<Cell>> cells) {
-        for (List<Cell> row : cells) {
-            for (Cell cell : row) {
-                String nextState = determineNextState(cell, gridModel.getNeighbors(cell));
-                cell.setNextState(nextState);
-            }
-        }
-    }
-
-
-    private void updateStates(List<List<Cell>> cells) {
-        for (List<Cell> row : cells) {
-            for (Cell cell : row) {
-                cell.updateState();
-            }
-        }
-    }
-
     //repetitive method here for testing MVC
-    public List<List<Cell>> getCells(){
+    public List<List<T>> getCells(){
         return gridModel.getCells();
     }
 
@@ -62,7 +40,27 @@ public abstract class SimModel {
         return simView;
     }
 
-    private void saveCurrentConfig(List<List<Cell>> cells) {
+    protected abstract void determineAndSetNextState(T cell, List<T> neighbors);
+
+    protected abstract void updateStates(List<List<T>> cells);
+
+    protected abstract String getConfigFileIdentifier();
+
+    protected abstract List<T> getNeighbors(T cell);
+
+    protected GridModel getGridModel(){
+        return gridModel;
+    }
+
+    private void setNextStates(List<List<T>> cells) {
+        for (List<T> row : cells) {
+            for (T cell : row) {
+                determineAndSetNextState(cell, getNeighbors(cell));
+            }
+        }
+    }
+
+    private void saveCurrentConfig(List<List<T>> cells) {
         try {
             String currentConfigFileName = SimController.CURRENT_CONFIG_FILE_PREFIX + getConfigFileIdentifier() +
                     SimController.CONFIG_FILE_SUFFIX;

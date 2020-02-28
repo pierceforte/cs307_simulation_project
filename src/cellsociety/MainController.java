@@ -1,9 +1,6 @@
 package cellsociety;
 import cellsociety.cell.Cell;
-import cellsociety.simulation.GameOfLifeSimModel;
-import cellsociety.simulation.SimController;
-import cellsociety.simulation.SimModel;
-import cellsociety.simulation.SimView;
+import cellsociety.simulation.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -33,7 +30,7 @@ public class MainController extends Application {
     public static final int HEIGHT = 630;
     public static final String SIMULATION_BUTTON_PREFIX = "Simulation ";
     public static final Paint BACKGROUND = Color.BEIGE;
-    public static final int FRAMES_PER_SECOND = 5;
+    public static final int FRAMES_PER_SECOND = 1;
     public static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
     public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
     public static final String INTRO_SCREEN_IMG_NAME = "StartScreen.jpg";
@@ -80,7 +77,7 @@ public class MainController extends Application {
     private Button makeButton(Stage stage, String buttonName, int xLocation, double yLocation) {
         Button simulationButton = new Button(buttonName);
         simulationButton.setOnAction(e -> {
-            Scene simulation1Scene = setupSimulation(GameOfLifeSimModel.class, WIDTH, HEIGHT, BACKGROUND);
+            Scene simulation1Scene = setupSimulation(WaTorSimModel.class, WIDTH, HEIGHT, BACKGROUND);
             stage.setScene(simulation1Scene);
             isSimulationActive = true;
         });

@@ -6,24 +6,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public class GameOfLifeSimModel extends SimModel {
+public class GameOfLifeSimModel extends SimModel<Cell> {
     public static final String DEAD = "0"; //represented in data file as 0
     public static final String ALIVE = "1"; //represented in data file as 1
     public static final String CONFIG_FILE_PREFIX = "GOL";
-
-    private Map<String, Function<Integer, String>> handleCell = Map.of(
-            ALIVE, (numNeighbors) -> handleLivingCell(numNeighbors),
-            DEAD, (numNeighbors) -> handleDeadCell(numNeighbors));
 
     public GameOfLifeSimModel(List<List<Cell>> cells, SimController simController) {
         super(cells, simController);
     }
 
     @Override
-    protected String determineNextState(Cell cell, List<Cell> neighbors) {
-        int numNeighbors = getNumNeighbors(neighbors);
-        String curCellState = cell.getState();
-        return handleCell.get(curCellState).apply(numNeighbors);
+    protected void determineAndSetNextState(Cell cell, List<Cell> neighbors) {
+        cell.setNextState(neighbors);
+    }
+
+    @Override
+    protected void updateStates(List<List<Cell>> cells) {
+        for (List<Cell> row : cells) {
+            for (Cell cell : row) {
+                cell.updateState();
+            }
+        }
     }
 
     @Override
@@ -31,29 +34,8 @@ public class GameOfLifeSimModel extends SimModel {
         return CONFIG_FILE_PREFIX;
     }
 
-    private String handleDeadCell(int numNeighbors) {
-        if (numNeighbors == 3) {
-            return ALIVE;
-        }
-        return DEAD;
-    }
-
-    private String handleLivingCell(int numNeighbors) {
-        if (numNeighbors < 2 || numNeighbors > 3) {
-            return DEAD;
-        }
-        return ALIVE;
-    }
-
-    private int getNumNeighbors(List<Cell> neighbors) {
-        int numNeighbors = 0;
-        for (Cell neighbor : neighbors) {
-            if (isCellAlive(neighbor)) numNeighbors++;
-        }
-        return numNeighbors;
-    }
-
-    private boolean isCellAlive(Cell cell) {
-        return cell.getState().equals(ALIVE);
+    @Override
+    protected List<Cell> getNeighbors(Cell cell) {
+        return getGridModel().getAllNeighbors(cell);
     }
 }

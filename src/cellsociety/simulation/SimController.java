@@ -2,6 +2,7 @@ package cellsociety.simulation;
 
 import cellsociety.ConfigReader;
 import cellsociety.MainController;
+import cellsociety.cell.WaTorCell;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -30,12 +31,12 @@ public class SimController {
     private boolean isEnded;
 
     //TODO: cleanup constructor
-    public <T extends SimModel> SimController(Class<T> simTypeClassName, MainController mainController) {
+    public <S extends SimModel> SimController(Class<S> simTypeClassName, MainController mainController) {
         view = new SimView(this);
         this.mainController = mainController;
         String configurationFile = chooseConfigurationFile();
         ConfigReader data = new ConfigReader(configurationFile);
-        List<List<Cell>> listOfCells = data.getCellList();
+        List<List<WaTorCell>> listOfCells = data.getCellList();
 
         try {
             Constructor<?> constructor = simTypeClassName.getConstructor(List.class, SimController.class);
