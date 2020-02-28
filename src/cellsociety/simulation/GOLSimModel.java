@@ -50,7 +50,7 @@ public class GOLSimModel extends SimModel<GOLCell> {
 
     @Override
     protected void determineAndSetNextState(GOLCell cell, List<GOLCell> neighbors) {
-        cell.setNextState(neighbors);
+        cell.setWhatToDoNext(neighbors);
     }
 
     @Override

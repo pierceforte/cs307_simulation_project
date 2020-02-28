@@ -39,7 +39,7 @@ public class CellSocietyTest extends DukeApplicationTest {
         mySimModel = createModelFromStart(GOLSimModel.class);
         List<List<Cell>> cellsFromModel = mySimModel.getCells();
 
-        ConfigReader data = new ConfigReader(SimController.GOL_FILE_IDENTIFIER + SimController.CONFIG_FILE_SUFFIX);
+        ConfigReader data = new ConfigReader(GOLSimModel.CONFIG_FILE_PREFIX + SimController.CONFIG_FILE_SUFFIX);
         List<List<String>> cellStatesFromFile = data.getCellList();
 
         assertEquals(data.getManualQuantityOfColumns(),data.getQuantityOfColumns());

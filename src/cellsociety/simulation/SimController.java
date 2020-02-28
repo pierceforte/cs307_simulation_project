@@ -12,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class SimController {
@@ -19,7 +20,9 @@ public class SimController {
     public static final String CURRENT_CONFIG_FILE_PREFIX = "current";
 
     //TODO: find a way to include this info in the specific SimModel
-    public static final String GOL_FILE_IDENTIFIER = "WaTor";
+    public static final Map<Class, String> CLASS_TO_FILE_ID = Map.of(
+            GOLSimModel.class, GOLSimModel.CONFIG_FILE_PREFIX,
+            WaTorSimModel.class, WaTorSimModel.CONFIG_FILE_PREFIX);
 
     //TODO: not sure if we want this dependency
     private MainController mainController;
@@ -30,7 +33,8 @@ public class SimController {
 
     //TODO: cleanup constructor and add code to choose which simulation identifier
     public <S extends SimModel> SimController(Class<S> simTypeClassName, MainController mainController) {
-        this(simTypeClassName, mainController, GOL_FILE_IDENTIFIER + CONFIG_FILE_SUFFIX, true);
+        this(simTypeClassName, mainController,
+                CLASS_TO_FILE_ID.get(simTypeClassName) + CONFIG_FILE_SUFFIX, true);
     }
 
     public <T extends SimModel> SimController(Class<T> simTypeClassName, MainController mainController, String defaultConfigFileName,
@@ -40,7 +44,7 @@ public class SimController {
         ConfigReader data;
         // for some reason we need to check if true like this
         if (askToRestartOrContinue == true) {
-            String configurationFile = chooseConfigurationFile();
+            String configurationFile = chooseConfigurationFile(CLASS_TO_FILE_ID.get(simTypeClassName));
             data = new ConfigReader(configurationFile);
         }
         else {
@@ -105,9 +109,9 @@ public class SimController {
         return isEnded;
     }
 
-    private String chooseConfigurationFile() {
-        String fileToRead = GOL_FILE_IDENTIFIER + CONFIG_FILE_SUFFIX;
-        String currentConfigFile = CURRENT_CONFIG_FILE_PREFIX + GOL_FILE_IDENTIFIER + CONFIG_FILE_SUFFIX;
+    private String chooseConfigurationFile(String fileId) {
+        String fileToRead = fileId + CONFIG_FILE_SUFFIX;
+        String currentConfigFile = CURRENT_CONFIG_FILE_PREFIX + fileId + CONFIG_FILE_SUFFIX;
 
         if (this.getClass().getClassLoader().getResource(currentConfigFile) != null) {
             if (doesCurrentConfigHaveCorrectDimensions(fileToRead, currentConfigFile) && !view.userRestartedSimulation()) {

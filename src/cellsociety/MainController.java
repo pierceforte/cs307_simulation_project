@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.text.DecimalFormat;
+import java.util.Map;
 
 public class MainController extends Application {
     public static final String STYLESHEET = "style.css";
@@ -34,6 +35,10 @@ public class MainController extends Application {
     public static final String DEFAULT_FONT = "Verdana";
     public static final DecimalFormat df2 = new DecimalFormat("#.##");
     public static final String STARTING_MESSAGE = "  ";
+    public static final Map<String, Class> BUTTON_NAME_TO_SIM_CLASS = Map.of(
+            "Game of Life", GOLSimModel.class,
+            "Wa-Tor", WaTorSimModel.class);
+
     private Group root = new Group();
     private Scene myScene;
     private Stage myStage;
@@ -59,9 +64,13 @@ public class MainController extends Application {
         introScene.getStylesheets().add(STYLESHEET);
         myIntroPane.getChildren().add(introScreenNode);
 
-        Button GOLSimButton = makeButton(stage, "Game of Life", 180, 350);
-        GOLSimButton.setId("GOLSimButton");
-        myIntroPane.getChildren().add(GOLSimButton);
+        Button gOLSimButton = makeButton(stage, "Game of Life", 180, 350);
+        gOLSimButton.setId("GOLSimButton");
+        myIntroPane.getChildren().add(gOLSimButton);
+
+        Button waTorSimButton = makeButton(stage, "Wa-Tor", 360, 350);
+        waTorSimButton.setId("WaTorSimButton");
+        myIntroPane.getChildren().add(waTorSimButton);
 
         myStage = stage;
         stage.setScene(introScene);
@@ -73,7 +82,7 @@ public class MainController extends Application {
     private Button makeButton(Stage stage, String buttonName, int xLocation, double yLocation) {
         Button simulationButton = new Button(buttonName);
         simulationButton.setOnAction(e -> {
-            Scene simulation1Scene = setupSimulation(WaTorSimModel.class, WIDTH, HEIGHT, BACKGROUND);
+            Scene simulation1Scene = setupSimulation(BUTTON_NAME_TO_SIM_CLASS.get(buttonName), WIDTH, HEIGHT, BACKGROUND);
             stage.setScene(simulation1Scene);
             isSimulationActive = true;
         });
