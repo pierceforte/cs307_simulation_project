@@ -1,31 +1,52 @@
 package cellsociety;
 
+import cellsociety.cell.Cell;
+import cellsociety.cell.GOL.GOLCell;
+import cellsociety.simulation.GOLSimModel;
 import cellsociety.simulation.SimController;
 import cellsociety.simulation.SimModel;
 
+import javafx.event.ActionEvent;
+import javafx.scene.control.Button;
+import javafx.stage.Stage;
+import org.junit.Assert;
+import org.junit.jupiter.api.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class CellSocietyTest extends DukeApplicationTest {
+
+    public static final String GOL_CONFIG_TESTS_PATH = "test_configs/GOL/";
+    public static final String GOL_CONFIG_TESTS_EXTENSION = ".csv";
 
     private MainController myMainController;
     private SimController mySimController;
     private SimModel mySimModel;
 
 
-
-
-/*
     @Test
     public void testGOLGridPopulation() {
-        mySimModel = createModelFromStart(GameOfLifeSimModel.class);
+        mySimModel = createModelFromStart(GOLSimModel.class);
         List<List<Cell>> cellsFromModel = mySimModel.getCells();
 
         ConfigReader data = new ConfigReader(SimController.GOL_FILE_IDENTIFIER + SimController.CONFIG_FILE_SUFFIX);
-        List<List<Cell>> cellsFromFile = data.getCellList();
+        List<List<String>> cellStatesFromFile = data.getCellList();
+
         assertEquals(data.getManualQuantityOfColumns(),data.getQuantityOfColumns());
         assertEquals(data.getManualQuantityOfRows(),data.getQuantityOfRows());
         for (int row = 0; row < cellsFromModel.size(); row++) {
             for (int col = 0; col < cellsFromModel.get(0).size(); col++) {
-                assertEquals(cellsFromFile.get(row).get(col).getState(), cellsFromModel.get(row).get(col).getState());
+                assertEquals(cellStatesFromFile.get(row).get(col), cellsFromModel.get(row).get(col).getState());
             }
         }
     }
@@ -55,27 +76,25 @@ public class CellSocietyTest extends DukeApplicationTest {
     @Test
     public void testGOLCellBirth() {
         // test that a dead cell with 3 neighbors becomes alive
-        testGOLCellStateChange(0, 7, GameOfLifeSimModel.DEAD, GameOfLifeSimModel.ALIVE);
+        testGOLCellStateChange(0, 7, GOLCell.DEAD, GOLCell.ALIVE);
     }
 
     @Test
     public void testGOLCellStaysAlive() {
         // test a cell with 2 neighbors
-        testGOLCellStateChange(0, 10, GameOfLifeSimModel.ALIVE, GameOfLifeSimModel.ALIVE);
+        testGOLCellStateChange(0, 10, GOLCell.ALIVE, GOLCell.ALIVE);
         // test a cell with 3 neighbors
-        testGOLCellStateChange(11, 3, GameOfLifeSimModel.ALIVE, GameOfLifeSimModel.ALIVE);
+        testGOLCellStateChange(11, 3, GOLCell.ALIVE, GOLCell.ALIVE);
     }
 
     @Test
     public void testGOLCellStaysDead() {
         // test a dead cell with less than 3 neighbors (in this case, 2)
-        testGOLCellStateChange(0, 5, GameOfLifeSimModel.DEAD, GameOfLifeSimModel.DEAD);
+        testGOLCellStateChange(0, 5, GOLCell.DEAD, GOLCell.DEAD);
         // test a dead cell with more than 3 neighbors (in this case, 4)
-        testGOLCellStateChange(0, 9, GameOfLifeSimModel.DEAD, GameOfLifeSimModel.DEAD);
+        testGOLCellStateChange(0, 9, GOLCell.DEAD, GOLCell.DEAD);
     }
 
-    // TODO: get this working with frame rate of 5 (it works with frame rate of 1, but not 5)
-    //  Sometimes works, but not consistently
     @Test
     public void testGOLReset() {
         startApplication();
@@ -83,7 +102,9 @@ public class CellSocietyTest extends DukeApplicationTest {
         fireButtonEvent(lookup("#GOLSimButton").query());
         fireButtonEvent(lookup("#restartBttn").query());
         // get initial configuration
-        List<List<Cell>> initialCellsFromModel = myMainController.getCurSimController().getModel().getCells();
+        List<List<Cell>> initialCells = myMainController.getCurSimController().getModel().getCells();
+        // store initial states
+        List<List<String>> initialCellStates = getListOfCellStates(initialCells);
         // update simulation
         step();
         // exit simulation
@@ -93,13 +114,13 @@ public class CellSocietyTest extends DukeApplicationTest {
         // begin GOL simulation from beginning
         fireButtonEvent(lookup("#GOLSimButton").query());
         fireButtonEvent(lookup("#restartBttn").query());
-        step();
-        List<List<Cell>> restartedCellsFromModel = myMainController.getCurSimController().getModel().getCells();
-
-        for (int row = 0; row < initialCellsFromModel.size(); row++) {
+        // get new model's cells
+        List<List<Cell>> newCells = myMainController.getCurSimController().getModel().getCells();
+        // check that new cells are the same as initial configuration cells after reset
+        for (int row = 0; row < initialCells.size(); row++) {
             System.out.println();
-            for (int col = 0; col < initialCellsFromModel.get(0).size(); col++) {
-                assertEquals(initialCellsFromModel.get(row).get(col).getState(), restartedCellsFromModel.get(row).get(col).getState());
+            for (int col = 0; col < initialCells.get(0).size(); col++) {
+                assertEquals(newCells.get(row).get(col).getState(), initialCellStates.get(row).get(col));
             }
         }
     }
@@ -158,6 +179,7 @@ public class CellSocietyTest extends DukeApplicationTest {
         assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, () -> lookup("#exitBttn").query());
     }
 
+    // NOTE: only works when run by itself; we are still looking into how to fix this.
     @Test
     public void testContinueSimulationButton() {
         startApplication();
@@ -202,6 +224,7 @@ public class CellSocietyTest extends DukeApplicationTest {
         assertTrue(updatedNumLines > initialNumLines);
     }
 
+    // TODO: refactor
     @Test
     public void testPauseAndPlaySimulationButtons() {
         startApplication();
@@ -220,53 +243,163 @@ public class CellSocietyTest extends DukeApplicationTest {
 
         // check that simulation is active before pause
         assertTrue(myMainController.getCurSimController().isActive());
+        // collect cells
+        List<List<Cell>> cells = myMainController.getCurSimController().getModel().getCells();
+        List<List<String>> prePauseCellStates = getListOfCellStates(cells);
         // pause and check that simulation is inactive
         fireButtonEvent(pauseButton);
         assertFalse(myMainController.getCurSimController().isActive());
-        // play and check that simulation is active
-        fireButtonEvent(playButton);
-        assertTrue(myMainController.getCurSimController().isActive());
 
-        /*
-        Couldn't get this stuff working (the model didn't actually update – maybe I wasn't accessing correct version).
-        Nonetheless, we don't need to implement this stuff but it could be useful.
-
-        mySimModel = myMainController.getCurSimController().getModel();
-        // collect cells during pause
-        List<List<Cell>> pausedCellsFromModel = mySimModel.getCells();
         // check that cells during the pause are the same as the cells before the pause
-
-
-        for (int row = 0; row < prePauseCellsFromModel.size(); row++) {
+        for (int row = 0; row < cells.size(); row++) {
             System.out.println();
-            for (int col = 0; col < prePauseCellsFromModel.get(0).size(); col++) {
-                assertEquals(prePauseCellsFromModel.get(row).get(col).getState(), pausedCellsFromModel.get(row).get(col).getState());
+            for (int col = 0; col < cells.get(0).size(); col++) {
+                assertEquals(prePauseCellStates.get(row).get(col), cells.get(row).get(col).getState());
             }
         }
 
+        // play and check that simulation is active
         fireButtonEvent(playButton);
+        assertTrue(myMainController.getCurSimController().isActive());
         step();
 
         boolean notTheSame = false;
-        for (int row = 0; row < prePauseCellsFromModel.size(); row++) {
+        for (int row = 0; row < cells.size(); row++) {
             System.out.println();
-            for (int col = 0; col < prePauseCellsFromModel.get(0).size(); col++) {
-                if (!prePauseCellsFromModel.get(row).get(col).getState().equals(pausedCellsFromModel.get(row).get(col).getState())) {
+            for (int col = 0; col < cells.get(0).size(); col++) {
+                if (!prePauseCellStates.get(row).get(col).equals(cells.get(row).get(col).getState())) {
                     notTheSame = true;
                     break;
                 }
             }
         }
         assertTrue(notTheSame);
-         */
-    //}
-/*
+    }
+
+    /*
+
+    Below are the initial configuration tests for Game of Life.
+    There are 5 Still Lifes, 1 Oscillator (Blinker), and 1 Spaceship (Glider)
+    
+     */
+    @Test
+    public void testGOLBeehiveConfig() {
+        SimModel simModel = createModelForInitialConfigUpdateTests(GOLSimModel.class,
+                GOL_CONFIG_TESTS_PATH + "beehive" + GOL_CONFIG_TESTS_EXTENSION);
+        testGOLStillLifes(simModel);
+    }
+
+    @Test
+    public void testGOLBlockConfig() {
+        SimModel simModel = createModelForInitialConfigUpdateTests(GOLSimModel.class,
+                GOL_CONFIG_TESTS_PATH + "block" + GOL_CONFIG_TESTS_EXTENSION);
+        testGOLStillLifes(simModel);
+    }
+
+    @Test
+    public void testGOLBoatConfig() {
+        SimModel simModel = createModelForInitialConfigUpdateTests(GOLSimModel.class,
+                GOL_CONFIG_TESTS_PATH + "boat" + GOL_CONFIG_TESTS_EXTENSION);
+        testGOLStillLifes(simModel);
+    }
+
+    @Test
+    public void testGOLLoafConfig() {
+        SimModel simModel = createModelForInitialConfigUpdateTests(GOLSimModel.class,
+                GOL_CONFIG_TESTS_PATH + "loaf" + GOL_CONFIG_TESTS_EXTENSION);
+        testGOLStillLifes(simModel);
+    }
+
+    @Test
+    public void testGOLTubConfig() {
+        SimModel simModel = createModelForInitialConfigUpdateTests(GOLSimModel.class,
+                GOL_CONFIG_TESTS_PATH + "tub" + GOL_CONFIG_TESTS_EXTENSION);
+        testGOLStillLifes(simModel);
+    }
+
+    @Test
+    public void testGOLBlinkerConfig() {
+        SimModel simModel1 = createModelForInitialConfigUpdateTests(GOLSimModel.class,
+                GOL_CONFIG_TESTS_PATH + "blinker1" + GOL_CONFIG_TESTS_EXTENSION);
+        SimModel simModel2 = createModelForInitialConfigUpdateTests(GOLSimModel.class,
+                GOL_CONFIG_TESTS_PATH + "blinker2" + GOL_CONFIG_TESTS_EXTENSION);
+        testGOLStateLoops(List.of(simModel1, simModel2));
+    }
+
+    @Test
+    public void testGOLGliderConfig() {
+        SimModel simModel1 = createModelForInitialConfigUpdateTests(GOLSimModel.class,
+                GOL_CONFIG_TESTS_PATH + "glider1" + GOL_CONFIG_TESTS_EXTENSION);
+        SimModel simModel2 = createModelForInitialConfigUpdateTests(GOLSimModel.class,
+                GOL_CONFIG_TESTS_PATH + "glider2" + GOL_CONFIG_TESTS_EXTENSION);
+        SimModel simModel3 = createModelForInitialConfigUpdateTests(GOLSimModel.class,
+                GOL_CONFIG_TESTS_PATH + "glider3" + GOL_CONFIG_TESTS_EXTENSION);
+        SimModel simModel4 = createModelForInitialConfigUpdateTests(GOLSimModel.class,
+                GOL_CONFIG_TESTS_PATH + "glider4" + GOL_CONFIG_TESTS_EXTENSION);
+        SimModel simModel5 = createModelForInitialConfigUpdateTests(GOLSimModel.class,
+                GOL_CONFIG_TESTS_PATH + "glider5" + GOL_CONFIG_TESTS_EXTENSION);
+        testGOLStateLoops(List.of(simModel1, simModel2, simModel3, simModel4, simModel5));
+    }
+
+    private void testGOLStateLoops(List<SimModel> models) {
+        if (models.size() == 0) return;
+        SimModel referenceModel = models.get(0);
+        // step our reference model and check it with the expected cells (which are gathered by creating
+        // a new model with the expected configuration)
+        for (int modelNum = 1; modelNum < models.size(); modelNum++) {
+            referenceModel.update();
+            List<List<Cell>> referenceModelCells = referenceModel.getCells();
+            List<List<Cell>> expectedModelCells = models.get(modelNum).getCells();
+            for (int row = 0; row < referenceModelCells.size(); row++) {
+                for (int col = 0; col < referenceModelCells.get(0).size(); col++) {
+                    assertEquals(referenceModelCells.get(row).get(col).getState(), expectedModelCells.get(row).get(col).getState());
+                }
+            }
+        }
+    }
+
+    private void testGOLStillLifes(SimModel simModel) {
+        List<List<Cell>> cells = simModel.getCells();
+        List<List<String>> initialCellStates = getListOfCellStates(cells);
+        // update model and its cells
+        simModel.update();
+
+        // check that cells after updating are the same as the initial cells
+        for (int row = 0; row < cells.size(); row++) {
+            for (int col = 0; col < cells.get(0).size(); col++) {
+                assertEquals(initialCellStates.get(row).get(col), cells.get(row).get(col).getState());
+            }
+        }
+    }
+
+    private SimModel createModelForInitialConfigUpdateTests(Class simTypeClassName, String initialConfigFile) {
+        boolean askToRestartOrContinue = false;
+        final SimController[] simController = new SimController[1];
+        javafxRun(() -> {
+            simController[0] = new SimController(GOLSimModel.class, new MainController(),
+                    initialConfigFile, askToRestartOrContinue);
+        });
+        return simController[0].getModel();
+    }
+
+    private List<List<String>> getListOfCellStates(List<List<Cell>> cells) {
+        List<List<String>> cellStates = new ArrayList<>();
+        // store initial states
+        for (int row = 0; row < cells.size(); row++) {
+            cellStates.add(new ArrayList<>());
+            for (int col = 0; col < cells.get(0).size(); col++) {
+                cellStates.get(row).add(cells.get(row).get(col).getState());
+            }
+        }
+        return cellStates;
+    }
+
     private void step() {
         javafxRun(() -> myMainController.step(MainController.SECOND_DELAY));
     }
 
     private void testGOLCellStateChange(int row, int col, String initialState, String updatedStated) {
-        createModelFromStart(GameOfLifeSimModel.class);
+        createModelFromStart(GOLSimModel.class);
         List<List<Cell>> cells = mySimModel.getCells();
 
         // get a cell
@@ -280,7 +413,7 @@ public class CellSocietyTest extends DukeApplicationTest {
     }
 
     private void testGOLCellDeath(int row, int col) {
-        testGOLCellStateChange(row, col, GameOfLifeSimModel.ALIVE, GameOfLifeSimModel.DEAD);
+        testGOLCellStateChange(row, col, GOLCell.ALIVE, GOLCell.DEAD);
     }
 
     private <T extends SimModel> SimModel createModelFromStart(Class<T> simTypeClassName) {
@@ -317,5 +450,5 @@ public class CellSocietyTest extends DukeApplicationTest {
             Assert.fail("Exception " + e);
         }
         return -1;
-    }*/
+    }
 }

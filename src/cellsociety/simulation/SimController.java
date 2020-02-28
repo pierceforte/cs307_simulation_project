@@ -4,6 +4,8 @@ import cellsociety.ConfigReader;
 import cellsociety.MainController;
 import cellsociety.cell.WaTor.WaTorCell;
 import javafx.scene.Node;
+import javafx.scene.Node;
+import cellsociety.cell.Cell;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,12 +28,24 @@ public class SimController {
     private boolean isActive;
     private boolean isEnded;
 
-    //TODO: cleanup constructor
+    //TODO: cleanup constructor and add code to choose which simulation identifier
     public <S extends SimModel> SimController(Class<S> simTypeClassName, MainController mainController) {
+        this(simTypeClassName, mainController, GOL_FILE_IDENTIFIER + CONFIG_FILE_SUFFIX, true);
+    }
+
+    public <T extends SimModel> SimController(Class<T> simTypeClassName, MainController mainController, String defaultConfigFileName,
+                                              boolean askToRestartOrContinue) {
         view = new SimView(this);
         this.mainController = mainController;
-        String configurationFile = chooseConfigurationFile();
-        ConfigReader data = new ConfigReader(configurationFile);
+        ConfigReader data;
+        // for some reason we need to check if true like this
+        if (askToRestartOrContinue == true) {
+            String configurationFile = chooseConfigurationFile();
+            data = new ConfigReader(configurationFile);
+        }
+        else {
+            data = new ConfigReader(defaultConfigFileName);
+        }
         List<List<String>> listOfCells = data.getCellList();
 
         try {
