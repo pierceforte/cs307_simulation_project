@@ -13,8 +13,13 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -109,6 +114,23 @@ public class SimView {
         }
         else if (event.getSource() == exitBttn) {
             controller.setIsEnded(true);
+            FileChooser fileChooser = new FileChooser();
+            String currentPath = Paths.get("resources/configs/" + controller.getModel().getConfigFileIdentifier() + "/")
+                    .toAbsolutePath().normalize().toString();
+            fileChooser.setInitialDirectory(new File(currentPath));
+
+            //Set extension filter
+            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
+            fileChooser.getExtensionFilters().add(extFilter);
+
+            Group group = new Group();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(group));
+
+            //Show save file dialog
+            File file = fileChooser.showSaveDialog(stage);
+
+
         }
     }
 

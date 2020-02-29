@@ -31,7 +31,7 @@ public class MainController extends Application {
     public static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
     public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
     public static final String INTRO_SCREEN_IMG_NAME = "StartScreen.jpg";
-    public static final int DEFAULT_FONT_SIZE = 20;
+    public static final int DEFAULT_FONT_SIZE = 5;
     public static final String DEFAULT_FONT = "Verdana";
     public static final DecimalFormat df2 = new DecimalFormat("#.##");
     public static final String STARTING_MESSAGE = "  ";
