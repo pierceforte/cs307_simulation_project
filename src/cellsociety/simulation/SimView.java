@@ -3,16 +3,19 @@ package cellsociety.simulation;
 import cellsociety.MainController;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import cellsociety.cell.Cell;
 import cellsociety.cell.CellView;
 import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -113,6 +116,53 @@ public class SimView {
             controller.pause();
         }
         else if (event.getSource() == exitBttn) {
+
+            Stage stage = new Stage();
+            stage.setTitle("Save Current Configuration");
+
+            Text nameHeader = new Text("Configuration File Name");
+            nameHeader.setX(300/2 - 50/2);
+            nameHeader.setY(50);
+
+            TextField nameField = new TextField();
+            nameField.setPrefWidth(100);
+            nameField.setLayoutX(300/2 - 100/2);
+            nameField.setLayoutY(75);
+
+            Text authorHeader = new Text("Author");
+            authorHeader.setX(300/2 - 50/2);
+            authorHeader.setY(150);
+
+            TextField authorField = new TextField();
+            authorField.setPrefWidth(100);
+            authorField.setLayoutX(300/2 - 100/2);
+            authorField.setLayoutY(175);
+
+            Text descriptionHeader = new Text("Description");
+            descriptionHeader.setX(300/2 - 50/2);
+            descriptionHeader.setY(250);
+
+            TextArea descriptionField = new TextArea();
+            descriptionField.setWrapText(true);
+            descriptionField.setPrefWidth(100);
+            descriptionField.setLayoutX(300/2 - 200/2);
+            descriptionField.setLayoutY(275);
+
+
+            //authorField.setPromptText();
+
+
+            StackPane pane = new StackPane();
+            //pane.setBackground(new Background(new BackgroundFill(Color.MAROON, CornerRadii.EMPTY, Insets.EMPTY)));
+            pane.getChildren().addAll(nameHeader, nameField, authorHeader, authorField, descriptionHeader, descriptionField);
+            //pane.setAlignment(Pos.CENTER);
+
+
+            Scene scene = new Scene(pane, 300, 500);
+            stage.setScene(scene);
+            stage.showAndWait();
+
+            /*
             controller.setIsEnded(true);
             FileChooser fileChooser = new FileChooser();
             String currentPath = Paths.get("resources/configs/" + controller.getModel().getConfigFileIdentifier() + "/")
@@ -128,7 +178,7 @@ public class SimView {
             stage.setScene(new Scene(group));
 
             //Show save file dialog
-            File file = fileChooser.showSaveDialog(stage);
+            File file = fileChooser.showSaveDialog(stage);*/
 
 
         }
