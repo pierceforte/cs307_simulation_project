@@ -12,7 +12,7 @@ public class SegregationCell extends Cell {
     public static final String EMPTY = "0";
     public static final String AGENT_A = "1";
     public static final String AGENT_B = "2";
-    public static final double DEFAULT_SATISFACTION_MIN = 0.7;
+    public static final double DEFAULT_SATISFACTION_MIN = 0.75;
 
     private Map<String, BiFunction<List<SegregationCell>, List<List<SegregationCell>>, List<List<SegregationCell>>>> handleCell = Map.of(
             EMPTY, (neighbors, nextGrid) -> handleEmptyCell(neighbors, nextGrid),

@@ -65,13 +65,17 @@ public class MainController extends Application {
         introScene.getStylesheets().add(STYLESHEET);
         myIntroPane.getChildren().add(introScreenNode);
 
-        Button gOLSimButton = makeButton(stage, "Segregation", 180, 350);
+        Button gOLSimButton = makeButton(stage, "Game of Life", 180, 350);
         gOLSimButton.setId("GOLSimButton");
         myIntroPane.getChildren().add(gOLSimButton);
 
         Button waTorSimButton = makeButton(stage, "Wa-Tor", 360, 350);
         waTorSimButton.setId("WaTorSimButton");
         myIntroPane.getChildren().add(waTorSimButton);
+
+        Button segregationSimButton = makeButton(stage, "Segregation", 180, 400);
+        segregationSimButton.setId("SegregationSimButton");
+        myIntroPane.getChildren().add(segregationSimButton);
 
         myStage = stage;
         stage.setScene(introScene);
