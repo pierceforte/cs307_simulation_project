@@ -1,5 +1,7 @@
 package cellsociety.cell.WaTor;
 
+import cellsociety.cell.Cell;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,8 +56,8 @@ public class SharkCell extends LivingWaTorCell{
         }
         // choose randomly from the potential spaces to move to from above
         List<Integer> newPosition = getRandomNewPosition(potentialNewPositions);
-        setNextRow(newPosition.get(0));
-        setNextCol(newPosition.get(1));
+        setNextRow(newPosition.get(Cell.ROW_INDEX));
+        setNextCol(newPosition.get(Cell.COL_INDEX));
 
         nextGrid.get(getNextRow()).set(getNextCol(), this);
 

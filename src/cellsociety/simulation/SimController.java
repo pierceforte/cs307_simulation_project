@@ -22,7 +22,8 @@ public class SimController {
     //TODO: find a way to include this info in the specific SimModel
     public static final Map<Class, String> CLASS_TO_FILE_ID = Map.of(
             GOLSimModel.class, GOLSimModel.CONFIG_FILE_PREFIX,
-            WaTorSimModel.class, WaTorSimModel.CONFIG_FILE_PREFIX);
+            WaTorSimModel.class, WaTorSimModel.CONFIG_FILE_PREFIX,
+            SegregationSimModel.class, SegregationSimModel.CONFIG_FILE_PREFIX);
 
     //TODO: not sure if we want this dependency
     private MainController mainController;

@@ -8,11 +8,11 @@
 }
 
 .state0{
-    -fx-fill: Black;
+    -fx-fill: White;
 }
 
 .state1{
-    -fx-fill: Green;
+    -fx-fill: Red;
 }
 
 .state2{
