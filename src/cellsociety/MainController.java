@@ -27,7 +27,7 @@ public class MainController extends Application {
     public static final int HEIGHT = 630;
     public static final String SIMULATION_BUTTON_PREFIX = "Simulation ";
     public static final Paint BACKGROUND = Color.BEIGE;
-    public static final int FRAMES_PER_SECOND = 10;
+    public static final int FRAMES_PER_SECOND = 5;
     public static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
     public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
     public static final String INTRO_SCREEN_IMG_NAME = "StartScreen.jpg";
@@ -37,7 +37,8 @@ public class MainController extends Application {
     public static final String STARTING_MESSAGE = "  ";
     public static final Map<String, Class> BUTTON_NAME_TO_SIM_CLASS = Map.of(
             "Game of Life", GOLSimModel.class,
-            "Wa-Tor", WaTorSimModel.class);
+            "Wa-Tor", WaTorSimModel.class,
+            "Segregation", SegregationSimModel.class);
 
     private Group root = new Group();
     private Scene myScene;
@@ -64,7 +65,7 @@ public class MainController extends Application {
         introScene.getStylesheets().add(STYLESHEET);
         myIntroPane.getChildren().add(introScreenNode);
 
-        Button gOLSimButton = makeButton(stage, "Game of Life", 180, 350);
+        Button gOLSimButton = makeButton(stage, "Segregation", 180, 350);
         gOLSimButton.setId("GOLSimButton");
         myIntroPane.getChildren().add(gOLSimButton);
 
