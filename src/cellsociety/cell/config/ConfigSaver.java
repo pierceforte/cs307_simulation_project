@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ConfigSaver<T extends Cell> {
+    public static final String PATH_TO_CONFIGS = "resources/configs/";
     public static final String CSV_EXTENSION = ".csv";
     public static final Map<Class, String> CLASS_NAME_TO_SAVE_FOLDER = Map.of(
             GOLSimModel.class, GOLSimModel.CONFIG_FILE_PREFIX,
