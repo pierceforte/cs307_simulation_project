@@ -1,9 +1,6 @@
 package cellsociety.simulation;
 
-import cellsociety.cell.GOL.GOLCell;
-import cellsociety.cell.Segregation.SegregationCell;
-import cellsociety.cell.WaTor.EmptyCell;
-import cellsociety.cell.WaTor.WaTorCell;
+import cellsociety.cell.segregation.SegregationCell;
 
 import java.util.ArrayList;
 import java.util.List;

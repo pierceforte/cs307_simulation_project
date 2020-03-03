@@ -1,11 +1,10 @@
 package cellsociety.simulation;
 
-import cellsociety.ConfigReader;
+import cellsociety.cell.config.ConfigReader;
 import cellsociety.MainController;
-import cellsociety.cell.WaTor.WaTorCell;
+import cellsociety.cell.config.ConfigSaver;
+import cellsociety.cell.gol.GOLCell;
 import javafx.scene.Node;
-import javafx.scene.Node;
-import cellsociety.cell.Cell;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -110,6 +109,10 @@ public class SimController {
         return isEnded;
     }
 
+    public void saveConfig(String fileName, String author, String description) {
+        new ConfigSaver<>(model.getCells(), fileName, author, description, model.getClass());
+    }
+
     private String chooseConfigurationFile(String fileId) {
         String fileToRead = fileId + CONFIG_FILE_SUFFIX;
         String currentConfigFile = CURRENT_CONFIG_FILE_PREFIX + fileId + CONFIG_FILE_SUFFIX;
@@ -128,11 +131,11 @@ public class SimController {
 
         try {
             Scanner startInput = new Scanner(new File(this.getClass().getClassLoader().getResource(startFile).getPath()));
-            startDimensions = startInput.next().split(ConfigReader.DATA_REGEX);
+            startDimensions = startInput.next().split(ConfigReader.SPLIT_REGEX);
 
             Scanner currentInput = new Scanner(new File(this.getClass().getClassLoader().getResource(currentFile).getPath()));
             if (currentInput.hasNextLine()) {
-                currentDimensions = currentInput.next().split(ConfigReader.DATA_REGEX);
+                currentDimensions = currentInput.next().split(ConfigReader.SPLIT_REGEX);
             }
             else return false;
         }

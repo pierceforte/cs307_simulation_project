@@ -1,6 +1,7 @@
 package cellsociety.simulation;
 
 import cellsociety.MainController;
+import cellsociety.cell.config.ConfigSaver;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -116,71 +117,36 @@ public class SimView {
             controller.pause();
         }
         else if (event.getSource() == exitBttn) {
+            controller.pause();
 
             Stage stage = new Stage();
             stage.setTitle("Save Current Configuration");
 
-            Text nameHeader = new Text("Configuration File Name");
-            nameHeader.setX(300/2 - 50/2);
-            nameHeader.setY(50);
+            Pane pane = new Pane();
+            pane.setBackground(new Background(new BackgroundFill(Color.MAROON, CornerRadii.EMPTY, Insets.EMPTY)));
 
-            TextField nameField = new TextField();
-            nameField.setPrefWidth(100);
-            nameField.setLayoutX(300/2 - 100/2);
-            nameField.setLayoutY(75);
+            Button saveBttn = createButton("Save Configuration:", 300/2 - 100/2, 400, 100, 30);
+            saveBttn.setId("saveBttn");
+            Button noSaveBttn = createButton("Quit without Saving", 300/2 - 100/2, 440, 100, 30);
+            noSaveBttn.setId("noSaveBttn");
 
-            Text authorHeader = new Text("Author");
-            authorHeader.setX(300/2 - 50/2);
-            authorHeader.setY(150);
+            saveBttn.setOnAction(new EventHandler<ActionEvent>() {
+                @Override public void handle(ActionEvent t) {
+                    letUserSaveConfig();
+                    stage.close();
+                }
+            });
+            noSaveBttn.setOnAction(new EventHandler<ActionEvent>() {
+                @Override public void handle(ActionEvent t) {
+                    stage.close();
+                    ensureUserWantsToQuit();
+                }
+            });
 
-            TextField authorField = new TextField();
-            authorField.setPrefWidth(100);
-            authorField.setLayoutX(300/2 - 100/2);
-            authorField.setLayoutY(175);
-
-            Text descriptionHeader = new Text("Description");
-            descriptionHeader.setX(300/2 - 50/2);
-            descriptionHeader.setY(250);
-
-            TextArea descriptionField = new TextArea();
-            descriptionField.setWrapText(true);
-            descriptionField.setPrefWidth(100);
-            descriptionField.setLayoutX(300/2 - 200/2);
-            descriptionField.setLayoutY(275);
-
-
-            //authorField.setPromptText();
-
-
-            StackPane pane = new StackPane();
-            //pane.setBackground(new Background(new BackgroundFill(Color.MAROON, CornerRadii.EMPTY, Insets.EMPTY)));
-            pane.getChildren().addAll(nameHeader, nameField, authorHeader, authorField, descriptionHeader, descriptionField);
-            //pane.setAlignment(Pos.CENTER);
-
-
-            Scene scene = new Scene(pane, 300, 500);
+            pane.getChildren().addAll(saveBttn, noSaveBttn);
+            Scene scene = new Scene(pane, 300, 600);
             stage.setScene(scene);
             stage.showAndWait();
-
-            /*
-            controller.setIsEnded(true);
-            FileChooser fileChooser = new FileChooser();
-            String currentPath = Paths.get("resources/configs/" + controller.getModel().getConfigFileIdentifier() + "/")
-                    .toAbsolutePath().normalize().toString();
-            fileChooser.setInitialDirectory(new File(currentPath));
-
-            //Set extension filter
-            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("CSV files (*.csv)", "*.csv");
-            fileChooser.getExtensionFilters().add(extFilter);
-
-            Group group = new Group();
-            Stage stage = new Stage();
-            stage.setScene(new Scene(group));
-
-            //Show save file dialog
-            File file = fileChooser.showSaveDialog(stage);*/
-
-
         }
     }
 
@@ -214,6 +180,102 @@ public class SimView {
         return button;
     }
 
+    private void letUserSaveConfig() {
+        Stage stage = new Stage();
+        stage.setTitle("Save Current Configuration");
+
+        Text nameHeader = new Text("Configuration File Name");
+        nameHeader.setX(300/2 - nameHeader.getLayoutBounds().getWidth()/2);
+        nameHeader.setY(50);
+
+        TextField nameField = new TextField();
+        nameField.setPrefWidth(100);
+        nameField.setLayoutX(300/2 - nameField.getPrefWidth()/2);
+        nameField.setLayoutY(75);
+
+        Text authorHeader = new Text("Author");
+        authorHeader.setX(300/2 - authorHeader.getLayoutBounds().getWidth()/2);
+        authorHeader.setY(150);
+
+        TextField authorField = new TextField();
+        authorField.setPrefWidth(100);
+        authorField.setLayoutX(300/2 - authorField.getPrefWidth()/2);
+        authorField.setLayoutY(175);
+
+        Text descriptionHeader = new Text("Description");
+        descriptionHeader.setX(300/2 - descriptionHeader.getLayoutBounds().getWidth()/2);
+        descriptionHeader.setY(250);
+
+        TextArea descriptionField = new TextArea();
+        descriptionField.setWrapText(true);
+        descriptionField.setPrefWidth(200);
+        descriptionField.setLayoutX(300/2 - descriptionField.getPrefWidth()/2);
+        descriptionField.setLayoutY(275);
+
+        Button saveBttn = createButton("Save Configuration", 300/2 - 100/2, 500, 100, 30);
+        saveBttn.setId("saveBttn");
+        Button cancelBttn = createButton("Cancel", 300/2 - 100/2, 540, 100, 30);
+        cancelBttn.setId("cancelBttn");
+
+        saveBttn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent t) {
+                stage.close();
+                controller.saveConfig(nameField.getText(), authorField.getText(), descriptionField.getText());
+                ensureUserWantsToQuit();
+            }
+        });
+        cancelBttn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent t) {
+                stage.close();
+                controller.start();
+            }
+        });
+
+        Pane pane = new Pane();
+        pane.setBackground(new Background(new BackgroundFill(Color.MAROON, CornerRadii.EMPTY, Insets.EMPTY)));
+        pane.getChildren().addAll(nameHeader, nameField, authorHeader, authorField, descriptionHeader, descriptionField,
+                saveBttn, cancelBttn);
+
+
+        Scene scene = new Scene(pane, 300, 600);
+        stage.setScene(scene);
+        stage.showAndWait();
+    }
+
+    private void ensureUserWantsToQuit() {
+        Stage stage = new Stage();
+        stage.setTitle("Resume or Quit");
+
+        Pane pane = new Pane();
+        pane.setBackground(new Background(new BackgroundFill(Color.MAROON, CornerRadii.EMPTY, Insets.EMPTY)));
+
+        Text areYouSureHeader = new Text("Are you sure you want to Quit the simulation?");
+        areYouSureHeader.setX(300/2 - areYouSureHeader.getLayoutBounds().getWidth()/2);
+        areYouSureHeader.setY(150);
+
+        Button resumeBttn = createButton("Resume", 300/2 - 100/2, 400, 100, 30);
+        resumeBttn.setId("resumeBttn");
+        Button quitBttn = createButton("Quit", 300/2 - 100/2, 440, 100, 30);
+        quitBttn.setId("quitBttn");
+
+        resumeBttn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent t) {
+                stage.close();
+                controller.start();
+            }
+        });
+        quitBttn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent t) {
+                stage.close();
+                controller.setIsEnded(true);
+            }
+        });
+
+        pane.getChildren().addAll(areYouSureHeader, resumeBttn, quitBttn);
+        Scene scene = new Scene(pane, 300, 600);
+        stage.setScene(scene);
+        stage.showAndWait();
+    }
 
 
 }

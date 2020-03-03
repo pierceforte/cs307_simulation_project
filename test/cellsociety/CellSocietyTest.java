@@ -1,7 +1,8 @@
 package cellsociety;
 
 import cellsociety.cell.Cell;
-import cellsociety.cell.GOL.GOLCell;
+import cellsociety.cell.gol.GOLCell;
+import cellsociety.cell.config.ConfigReader;
 import cellsociety.simulation.GOLSimModel;
 import cellsociety.simulation.SimController;
 import cellsociety.simulation.SimModel;
@@ -12,14 +13,11 @@ import javafx.stage.Stage;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 

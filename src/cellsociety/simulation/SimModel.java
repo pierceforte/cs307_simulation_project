@@ -1,6 +1,6 @@
 package cellsociety.simulation;
 
-import cellsociety.ConfigReader;
+import cellsociety.cell.config.ConfigReader;
 import cellsociety.cell.Cell;
 import cellsociety.grid.GridModel;
 
@@ -57,33 +57,4 @@ public abstract class SimModel <T extends Cell>{
         return gridModel;
     }
 
-    private void saveCurrentConfig(List<List<T>> cells) {
-        try {
-            String currentConfigFileName = SimController.CURRENT_CONFIG_FILE_PREFIX + getConfigFileIdentifier() +
-                    SimController.CONFIG_FILE_SUFFIX;
-            PrintWriter pw = new PrintWriter(new File(this.getClass().getClassLoader().getResource(currentConfigFileName).getPath()));
-            pw.println(cells.size() + ConfigReader.DATA_REGEX + cells.get(0).size());
-
-            for (int row = 0; row < cells.size(); row++) {
-                int cols = cells.get(0).size();
-                if (cols == 0) {
-                    break;
-                }
-                String line = cells.get(row).get(0).getState();
-                for (int col = 1; col < cols; col++) {
-                    line += ConfigReader.DATA_REGEX + cells.get(row).get(col).getState();
-                }
-                pw.println(line);
-            }
-            pw.close();
-        } catch (FileNotFoundException e) {
-            //logError(e);
-            System.exit(0);
-        }
-        catch (NullPointerException e) {
-            //logError(e);
-            // don't save file
-            e.printStackTrace();
-        }
-    }
 }
