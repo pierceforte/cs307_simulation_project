@@ -1,9 +1,11 @@
 package cellsociety;
 
-import cellsociety.cell.Cell;
+import cellsociety.cell.WaTor.WaTorCell;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class ConfigReader {
     public static final int NUM_ROWS_INDEX = 0;
@@ -14,68 +16,69 @@ public class ConfigReader {
     private final String simulationInitialLayout;
     private int quantityOfRows;
     private int quantityOfColumns;
-    private int manualColumnquantity;
-    private int manualRowquantity;
-   // private List<List<Cell>> myResults;
-
+    private int manualQuantityOfRows;
+    private int manualQuantityOfColumns;
 
     public ConfigReader(String fileOfCells) {
         simulationInitialLayout = fileOfCells;
     }
-    Random rand = new Random();
 
     @SuppressWarnings("ThrowablePrintedToSystemOut")
-    public List<List<Cell>> getCellList() {
+    public List<List<String>> getCellList() {
         try {
-            File file = new File(Objects.requireNonNull(this.getClass().getClassLoader().getResource(simulationInitialLayout)).getFile());
-             buildListOfCellLists(file);
+            File file = new File(this.getClass().getClassLoader().getResource(simulationInitialLayout).getFile());
+            return buildListOfCellLists(file);
         } catch (FileNotFoundException e)
         {
+            //System.out.println("Could not write Exception to file");
             logError(e);
             System.exit(0);
         }
         return null;
     }
 
-    protected List<List<Cell>> buildListOfCellLists(File file) throws FileNotFoundException {
-        List<List<Cell>> results = new ArrayList<>();
+    private List<List<String>> buildListOfCellLists(File file) throws FileNotFoundException {
+        List<List<String>> results = new ArrayList<>();
         Scanner input = new Scanner(file);
         String[] dimensions = input.next().split(DATA_REGEX);
         quantityOfRows = Integer.valueOf(dimensions[NUM_ROWS_INDEX]);
         quantityOfColumns = Integer.valueOf(dimensions[NUM_COLS_INDEX]);
         for(int r = 0; r < quantityOfRows; r++) {
-            List<Cell> row = getRowInfo(input.next(), r);
+            List<String> row = getRowInfo(input.next(), r);
             results.add(row);
         }
-        manualRowquantity=results.size();
-        int randomrow = rand.nextInt(manualRowquantity);
-        manualColumnquantity=results.get(0).size();
+        manualQuantityOfRows = results.size();
+        manualQuantityOfColumns = results.get(0).size();
         return results;
 
     }
 
-    int getManualquantityOfColumns(){return manualColumnquantity;}
+    int getQuantityOfColumns(){
+        return quantityOfColumns;
+    }
 
-    int getManualquantityOfRows(){return manualRowquantity;}
+    int getQuantityOfRows(){
+        return quantityOfRows;
+    }
 
-    int getQuantityOfColumns(){return quantityOfColumns;}
+    public int getManualQuantityOfRows(){ return manualQuantityOfRows; }
 
-    int getQuantityOfRows(){return quantityOfRows;}
+    public int getManualQuantityOfColumns(){ return manualQuantityOfColumns; }
 
-    private List<Cell> getRowInfo(String row, int r) {
+    private List<String> getRowInfo(String row, int r) {
         String[] arrayOfInfo = row.split(DATA_REGEX);
         return makeCellObjects(arrayOfInfo, r);
     }
 
-    private List<Cell> makeCellObjects(String[] rowArray, int r) {
-        List<Cell> cellRow = new ArrayList<>();
+    private List<String> makeCellObjects(String[] rowArray, int r) {
+        List<String> cellRow = new ArrayList<>();
         for(int c = 0; c < rowArray.length; c++) {
-            cellRow.add(new Cell(rowArray[c] , r, c));
+            cellRow.add(rowArray[c]);
         }
         return cellRow;
     }
 
-    private void logError(Exception e) {
+    public void logError(Exception e) {
         try {
             FileWriter fStream = new FileWriter(ERROR_LOG, true);
             BufferedWriter out = new BufferedWriter(fStream);

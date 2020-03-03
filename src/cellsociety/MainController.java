@@ -1,9 +1,5 @@
 package cellsociety;
-import cellsociety.cell.Cell;
-import cellsociety.simulation.GameOfLifeSimModel;
-import cellsociety.simulation.SimController;
-import cellsociety.simulation.SimModel;
-import cellsociety.simulation.SimView;
+import cellsociety.simulation.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -21,12 +17,14 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.text.DecimalFormat;
-import java.util.List;
+import java.util.Map;
 
 public class MainController extends Application {
+    public static final String STYLESHEET = "style.css";
     public static final String TITLE = "Cell Society";
     public static final int WIDTH = 600;
-    public static final int HEIGHT = 600;
+    public static final int GRID_HEIGHT = 600;
+    public static final int HEIGHT = 630;
     public static final String SIMULATION_BUTTON_PREFIX = "Simulation ";
     public static final Paint BACKGROUND = Color.BEIGE;
     public static final int FRAMES_PER_SECOND = 5;
@@ -37,16 +35,22 @@ public class MainController extends Application {
     public static final String DEFAULT_FONT = "Verdana";
     public static final DecimalFormat df2 = new DecimalFormat("#.##");
     public static final String STARTING_MESSAGE = "  ";
-    private Group root;
+    public static final Map<String, Class> BUTTON_NAME_TO_SIM_CLASS = Map.of(
+            "Game of Life", GOLSimModel.class,
+            "Wa-Tor", WaTorSimModel.class,
+            "Segregation", SegregationSimModel.class);
+
+    private Group root = new Group();
     private Scene myScene;
     private Stage myStage;
-    private Pane myIntroPane = new Pane();
+    private Pane myIntroPane;
     private Timeline myAnimation;
     private Text myPressToBeginText;
     private Text myTimeText;
     private double myTime;
     private SimModel mySimModel;
     private SimController mySimController;
+    private boolean isSimulationActive = false;
 
     @Override
     public void start(Stage stage) {
@@ -55,18 +59,24 @@ public class MainController extends Application {
         ImageView introScreenNode = new ImageView(introScreenImage);
         introScreenNode.setFitHeight(HEIGHT);
         introScreenNode.setFitWidth(WIDTH);
+        myIntroPane = new Pane();
+        myIntroPane.setId("introPane");
         Scene introScene = new Scene(myIntroPane, WIDTH, HEIGHT);
+        introScene.getStylesheets().add(STYLESHEET);
         myIntroPane.getChildren().add(introScreenNode);
 
-        //read configuration files
+        Button gOLSimButton = makeButton(stage, "Game of Life", 180, 350);
+        gOLSimButton.setId("GOLSimButton");
+        myIntroPane.getChildren().add(gOLSimButton);
 
-        Scene simulation1Scene = setupSimulation(WIDTH, HEIGHT, BACKGROUND,"GOL");
-        //Scene simulation2Scene = setupSimulation(WIDTH, HEIGHT, BACKGROUND,"SIM2");
-        Button simulation1Button = makeButton(stage, simulation1Scene, "Simulation 1", 180, 350);
-        //Button simulation2Button = makeButton(stage, simulation2Scene, "Simulation 2", 360, 350);
-        myIntroPane.getChildren().add(simulation1Button);
+        Button waTorSimButton = makeButton(stage, "Wa-Tor", 360, 350);
+        waTorSimButton.setId("WaTorSimButton");
+        myIntroPane.getChildren().add(waTorSimButton);
 
-        //myIntroPane.getChildren().addAll(simulation1Button,simulation2Button);
+        Button segregationSimButton = makeButton(stage, "Segregation", 180, 400);
+        segregationSimButton.setId("SegregationSimButton");
+        myIntroPane.getChildren().add(segregationSimButton);
+
         myStage = stage;
         stage.setScene(introScene);
         stage.setTitle(TITLE);
@@ -74,11 +84,12 @@ public class MainController extends Application {
         setMyAnimation(stage);
     }
 
-    private Button makeButton(Stage stage, Scene simulation1Scene, String buttonName, int xLocation, double yLocation) {
+    private Button makeButton(Stage stage, String buttonName, int xLocation, double yLocation) {
         Button simulationButton = new Button(buttonName);
         simulationButton.setOnAction(e -> {
+            Scene simulation1Scene = setupSimulation(BUTTON_NAME_TO_SIM_CLASS.get(buttonName), WIDTH, HEIGHT, BACKGROUND);
             stage.setScene(simulation1Scene);
-            mySimController.togglePause();
+            isSimulationActive = true;
         });
         simulationButton.setTranslateX(xLocation);
         simulationButton.setTranslateY(yLocation);
@@ -91,43 +102,53 @@ public class MainController extends Application {
         myAnimation.setCycleCount(Timeline.INDEFINITE);
         myAnimation.getKeyFrames().add(frame);
         myAnimation.play();
-
     }
 
-
-    public Scene setupSimulation(int width, int height, Paint background, String simulationName) {
+    private <T extends SimModel> Scene setupSimulation(Class<T> simTypeClassName, int width, int height, Paint background) {
         root = new Group();
-        ConfigReader data = new ConfigReader(simulationName + "Config.csv");
-
-        List<List<Cell>> listOfCells = data.getCellList();
-        mySimModel = new GameOfLifeSimModel(listOfCells);
-        mySimController = new SimController(mySimModel);
-        mySimController.togglePause();
-        root.getChildren().add(mySimController.getView());
-
-        myTimeText = screenMessage(1 * WIDTH/7, 30, "Time: " + myTime);
-        myPressToBeginText = screenMessage(WIDTH / 3,  2 * HEIGHT / 3, STARTING_MESSAGE);
-        addToRoot(root);
+        mySimController = new SimController(simTypeClassName, this);
+        //myTimeText = screenMessage(1 * WIDTH/7, 30, "Time: " + myTime);
+        //myPressToBeginText = screenMessage(WIDTH / 3,  2 * HEIGHT / 3, STARTING_MESSAGE);
+        //root.getChildren.addAll(List.of(myTimeText, myPressToBeginText);
         myScene = new Scene(root, width, height, background);
         myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode(), root));
+
+        //testing adding of css styles
+        myScene.getStylesheets().add(STYLESHEET);
         return myScene;
     }
 
-    private void addToRoot(Group root) {
-        root.getChildren().add(myTimeText);
+    public void step(double elapsedTime) {
+        if (isSimulationActive) {
+            if (mySimController.isEnded()) {
+                returnToIntroScreen();
+            }
+            else {
+                mySimController.update(false);
+            }
+        }
     }
 
-
-    public void step(double elapsedTime) {
-        //mySimController.play();
-        mySimController.updateCellStates();
-        mySimController.updateCellViews();
+    public void clearRoot() {
         root.getChildren().clear();
-        root.getChildren().add(mySimController.getView());
+    }
+
+    public <T extends Node> void addToRoot(T node) {
+        root.getChildren().add(node);
+    }
+
+    public SimController getCurSimController() {
+        return mySimController;
+    }
+
+    private void returnToIntroScreen() {
+        isSimulationActive = false;
+        root.getChildren().clear();
+        myAnimation.stop();
+        start(myStage);
     }
 
     private void handleKeyInput(KeyCode code, Group root) {
-
 
     }
 
@@ -139,19 +160,6 @@ public class MainController extends Application {
         message.setText(words);
         message.setFill(Color.BLACK);
         return message;
-    }
-
-
-
-//    Scene configScene() {
-//        Group root = new Group();
-//
-//    }
-
-
-    private void addSimulationButtonToScene(Scene scene, int simNumber, Stage stage, double xPos, double yPos) {
-        Button simulationButton1 = makeButton(stage, scene, SIMULATION_BUTTON_PREFIX + simNumber, (int) xPos, yPos);
-        myIntroPane.getChildren().add(simulationButton1);
     }
 
     public static void main(String[] args)

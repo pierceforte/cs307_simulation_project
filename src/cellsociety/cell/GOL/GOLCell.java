@@ -1,4 +1,4 @@
-package cellsociety.simulation;
+package cellsociety.cell.GOL;
 
 import cellsociety.cell.Cell;
 
@@ -6,40 +6,44 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public class GameOfLifeSimModel extends SimModel {
+public class GOLCell extends Cell {
     public static final String DEAD = "0"; //represented in data file as 0
     public static final String ALIVE = "1"; //represented in data file as 1
 
     private Map<String, Function<Integer, String>> handleCell = Map.of(
-            ALIVE, (numNeighbors) -> handleDeadCell(numNeighbors),
-            DEAD, (numNeighbors) -> handleLivingCell(numNeighbors));
+            ALIVE, (numNeighbors) -> handleLivingCell(numNeighbors),
+            DEAD, (numNeighbors) -> handleDeadCell(numNeighbors));
 
-    public GameOfLifeSimModel(List<List<Cell>> cells) {
-        super(cells);
+    public GOLCell(String state, int row, int col) {
+        super(state, row, col);
     }
 
+<<<<<<< HEAD:src/cellsociety/simulation/GameOfLifeSimModel.java
     @Override
     public String determineNextState(Cell cell, List<Cell> neighbors) {
+=======
+    public <T extends Cell> void setWhatToDoNext(List<T> neighbors){
+>>>>>>> master:src/cellsociety/cell/GOL/GOLCell.java
         int numNeighbors = getNumNeighbors(neighbors);
-        String curCellState = cell.getState();
-        return handleCell.get(curCellState).apply(numNeighbors);
+        String nextState = handleCell.get(getState()).apply(numNeighbors);
+        setNextState(nextState);
     }
 
-    private String handleDeadCell(int numNeighbors) {
+    public String handleDeadCell(int numNeighbors) {
         if (numNeighbors == 3) {
             return ALIVE;
         }
         return DEAD;
     }
 
-    private String handleLivingCell(int numNeighbors) {
+    public String handleLivingCell(int numNeighbors) {
         if (numNeighbors < 2 || numNeighbors > 3) {
             return DEAD;
         }
         return ALIVE;
     }
 
-    private int getNumNeighbors(List<Cell> neighbors) {
+    public <T extends Cell> int getNumNeighbors(List<T> neighbors) {
         int numNeighbors = 0;
         for (Cell neighbor : neighbors) {
             if (isCellAlive(neighbor)) numNeighbors++;
@@ -47,7 +51,7 @@ public class GameOfLifeSimModel extends SimModel {
         return numNeighbors;
     }
 
-    private boolean isCellAlive(Cell cell) {
+    public boolean isCellAlive(Cell cell) {
         return cell.getState().equals(ALIVE);
     }
 }

@@ -1,0 +1,21 @@
+.button{
+    -fx-background-color: LightGrey;
+    -fx-font-size: 15px;
+}
+
+.cell {
+    -fx-stroke: Black;
+}
+
+.state0{
+    -fx-fill: White;
+}
+
+.state1{
+    -fx-fill: Red;
+}
+
+.state2{
+    -fx-fill: Blue;
+}
+
