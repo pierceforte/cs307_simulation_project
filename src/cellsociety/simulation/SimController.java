@@ -16,7 +16,6 @@ import java.util.Scanner;
 
 public class SimController {
     public static final String CONFIG_FILE_SUFFIX = "Config.csv";
-    public static final String CURRENT_CONFIG_FILE_PREFIX = "current";
 
     //TODO: find a way to include this info in the specific SimModel
     public static final Map<Class, String> CLASS_TO_FILE_ID = Map.of(
@@ -31,25 +30,12 @@ public class SimController {
     private boolean isActive;
     private boolean isEnded;
 
-    //TODO: cleanup constructor and add code to choose which simulation identifier
-    public <S extends SimModel> SimController(Class<S> simTypeClassName, MainController mainController) {
-        this(simTypeClassName, mainController,
-                CLASS_TO_FILE_ID.get(simTypeClassName) + CONFIG_FILE_SUFFIX, true);
-    }
-
-    public <T extends SimModel> SimController(Class<T> simTypeClassName, MainController mainController, String defaultConfigFileName,
-                                              boolean askToRestartOrContinue) {
+    //TODO: cleanup constructor
+    public <T extends SimModel> SimController(Class<T> simTypeClassName, MainController mainController, String csvFileName) {
         view = new SimView(this);
         this.mainController = mainController;
-        ConfigReader data;
-        // for some reason we need to check if true like this
-        if (askToRestartOrContinue == true) {
-            String configurationFile = chooseConfigurationFile(CLASS_TO_FILE_ID.get(simTypeClassName));
-            data = new ConfigReader(configurationFile);
-        }
-        else {
-            data = new ConfigReader(defaultConfigFileName);
-        }
+        System.out.println(csvFileName);
+        ConfigReader data = new ConfigReader(csvFileName);
         List<List<String>> listOfCells = data.getCellList();
 
         try {
@@ -112,45 +98,4 @@ public class SimController {
     public void saveConfig(String fileName, String author, String description) {
         new ConfigSaver<>(model.getCells(), fileName, author, description, model.getClass());
     }
-
-    private String chooseConfigurationFile(String fileId) {
-        String fileToRead = fileId + CONFIG_FILE_SUFFIX;
-        String currentConfigFile = CURRENT_CONFIG_FILE_PREFIX + fileId + CONFIG_FILE_SUFFIX;
-
-        if (this.getClass().getClassLoader().getResource(currentConfigFile) != null) {
-            if (doesCurrentConfigHaveCorrectDimensions(fileToRead, currentConfigFile) && !view.userRestartedSimulation()) {
-                fileToRead = currentConfigFile;
-            }
-        }
-        return fileToRead;
-    }
-
-    private boolean doesCurrentConfigHaveCorrectDimensions(String startFile, String currentFile) {
-        String[] startDimensions;
-        String[] currentDimensions;
-
-        try {
-            Scanner startInput = new Scanner(new File(this.getClass().getClassLoader().getResource(startFile).getPath()));
-            startDimensions = startInput.next().split(ConfigReader.SPLIT_REGEX);
-
-            Scanner currentInput = new Scanner(new File(this.getClass().getClassLoader().getResource(currentFile).getPath()));
-            if (currentInput.hasNextLine()) {
-                currentDimensions = currentInput.next().split(ConfigReader.SPLIT_REGEX);
-            }
-            else return false;
-        }
-        catch (FileNotFoundException | NullPointerException e) {
-            //logError(e)
-            return false;
-        }
-
-        for (int dimension = 0; dimension < startDimensions.length; dimension++) {
-            if (startDimensions.length != currentDimensions.length ||
-                    !startDimensions[dimension].equals(currentDimensions[dimension])) {
-                return false;
-            }
-        }
-        return true;
-    }
-
 }

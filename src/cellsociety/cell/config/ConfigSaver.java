@@ -3,9 +3,9 @@ package cellsociety.cell.config;
 import cellsociety.cell.Cell;
 import cellsociety.simulation.GOLSimModel;
 import cellsociety.simulation.SegregationSimModel;
-import cellsociety.simulation.SimModel;
 import cellsociety.simulation.WaTorSimModel;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -14,15 +14,21 @@ import java.util.Map;
 public class ConfigSaver<T extends Cell> {
     public static final String PATH_TO_CONFIGS = "resources/configs/";
     public static final String CSV_EXTENSION = ".csv";
-    public static final Map<Class, String> CLASS_NAME_TO_SAVE_FOLDER = Map.of(
+    public static final String PROPERTIES_EXTENSION = ".properties";
+    public static final Map<Class, String> SIM_CLASS_NAME_TO_DIRECTORY = Map.of(
             GOLSimModel.class, GOLSimModel.CONFIG_FILE_PREFIX,
             WaTorSimModel.class, WaTorSimModel.CONFIG_FILE_PREFIX,
             SegregationSimModel.class, SegregationSimModel.CONFIG_FILE_PREFIX);
+    public static final Map<String, Class> DIRECTORY_TO_SIM_CLASS = Map.of(
+            GOLSimModel.CONFIG_FILE_PREFIX, GOLSimModel.class,
+            WaTorSimModel.CONFIG_FILE_PREFIX, WaTorSimModel.class,
+            SegregationSimModel.CONFIG_FILE_PREFIX, SegregationSimModel.class);
 
     public ConfigSaver(List<List<T>> cells, String fileName, String author, String description, Class modelClass) {
-        String directory = CLASS_NAME_TO_SAVE_FOLDER.get(modelClass);
-        saveCSV(cells, fileName, directory);
-        saveProperties(fileName, author, description, directory);
+        String simDirectory = SIM_CLASS_NAME_TO_DIRECTORY.get(modelClass);
+        new File(PATH_TO_CONFIGS + simDirectory + "/" + fileName).mkdir();
+        saveCSV(cells, fileName, simDirectory);
+        saveProperties(fileName, author, description, simDirectory);
     }
     
     // TODO: the saved config file will only contain the state of the cell. We need to determine if this is okay; for a simulation
@@ -31,9 +37,9 @@ public class ConfigSaver<T extends Cell> {
 
     // TODO: throw exceptions in method signature
 
-   private void saveCSV(List<List<T>> cells, String fileName, String directory) {
+   private void saveCSV(List<List<T>> cells, String fileName, String simDirectory) {
         try {
-            PrintWriter pw = new PrintWriter("resources/configs/" + directory + "/" + fileName + CSV_EXTENSION);
+            PrintWriter pw = new PrintWriter("resources/configs/" + simDirectory + "/" + fileName + "/" + fileName + CSV_EXTENSION);
             int rows = cells.size();
             int cols = cells.get(0).size();
             pw.println(rows + ConfigReader.SPLIT_REGEX + cols);
@@ -61,7 +67,7 @@ public class ConfigSaver<T extends Cell> {
         }
     }
 
-    private void saveProperties(String fileName, String author, String description, String directory) {
+    private void saveProperties(String fileName, String author, String description, String simDirectory) {
 
     }
 }

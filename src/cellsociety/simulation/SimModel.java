@@ -23,7 +23,6 @@ public abstract class SimModel <T extends Cell>{
 
     public void update() {
         List<List<T>> cells = gridModel.getCells();
-        //saveCurrentConfig(cells);
         setNextStates(cells);
         updateStates(cells);
     }

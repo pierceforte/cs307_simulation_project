@@ -24,7 +24,7 @@ public class FileNameVerifier {
             return "A file name must be entered.";
         }
         else if (fileExists()) {
-            return "A file with the name \"" + myFileName + "\" already exists.";
+            return "A simulation with the name \"" + myFileName + "\" already exists.";
         }
         else if (containsIllegalCharacters()) {
             return getIllegalCharactersMessage();
@@ -34,9 +34,8 @@ public class FileNameVerifier {
 
     private boolean fileExists() {
         File file = new File(ConfigSaver.PATH_TO_CONFIGS + "/" +
-                ConfigSaver.CLASS_NAME_TO_SAVE_FOLDER.get(myModelClass) + "/" + myFileName + ConfigSaver.CSV_EXTENSION);
-        System.out.println(file.toString());
-        return file.isFile();
+                ConfigSaver.SIM_CLASS_NAME_TO_DIRECTORY.get(myModelClass) + "/" + myFileName);
+        return file.isDirectory();
     }
 
     private boolean containsIllegalCharacters() {
@@ -61,10 +60,10 @@ public class FileNameVerifier {
         String message = "File name must not include the characters: ";
 
         for (String illegalString : illegalCharactersInName) {
-            message += illegalString + ", ";
+            message += illegalString + " ";
         }
 
-        return message.substring(0, message.length() - 2);
+        return message;
     }
 
 }
