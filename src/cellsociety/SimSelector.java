@@ -37,6 +37,10 @@ public class SimSelector {
         String initialPath = Paths.get("resources/configs/").toAbsolutePath().normalize().toString();
         directoryChooser.setInitialDirectory(new File(initialPath));
         File directoryChosen = directoryChooser.showDialog(new Stage());
+        if (directoryChosen == null) {
+            // TODO: handle error
+            return;
+        }
         String [] directoryChosenPath = directoryChosen.getPath().split("/");
         String simTypeDirectory = directoryChosenPath[directoryChosenPath.length - 2];
 
