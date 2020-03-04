@@ -1,6 +1,6 @@
 package cellsociety.simulation;
 
-import cellsociety.cell.gol.GOLCell;
+import cellsociety.cell.GOL.GOLCell;
 
 import java.util.ArrayList;
 import java.util.List;

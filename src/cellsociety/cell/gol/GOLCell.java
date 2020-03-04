@@ -1,4 +1,4 @@
-package cellsociety.cell.gol;
+package cellsociety.cell.GOL;
 
 import cellsociety.cell.Cell;
 

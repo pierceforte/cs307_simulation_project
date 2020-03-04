@@ -1,18 +1,14 @@
 package cellsociety.simulation;
 
-import cellsociety.cell.config.ConfigReader;
 import cellsociety.MainController;
+import cellsociety.cell.config.ConfigReader;
 import cellsociety.cell.config.ConfigSaver;
-import cellsociety.cell.gol.GOLCell;
 import javafx.scene.Node;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 public class SimController {
     public static final String CONFIG_FILE_SUFFIX = "Config.csv";

@@ -4,9 +4,6 @@ import cellsociety.cell.Fire.BurningCell;
 import cellsociety.cell.Fire.EmptyCell;
 import cellsociety.cell.Fire.FireCell;
 import cellsociety.cell.Fire.TreeCell;
-import cellsociety.cell.GOL.GOLCell;
-import cellsociety.cell.WaTor.WaTorCell;
-
 import java.util.ArrayList;
 import java.util.List;
 

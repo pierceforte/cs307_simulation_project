@@ -1,4 +1,4 @@
-package cellsociety.cell.wator;
+package cellsociety.cell.WaTor;
 
 import java.util.ArrayList;
 import java.util.Collections;

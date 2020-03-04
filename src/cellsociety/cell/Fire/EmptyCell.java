@@ -1,7 +1,5 @@
 package cellsociety.cell.Fire;
 
-import cellsociety.cell.WaTor.WaTorCell;
-
 import java.util.List;
 
 public class EmptyCell extends FireCell {

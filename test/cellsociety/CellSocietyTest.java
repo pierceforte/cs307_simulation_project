@@ -1,17 +1,16 @@
 package cellsociety;
 
 import cellsociety.cell.Cell;
-import cellsociety.cell.config.ConfigSaver;
-import cellsociety.cell.gol.GOLCell;
+import cellsociety.cell.GOL.GOLCell;
 import cellsociety.cell.config.ConfigReader;
+import cellsociety.cell.config.ConfigSaver;
 import cellsociety.simulation.GOLSimModel;
 import cellsociety.simulation.SimController;
 import cellsociety.simulation.SimModel;
-
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
-import org.junit.Assert;
+//import org.junit.Test;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -432,7 +431,7 @@ public class CellSocietyTest extends DukeApplicationTest {
             long lineCount = Files.lines(Paths.get(ConfigReader.ERROR_LOG)).count();
             return lineCount;
         } catch (IOException e) {
-            Assert.fail("Exception " + e);
+            //Assert.fail("Exception " + e);
         }
         return -1;
     }
