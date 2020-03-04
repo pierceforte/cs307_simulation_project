@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class Cell {
+    public static final int ROW_INDEX = 0;
+    public static final int COL_INDEX = 1;
 
     private String state, nextState;
     private int row, col;

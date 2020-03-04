@@ -1,8 +1,12 @@
 package cellsociety;
+import cellsociety.cell.FileNameVerifier;
+import cellsociety.cell.config.ConfigSaver;
 import cellsociety.simulation.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -13,10 +17,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.File;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.Map;
 
 public class MainController extends Application {
@@ -25,19 +34,14 @@ public class MainController extends Application {
     public static final int WIDTH = 600;
     public static final int GRID_HEIGHT = 600;
     public static final int HEIGHT = 630;
-    public static final String SIMULATION_BUTTON_PREFIX = "Simulation ";
     public static final Paint BACKGROUND = Color.BEIGE;
-    public static final int FRAMES_PER_SECOND = 10;
+    public static final int FRAMES_PER_SECOND = 5;
     public static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
     public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
     public static final String INTRO_SCREEN_IMG_NAME = "StartScreen.jpg";
-    public static final int DEFAULT_FONT_SIZE = 20;
+    public static final int DEFAULT_FONT_SIZE = 5;
     public static final String DEFAULT_FONT = "Verdana";
     public static final DecimalFormat df2 = new DecimalFormat("#.##");
-    public static final String STARTING_MESSAGE = "  ";
-    public static final Map<String, Class> BUTTON_NAME_TO_SIM_CLASS = Map.of(
-            "Game of Life", GOLSimModel.class,
-            "Wa-Tor", WaTorSimModel.class);
 
     private Group root = new Group();
     private Scene myScene;
@@ -64,31 +68,15 @@ public class MainController extends Application {
         introScene.getStylesheets().add(STYLESHEET);
         myIntroPane.getChildren().add(introScreenNode);
 
-        Button gOLSimButton = makeButton(stage, "Game of Life", 180, 350);
-        gOLSimButton.setId("GOLSimButton");
-        myIntroPane.getChildren().add(gOLSimButton);
-
-        Button waTorSimButton = makeButton(stage, "Wa-Tor", 360, 350);
-        waTorSimButton.setId("WaTorSimButton");
-        myIntroPane.getChildren().add(waTorSimButton);
+        SimSelector simSelector = new SimSelector(this);
+        Button simSelectorButton = simSelector.createSelectorButton();
+        myIntroPane.getChildren().add(simSelectorButton);
 
         myStage = stage;
-        stage.setScene(introScene);
-        stage.setTitle(TITLE);
-        stage.show();
-        setMyAnimation(stage);
-    }
-
-    private Button makeButton(Stage stage, String buttonName, int xLocation, double yLocation) {
-        Button simulationButton = new Button(buttonName);
-        simulationButton.setOnAction(e -> {
-            Scene simulation1Scene = setupSimulation(BUTTON_NAME_TO_SIM_CLASS.get(buttonName), WIDTH, HEIGHT, BACKGROUND);
-            stage.setScene(simulation1Scene);
-            isSimulationActive = true;
-        });
-        simulationButton.setTranslateX(xLocation);
-        simulationButton.setTranslateY(yLocation);
-        return simulationButton;
+        myStage.setScene(introScene);
+        myStage.setTitle(TITLE);
+        myStage.show();
+        setMyAnimation(myStage);
     }
 
     public void setMyAnimation(Stage s) {
@@ -99,13 +87,19 @@ public class MainController extends Application {
         myAnimation.play();
     }
 
-    private <T extends SimModel> Scene setupSimulation(Class<T> simTypeClassName, int width, int height, Paint background) {
+    public <T extends SimModel> void beginSimulation(Class<T> simTypeClassName, String csvFilePath) {
+        Scene simulationScene = setupSimulation(simTypeClassName, csvFilePath);
+        myStage.setScene(simulationScene);
+        isSimulationActive = true;
+    }
+
+    private <T extends SimModel> Scene setupSimulation(Class<T> simTypeClassName, String csvFilePath) {
         root = new Group();
-        mySimController = new SimController(simTypeClassName, this);
-        //myTimeText = screenMessage(1 * WIDTH/7, 30, "Time: " + myTime);
-        //myPressToBeginText = screenMessage(WIDTH / 3,  2 * HEIGHT / 3, STARTING_MESSAGE);
-        //root.getChildren.addAll(List.of(myTimeText, myPressToBeginText);
-        myScene = new Scene(root, width, height, background);
+        String [] csvFilePathFromResources = csvFilePath.split("/");
+        String validCsvFilePath = String.join("/",
+                Arrays.copyOfRange(csvFilePathFromResources, csvFilePathFromResources.length-4, csvFilePathFromResources.length));
+        mySimController = new SimController(simTypeClassName, this, validCsvFilePath);
+        myScene = new Scene(root, WIDTH, HEIGHT, BACKGROUND);
         myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode(), root));
 
         //testing adding of css styles
@@ -145,16 +139,6 @@ public class MainController extends Application {
 
     private void handleKeyInput(KeyCode code, Group root) {
 
-    }
-
-    private Text screenMessage(double x, double y, String words) {
-        Text message = new Text();
-        message.setX(x);
-        message.setY(y);
-        message.setFont(Font.font(DEFAULT_FONT, DEFAULT_FONT_SIZE));
-        message.setText(words);
-        message.setFill(Color.BLACK);
-        return message;
     }
 
     public static void main(String[] args)

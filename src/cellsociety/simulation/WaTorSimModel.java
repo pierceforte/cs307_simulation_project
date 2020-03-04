@@ -1,9 +1,9 @@
 package cellsociety.simulation;
 
-import cellsociety.cell.WaTor.EmptyCell;
-import cellsociety.cell.WaTor.FishCell;
-import cellsociety.cell.WaTor.SharkCell;
-import cellsociety.cell.WaTor.WaTorCell;
+import cellsociety.cell.wator.EmptyCell;
+import cellsociety.cell.wator.FishCell;
+import cellsociety.cell.wator.SharkCell;
+import cellsociety.cell.wator.WaTorCell;
 
 import java.util.*;
 
@@ -12,14 +12,9 @@ public class WaTorSimModel extends SimModel <WaTorCell> {
 
     private List<List<WaTorCell>> nextGrid = new ArrayList<>();
 
-    public WaTorSimModel(List<List<String>> cells, SimController simController) {
-        super(cells, simController);
-        for (int row = 0; row < cells.size(); row++) {
-            nextGrid.add(new ArrayList<>());
-            for (int col = 0; col < cells.get(0).size(); col++) {
-                nextGrid.get(row).add(new EmptyCell(row, col));
-            }
-        }
+    public WaTorSimModel(List<List<String>> cellStates, SimController simController) {
+        super(cellStates, simController);
+        initializeNextGrid();
     }
 
     @Override
@@ -90,6 +85,7 @@ public class WaTorSimModel extends SimModel <WaTorCell> {
 
     @Override
     protected void updateStates(List<List<WaTorCell>> cells) {
+        // update actual states of current grid
         for (int row = 0; row < cells.size(); row++) {
             for (int col = 0; col < cells.get(0).size(); col++) {
                 WaTorCell cell = nextGrid.get(row).get(col);
@@ -98,11 +94,8 @@ public class WaTorSimModel extends SimModel <WaTorCell> {
                 cells.get(row).set(col, nextGrid.get(row).get(col));
             }
         }
-        for (int row = 0; row < nextGrid.size(); row++) {
-            for (int col = 0; col < nextGrid.get(0).size(); col++) {
-                nextGrid.get(row).set(col, new EmptyCell(row, col));
-            }
-        }
+        // clear the "next" grid to eliminate changes that have already been made
+        initializeNextGrid();
     }
 
     @Override
@@ -113,6 +106,16 @@ public class WaTorSimModel extends SimModel <WaTorCell> {
     @Override
     protected List<WaTorCell> getNeighbors(WaTorCell cell) {
         return getGridModel().getCardinalNeighbors(cell);
+    }
+
+    private void initializeNextGrid() {
+        nextGrid.clear();
+        for (int row = 0; row < getCells().size(); row++) {
+            nextGrid.add(new ArrayList<>());
+            for (int col = 0; col < getCells().get(0).size(); col++) {
+                nextGrid.get(row).add(new EmptyCell(row, col));
+            }
+        }
     }
 
 }

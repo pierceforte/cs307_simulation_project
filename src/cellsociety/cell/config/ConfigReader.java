@@ -1,6 +1,4 @@
-package cellsociety;
-
-import cellsociety.cell.WaTor.WaTorCell;
+package cellsociety.cell.config;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -10,7 +8,7 @@ import java.util.Scanner;
 public class ConfigReader {
     public static final int NUM_ROWS_INDEX = 0;
     public static final int NUM_COLS_INDEX = 1;
-    public static final String DATA_REGEX = ",";
+    public static final String SPLIT_REGEX = ",";
     public static final String ERROR_LOG = "error_log.txt";
 
     private final String simulationInitialLayout;
@@ -40,7 +38,7 @@ public class ConfigReader {
     private List<List<String>> buildListOfCellLists(File file) throws FileNotFoundException {
         List<List<String>> results = new ArrayList<>();
         Scanner input = new Scanner(file);
-        String[] dimensions = input.next().split(DATA_REGEX);
+        String[] dimensions = input.next().split(SPLIT_REGEX);
         quantityOfRows = Integer.valueOf(dimensions[NUM_ROWS_INDEX]);
         quantityOfColumns = Integer.valueOf(dimensions[NUM_COLS_INDEX]);
         for(int r = 0; r < quantityOfRows; r++) {
@@ -53,11 +51,11 @@ public class ConfigReader {
 
     }
 
-    int getQuantityOfColumns(){
+    public int getQuantityOfColumns(){
         return quantityOfColumns;
     }
 
-    int getQuantityOfRows(){
+    public int getQuantityOfRows(){
         return quantityOfRows;
     }
 
@@ -66,7 +64,7 @@ public class ConfigReader {
     public int getManualQuantityOfColumns(){ return manualQuantityOfColumns; }
 
     private List<String> getRowInfo(String row, int r) {
-        String[] arrayOfInfo = row.split(DATA_REGEX);
+        String[] arrayOfInfo = row.split(SPLIT_REGEX);
         return makeCellObjects(arrayOfInfo, r);
     }
 

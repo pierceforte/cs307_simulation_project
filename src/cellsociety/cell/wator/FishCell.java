@@ -1,4 +1,6 @@
-package cellsociety.cell.WaTor;
+package cellsociety.cell.wator;
+
+import cellsociety.cell.Cell;
 
 import java.util.List;
 
@@ -18,8 +20,8 @@ public class FishCell extends LivingWaTorCell {
             return nextGrid;
         }
         List<Integer> newPosition = getRandomNewPosition(potentialNewPositions);
-        setNextRow(newPosition.get(0));
-        setNextCol(newPosition.get(1));
+        setNextRow(newPosition.get(Cell.ROW_INDEX));
+        setNextCol(newPosition.get(Cell.COL_INDEX));
 
         nextGrid.get(getNextRow()).set(getNextCol(), this);
 

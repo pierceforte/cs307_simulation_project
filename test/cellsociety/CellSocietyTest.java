@@ -1,7 +1,9 @@
 package cellsociety;
 
 import cellsociety.cell.Cell;
-import cellsociety.cell.GOL.GOLCell;
+import cellsociety.cell.config.ConfigSaver;
+import cellsociety.cell.gol.GOLCell;
+import cellsociety.cell.config.ConfigReader;
 import cellsociety.simulation.GOLSimModel;
 import cellsociety.simulation.SimController;
 import cellsociety.simulation.SimModel;
@@ -12,14 +14,11 @@ import javafx.stage.Stage;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -95,6 +94,7 @@ public class CellSocietyTest extends DukeApplicationTest {
         testGOLCellStateChange(0, 9, GOLCell.DEAD, GOLCell.DEAD);
     }
 
+    /*
     @Test
     public void testGOLReset() {
         startApplication();
@@ -124,6 +124,7 @@ public class CellSocietyTest extends DukeApplicationTest {
             }
         }
     }
+     */
 
     @Test
     public void testIntroPaneCreation() {
@@ -147,9 +148,6 @@ public class CellSocietyTest extends DukeApplicationTest {
         Button GOLSimButton = lookup("#GOLSimButton").query();
         fireButtonEvent(GOLSimButton);
 
-        Button restartSimButton = lookup("#restartBttn").query();
-        fireButtonEvent(restartSimButton);
-
         // assert that the cell view is now presented
         assertNotNull(lookup("#cellView0").query());
     }
@@ -162,9 +160,6 @@ public class CellSocietyTest extends DukeApplicationTest {
 
         Button GOLSimButton = lookup("#GOLSimButton").query();
         fireButtonEvent(GOLSimButton);
-
-        Button restartSimButton = lookup("#restartBttn").query();
-        fireButtonEvent(restartSimButton);
 
         // assert button is now present
         assertNotNull(lookup("#exitBttn").query());
@@ -185,7 +180,6 @@ public class CellSocietyTest extends DukeApplicationTest {
         startApplication();
         // begin GOL simulation from beginning
         fireButtonEvent(lookup("#GOLSimButton").query());
-        fireButtonEvent(lookup("#restartBttn").query());
         mySimModel = myMainController.getCurSimController().getModel();
         // step to update cells
         step();
@@ -373,11 +367,9 @@ public class CellSocietyTest extends DukeApplicationTest {
     }
 
     private SimModel createModelForInitialConfigUpdateTests(Class simTypeClassName, String initialConfigFile) {
-        boolean askToRestartOrContinue = false;
         final SimController[] simController = new SimController[1];
         javafxRun(() -> {
-            simController[0] = new SimController(GOLSimModel.class, new MainController(),
-                    initialConfigFile, askToRestartOrContinue);
+            simController[0] = new SimController(GOLSimModel.class, new MainController(), initialConfigFile);
         });
         return simController[0].getModel();
     }
@@ -418,17 +410,10 @@ public class CellSocietyTest extends DukeApplicationTest {
 
     private <T extends SimModel> SimModel createModelFromStart(Class<T> simTypeClassName) {
         javafxRun(() -> {
-            SimController mySimController = new SimController(simTypeClassName, new MainController());
+            SimController mySimController = new SimController(simTypeClassName, new MainController(),
+                    "configs/" + ConfigSaver.SIM_CLASS_NAME_TO_DIRECTORY.get(simTypeClassName) + "/GOLConfig/GOLConfig.csv");
             mySimModel = mySimController.getModel();
         });
-        // choose to restart simulation from initial configuration
-        try {
-            javafxRun(() -> fireButtonEvent(lookup("#restartBttn").query()));
-        }
-        catch (NullPointerException e) {
-            // logError(e);
-            // if button not presented, we don't have to do anything
-        }
         return mySimModel;
     }
 
