@@ -1,7 +1,7 @@
-package cellsociety.cell.wator;
+package cellsociety.cell.WaTor;
 
 import cellsociety.cell.Cell;
-import cellsociety.cell.wator.WaTorCell;
+import cellsociety.cell.WaTor.WaTorCell;
 import cellsociety.grid.Grid;
 
 import java.util.List;

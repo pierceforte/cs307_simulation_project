@@ -17,8 +17,14 @@ public class Cell {
         this.col = col;
     }
 
+
+
     public String getState(){
         return state;
+    }
+
+    public String getNextState(){
+        return nextState;
     }
 
     public void setNextState(String nextState) {

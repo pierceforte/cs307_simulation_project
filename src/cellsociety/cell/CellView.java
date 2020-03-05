@@ -14,19 +14,22 @@ public class CellView <T extends Cell> extends Rectangle {
 
     public CellView(T cell, double size, double xOffset, double yOffset, int idNum) {
         super(xOffset + cell.getCol() * size, yOffset + cell.getRow() * size, size, size);
+        this.cell = cell;
         setId("cellView" + idNum);
         getStyleClass().add("cell");
-        setDefaultColor();
-    }
-
-    public void setDefaultColor(){
         getStyleClass().add("state" + cell.getState());
+
     }
 
-    public void setCustomColor(Color color){
-        getStyleClass().remove("state" + cell.getState());
-        setFill(color);
+
+    public int getRow(){
+        return cell.getRow();
     }
+
+    public int getCol(){
+        return cell.getCol();
+    }
+
 
 
 

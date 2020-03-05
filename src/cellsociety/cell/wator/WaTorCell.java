@@ -1,4 +1,4 @@
-package cellsociety.cell.wator;
+package cellsociety.cell.WaTor;
 
 import cellsociety.cell.Cell;
 import cellsociety.grid.Grid;
