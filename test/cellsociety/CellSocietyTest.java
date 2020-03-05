@@ -1,52 +1,23 @@
 package cellsociety;
 
 import cellsociety.cell.Cell;
-<<<<<<< HEAD
-import org.junit.jupiter.api.DynamicTest;
-import org.junit.jupiter.api.Test;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.List;
-import java.util.Objects;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-public class CellSocietyTest extends DukeApplicationTest {
-
-    @Test
-    public void testnumcells_columns(){
-        String simulationInitialLayout =  "testfile.csv";
-        ConfigReader con = new ConfigReader(simulationInitialLayout);
-        File file = new File(Objects.requireNonNull(Main.class.getClassLoader().getResource(simulationInitialLayout)).getFile());
-        List<List<Cell>> ret = null;
-        try {
-            con.buildListOfCellLists(file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        assertEquals(con.getManualquantityOfColumns(),con.getQuantityOfColumns());
-        assertEquals(con.getManualquantityOfRows(),con.getQuantityOfRows());
-=======
 import cellsociety.cell.GOL.GOLCell;
+import cellsociety.cell.config.ConfigReader;
+import cellsociety.cell.config.ConfigSaver;
 import cellsociety.simulation.GOLSimModel;
 import cellsociety.simulation.SimController;
 import cellsociety.simulation.SimModel;
-
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
-import org.junit.Assert;
+//import org.junit.Test;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -85,9 +56,7 @@ public class CellSocietyTest extends DukeApplicationTest {
         assertThrows(java.lang.Exception.class, () -> data.getCellList());
 
     }
->>>>>>> master
 
-    }
     @Test
     public void testGOLCellDeathUnderPopulation() {
         // test that a cell with zero neighbors dies
@@ -124,6 +93,7 @@ public class CellSocietyTest extends DukeApplicationTest {
         testGOLCellStateChange(0, 9, GOLCell.DEAD, GOLCell.DEAD);
     }
 
+    /*
     @Test
     public void testGOLReset() {
         startApplication();
@@ -153,6 +123,7 @@ public class CellSocietyTest extends DukeApplicationTest {
             }
         }
     }
+     */
 
     @Test
     public void testIntroPaneCreation() {
@@ -176,9 +147,6 @@ public class CellSocietyTest extends DukeApplicationTest {
         Button GOLSimButton = lookup("#GOLSimButton").query();
         fireButtonEvent(GOLSimButton);
 
-        Button restartSimButton = lookup("#restartBttn").query();
-        fireButtonEvent(restartSimButton);
-
         // assert that the cell view is now presented
         assertNotNull(lookup("#cellView0").query());
     }
@@ -191,9 +159,6 @@ public class CellSocietyTest extends DukeApplicationTest {
 
         Button GOLSimButton = lookup("#GOLSimButton").query();
         fireButtonEvent(GOLSimButton);
-
-        Button restartSimButton = lookup("#restartBttn").query();
-        fireButtonEvent(restartSimButton);
 
         // assert button is now present
         assertNotNull(lookup("#exitBttn").query());
@@ -214,7 +179,6 @@ public class CellSocietyTest extends DukeApplicationTest {
         startApplication();
         // begin GOL simulation from beginning
         fireButtonEvent(lookup("#GOLSimButton").query());
-        fireButtonEvent(lookup("#restartBttn").query());
         mySimModel = myMainController.getCurSimController().getModel();
         // step to update cells
         step();
@@ -309,7 +273,7 @@ public class CellSocietyTest extends DukeApplicationTest {
 
     Below are the initial configuration tests for Game of Life.
     There are 5 Still Lifes, 1 Oscillator (Blinker), and 1 Spaceship (Glider)
-    
+
      */
     @Test
     public void testGOLBeehiveConfig() {
@@ -402,11 +366,9 @@ public class CellSocietyTest extends DukeApplicationTest {
     }
 
     private SimModel createModelForInitialConfigUpdateTests(Class simTypeClassName, String initialConfigFile) {
-        boolean askToRestartOrContinue = false;
         final SimController[] simController = new SimController[1];
         javafxRun(() -> {
-            simController[0] = new SimController(GOLSimModel.class, new MainController(),
-                    initialConfigFile, askToRestartOrContinue);
+            simController[0] = new SimController(GOLSimModel.class, new MainController(), initialConfigFile);
         });
         return simController[0].getModel();
     }
@@ -447,17 +409,10 @@ public class CellSocietyTest extends DukeApplicationTest {
 
     private <T extends SimModel> SimModel createModelFromStart(Class<T> simTypeClassName) {
         javafxRun(() -> {
-            SimController mySimController = new SimController(simTypeClassName, new MainController());
+            SimController mySimController = new SimController(simTypeClassName, new MainController(),
+                    "configs/" + ConfigSaver.SIM_CLASS_NAME_TO_DIRECTORY.get(simTypeClassName) + "/GOLConfig/GOLConfig.csv");
             mySimModel = mySimController.getModel();
         });
-        // choose to restart simulation from initial configuration
-        try {
-            javafxRun(() -> fireButtonEvent(lookup("#restartBttn").query()));
-        }
-        catch (NullPointerException e) {
-            // logError(e);
-            // if button not presented, we don't have to do anything
-        }
         return mySimModel;
     }
 
@@ -476,7 +431,7 @@ public class CellSocietyTest extends DukeApplicationTest {
             long lineCount = Files.lines(Paths.get(ConfigReader.ERROR_LOG)).count();
             return lineCount;
         } catch (IOException e) {
-            Assert.fail("Exception " + e);
+            //Assert.fail("Exception " + e);
         }
         return -1;
     }

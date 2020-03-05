@@ -38,7 +38,8 @@ public class MainController extends Application {
     public static final Map<String, Class> BUTTON_NAME_TO_SIM_CLASS = Map.of(
             "Game of Life", GOLSimModel.class,
             "Wa-Tor", WaTorSimModel.class,
-            "Segregation", SegregationSimModel.class);
+            "Segregation", SegregationSimModel.class,
+            "RPS", RPSModel.class);
 
     private Group root = new Group();
     private Scene myScene;

@@ -18,12 +18,7 @@ public class GOLCell extends Cell {
         super(state, row, col);
     }
 
-<<<<<<< HEAD:src/cellsociety/simulation/GameOfLifeSimModel.java
-    @Override
-    public String determineNextState(Cell cell, List<Cell> neighbors) {
-=======
     public <T extends Cell> void setWhatToDoNext(List<T> neighbors){
->>>>>>> master:src/cellsociety/cell/GOL/GOLCell.java
         int numNeighbors = getNumNeighbors(neighbors);
         String nextState = handleCell.get(getState()).apply(numNeighbors);
         setNextState(nextState);
