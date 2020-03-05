@@ -1,16 +1,9 @@
 package cellsociety.simulation;
 
-import cellsociety.cell.Cell;
 import cellsociety.cell.GOL.GOLCell;
-import cellsociety.cell.WaTor.EmptyCell;
-import cellsociety.cell.WaTor.FishCell;
-import cellsociety.cell.WaTor.SharkCell;
-import cellsociety.cell.WaTor.WaTorCell;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 
 public class GOLSimModel extends SimModel<GOLCell> {
     public static final String CONFIG_FILE_PREFIX = "GOL";

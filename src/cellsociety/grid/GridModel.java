@@ -17,6 +17,19 @@ public class GridModel<T extends Cell> {
         return cells;
     }
 
+    public T getCellAt(int row, int col){
+        return cells.get(row).get(col);
+    }
+
+    public int getNumRows(){
+        return cells.size();
+    }
+
+    public int getNumCols(){
+        return cells.get(0).size();
+    }
+
+
     public List<T> getAllNeighbors(T cell) {
         List<T> neighbors = new ArrayList<>();
 

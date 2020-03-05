@@ -1,4 +1,4 @@
-package cellsociety.cell.Segregation;
+package cellsociety.cell.segregation;
 
 import cellsociety.cell.Cell;
 
