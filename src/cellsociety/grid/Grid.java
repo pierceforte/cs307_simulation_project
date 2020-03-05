@@ -1,20 +1,26 @@
 package cellsociety.grid;
 
 import cellsociety.cell.Cell;
+import cellsociety.cell.wator.EmptyCell;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
 public class Grid<T extends Cell> {
-    private List<List<T>> cells;
+    private List<List<T>> cells = new ArrayList<>();
 
     public Grid(List<List<T>> cells) {
         this.cells = cells;
     }
 
     public Grid(Grid<T> gridToCopy) {
-        this.cells = new ArrayList<>(gridToCopy.getCells());
+        for (int row = 0; row < gridToCopy.getNumRows(); row++) {
+            cells.add(new ArrayList<>());
+            for (int col = 0; col < gridToCopy.getNumCols(); col++) {
+                cells.get(row).add(gridToCopy.get(row, col));
+            }
+        }
     }
 
     public List<List<T>> getCells() {

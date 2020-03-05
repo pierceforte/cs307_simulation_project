@@ -418,7 +418,12 @@ public class CellSocietyTest extends DukeApplicationTest {
 
     private void startApplication() {
         // start application
-        myMainController = new MainController();
+        myMainController = new MainController(){
+            @Override
+            public void start(Stage stage) {
+                myMainController.beginSimulation(GOLSimModel.class, "filePath");
+            }
+        };
         javafxRun(() -> myMainController.start(new Stage()));
     }
 

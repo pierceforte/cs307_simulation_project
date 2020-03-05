@@ -47,7 +47,6 @@ public class MainController extends Application {
 
     @Override
     public void start(Stage stage) {
-
         Image introScreenImage = new Image(getClass().getClassLoader().getResourceAsStream(INTRO_SCREEN_IMG_NAME));
         ImageView introScreenNode = new ImageView(introScreenImage);
         introScreenNode.setFitHeight(HEIGHT);

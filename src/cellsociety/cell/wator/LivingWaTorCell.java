@@ -1,5 +1,6 @@
 package cellsociety.cell.wator;
 
+import cellsociety.cell.Cell;
 import cellsociety.grid.Grid;
 
 import java.util.ArrayList;
@@ -51,5 +52,13 @@ public abstract class LivingWaTorCell extends WaTorCell {
             }
         }
         return potentialNewPositions;
+    }
+
+    protected Grid<WaTorCell> setNextPosition(List<List<Integer>> potentialNewPositions, Grid<WaTorCell> nextGrid) {
+        List<Integer> newPosition = getRandomNewPosition(potentialNewPositions);
+        setNextRow(newPosition.get(Cell.ROW_INDEX));
+        setNextCol(newPosition.get(Cell.COL_INDEX));
+        nextGrid.set(getNextRow(), getNextCol(), this);
+        return nextGrid;
     }
 }
