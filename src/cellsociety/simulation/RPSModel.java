@@ -2,7 +2,6 @@ package cellsociety.simulation;
 
 import cellsociety.cell.GOL.GOLCell;
 import cellsociety.cell.RPSCell;
-import cellsociety.cell.Segregation.SegregationCell;
 import cellsociety.grid.GridModel;
 
 import java.util.*;
@@ -46,30 +45,35 @@ public class RPSModel extends SimModel<RPSCell>{
 
     @Override
     protected void determineAndSetNextState(RPSCell cell, List<RPSCell> neighbors) {
-        Map<String,Integer> getstatemap = new TreeMap<>();
+        Map<String,Integer> getstatemap = new HashMap<>();
         for(RPSCell neighborcell :neighbors){
             getstatemap.putIfAbsent(neighborcell.getState(),0);
             getstatemap.put(neighborcell.getState(),getstatemap.get(neighborcell.getState())+1);
         }
+
         List<Integer> values = new ArrayList<>();
-        for(int val: getstatemap.values() ){
-            values.add(val);
-        }
+        Collections.addAll(getstatemap.values());
         Collections.sort(values);
         Collections.reverse(values);
-        String chosenkey="";
+        String chosenkey=cell.getState();
+        int keychecker = 0;
+
+
         for (int nval:values){
             for(String key : getstatemap.keySet() ){
                 if(nval==getstatemap.get(key)){
                     chosenkey = key;
+                    keychecker+=1;
                 }
             }
-            if(nval>threshold && chosenkey.hashCode()>cell.getState().hashCode()){
-                cell.setNextState(chosenkey);
+            if(nval < threshold){
+                if(cell.getState().hashCode() < chosenkey.hashCode()) {
+                    cell.setNextState(chosenkey);
+                }
             }
         }
-        if(chosenkey.length()==0){
-            cell.setNextState(cell.getState());
+        if(keychecker==0){
+            cell.setNextState(chosenkey);
         }
     }
 

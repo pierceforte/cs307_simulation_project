@@ -2,6 +2,7 @@ package cellsociety.cell.config;
 
 import cellsociety.cell.Cell;
 import cellsociety.simulation.GOLSimModel;
+import cellsociety.simulation.RPSModel;
 import cellsociety.simulation.SegregationSimModel;
 import cellsociety.simulation.WaTorSimModel;
 
@@ -18,11 +19,14 @@ public class ConfigSaver<T extends Cell> {
     public static final Map<Class, String> SIM_CLASS_NAME_TO_DIRECTORY = Map.of(
             GOLSimModel.class, GOLSimModel.CONFIG_FILE_PREFIX,
             WaTorSimModel.class, WaTorSimModel.CONFIG_FILE_PREFIX,
-            SegregationSimModel.class, SegregationSimModel.CONFIG_FILE_PREFIX);
+            SegregationSimModel.class, SegregationSimModel.CONFIG_FILE_PREFIX,
+            RPSModel.class, RPSModel.CONFIG_FILE_PREFIX
+    );
     public static final Map<String, Class> DIRECTORY_TO_SIM_CLASS = Map.of(
             GOLSimModel.CONFIG_FILE_PREFIX, GOLSimModel.class,
             WaTorSimModel.CONFIG_FILE_PREFIX, WaTorSimModel.class,
-            SegregationSimModel.CONFIG_FILE_PREFIX, SegregationSimModel.class);
+            SegregationSimModel.CONFIG_FILE_PREFIX, SegregationSimModel.class,
+            RPSModel.CONFIG_FILE_PREFIX, RPSModel.class);
 
     public ConfigSaver(List<List<T>> cells, String fileName, String author, String description, Class modelClass) {
         String simDirectory = SIM_CLASS_NAME_TO_DIRECTORY.get(modelClass);
