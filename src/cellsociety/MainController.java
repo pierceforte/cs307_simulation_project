@@ -1,12 +1,8 @@
 package cellsociety;
-import cellsociety.cell.FileNameVerifier;
-import cellsociety.cell.config.ConfigSaver;
 import cellsociety.simulation.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -15,18 +11,12 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.io.File;
-import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.Arrays;
-import java.util.Map;
 
 public class MainController extends Application {
     public static final String STYLESHEET = "style.css";

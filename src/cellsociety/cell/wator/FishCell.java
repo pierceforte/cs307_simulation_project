@@ -1,6 +1,8 @@
-package cellsociety.cell.WaTor;
+package cellsociety.cell.wator;
 
 import cellsociety.cell.Cell;
+import cellsociety.cell.wator.WaTorCell;
+import cellsociety.grid.Grid;
 
 import java.util.List;
 
@@ -13,17 +15,17 @@ public class FishCell extends LivingWaTorCell {
     }
 
     @Override
-    public List<List<WaTorCell>> setWhatToDoNext(List<WaTorCell> neighbors, List<List<WaTorCell>> nextGrid) {
+    public Grid<WaTorCell> setWhatToDoNext(List<WaTorCell> neighbors, Grid<WaTorCell> nextGrid) {
         List<List<Integer>> potentialNewPositions = getAdjacentEnterableCells(neighbors, nextGrid, List.of(FISH, SHARK));
         if (potentialNewPositions.isEmpty()) {
-            nextGrid.get(getRow()).set(getCol(), this);
+            nextGrid.set(getRow(), getCol(), this);
             return nextGrid;
         }
         List<Integer> newPosition = getRandomNewPosition(potentialNewPositions);
         setNextRow(newPosition.get(Cell.ROW_INDEX));
         setNextCol(newPosition.get(Cell.COL_INDEX));
 
-        nextGrid.get(getNextRow()).set(getNextCol(), this);
+        nextGrid.set(getNextRow(), getNextCol(), this);
 
         nextGrid = handleReproduction(nextGrid);
 

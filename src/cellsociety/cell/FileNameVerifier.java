@@ -1,6 +1,6 @@
 package cellsociety.cell;
 
-import cellsociety.cell.config.ConfigSaver;
+import cellsociety.config.ConfigSaver;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -1,14 +1,17 @@
 package cellsociety.simulation;
 
+import cellsociety.cell.Fire.FireCell;
 import cellsociety.cell.segregation.SegregationCell;
+import cellsociety.grid.Grid;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class SegregationSimModel extends SimModel<SegregationCell> {
     public static final String CONFIG_FILE_PREFIX = "Segregation";
 
-    private List<List<SegregationCell>> nextGrid = new ArrayList<>();
+    private Grid<SegregationCell> nextGrid;
 
     public SegregationSimModel(List<List<String>> cellStates, SimController simController) {
         super(cellStates, simController);
@@ -39,28 +42,25 @@ public class SegregationSimModel extends SimModel<SegregationCell> {
     }
 
     @Override
-    protected void setNextStates(List<List<SegregationCell>> cells) {
-        for (List<SegregationCell> row : cells) {
-            for (SegregationCell cell : row) {
-                determineAndSetNextState(cell, getNeighbors(cell));
+    protected void setNextStates(Grid<SegregationCell> grid) {
+        // TODO: try to put this in executeForAll runnable
+        for (int row = 0; row < grid.getNumRows(); row++) {
+            for (int col = 0; col < grid.getNumCols(); col++) {
+                SegregationCell cell = grid.get(row,col);
+                cell.setWhatToDoNext(getNeighbors(cell), nextGrid);
             }
         }
     }
 
     @Override
-    protected void determineAndSetNextState(SegregationCell cell, List<SegregationCell> neighbors) {
-        nextGrid = cell.setWhatToDoNext(neighbors, nextGrid);
-    }
-
-    @Override
-    protected void updateStates(List<List<SegregationCell>> cells) {
+    protected void updateStates(Grid<SegregationCell> grid) {
         // update actual states of current grid
-        for (int row = 0; row < cells.size(); row++) {
-            for (int col = 0; col < cells.get(0).size(); col++) {
-                SegregationCell cell = nextGrid.get(row).get(col);
+        for (int row = 0; row < nextGrid.getNumRows(); row++) {
+            for (int col = 0; col < nextGrid.getNumCols(); col++) {
+                SegregationCell cell = nextGrid.get(row, col);
                 cell.setRow(row);
                 cell.setCol(col);
-                cells.get(row).set(col, nextGrid.get(row).get(col));
+                grid.set(row, col, nextGrid.get(row, col));
             }
         }
     }
@@ -72,15 +72,10 @@ public class SegregationSimModel extends SimModel<SegregationCell> {
 
     @Override
     protected List<SegregationCell> getNeighbors(SegregationCell cell) {
-        return getGridModel().getAllNeighbors(cell);
+        return getGrid().getAllNeighbors(cell);
     }
 
     private void initializeNextGrid() {
-        for (int row = 0; row < getCells().size(); row++) {
-            nextGrid.add(new ArrayList<>());
-            for (int col = 0; col < getCells().get(0).size(); col++) {
-                nextGrid.get(row).add(getCells().get(row).get(col));
-            }
-        }
+        nextGrid = new Grid<SegregationCell>(getGrid());
     }
 }

@@ -1,10 +1,12 @@
-package cellsociety.cell.WaTor;
+package cellsociety.cell.wator;
+
+import cellsociety.grid.Grid;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class LivingWaTorCell extends WaTorCell{
+public abstract class LivingWaTorCell extends WaTorCell {
 
     private int reproductionTimer = 0;
 
@@ -14,19 +16,19 @@ public abstract class LivingWaTorCell extends WaTorCell{
 
     protected abstract int getChrononsToReproduce();
 
-    protected List<List<WaTorCell>> handleReproduction(List<List<WaTorCell>> nextGrid) {
+    protected Grid<WaTorCell> handleReproduction(Grid<WaTorCell> nextGrid) {
         if (reproductionTimer == getChrononsToReproduce()) {
             reproductionTimer = 0;
             if (this instanceof FishCell) {
-                nextGrid.get(getRow()).set(getCol(), new FishCell(getRow(), getCol()));
+                nextGrid.set(getRow(), getCol(), new FishCell(getRow(), getCol()));
             }
             else if (this instanceof SharkCell) {
-                nextGrid.get(getRow()).set(getCol(), new SharkCell(getRow(), getCol()));
+                nextGrid.set(getRow(), getCol(), new SharkCell(getRow(), getCol()));
             }
         }
         else {
             reproductionTimer++;
-            nextGrid.get(getRow()).set(getCol(), new EmptyCell(getRow(), getCol()));
+            nextGrid.set(getRow(), getCol(), new EmptyCell(getRow(), getCol()));
         }
         return nextGrid;
     }
@@ -36,7 +38,7 @@ public abstract class LivingWaTorCell extends WaTorCell{
         return potentialNewPositions.get(0);
     }
 
-    protected List<List<Integer>> getAdjacentEnterableCells(List<WaTorCell> neighbors, List<List<WaTorCell>> nextGrid, List<String> unenterableStates) {
+    protected List<List<Integer>> getAdjacentEnterableCells(List<WaTorCell> neighbors, Grid<WaTorCell> nextGrid, List<String> unenterableStates) {
         List<List<Integer>> potentialNewPositions = new ArrayList<>();
         for (WaTorCell cell : neighbors) {
             List<Integer> position = List.of(cell.getRow(), cell.getCol());
@@ -44,11 +46,10 @@ public abstract class LivingWaTorCell extends WaTorCell{
             // or higher priority (sharks have "higher" priority than fish when moving to a cell because they
             // can eat fish, but a fish can't move into a cell that has been claimed by shark)
             if (cell.getState().equals(EMPTY) &&
-                    !unenterableStates.contains(nextGrid.get(cell.getRow()).get(cell.getCol()).getState())) {
+                    !unenterableStates.contains(nextGrid.get(cell.getRow(), cell.getCol()).getState())) {
                 potentialNewPositions.add(position);
             }
         }
-
         return potentialNewPositions;
     }
 }

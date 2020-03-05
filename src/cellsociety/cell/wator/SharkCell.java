@@ -1,6 +1,8 @@
-package cellsociety.cell.WaTor;
+package cellsociety.cell.wator;
 
 import cellsociety.cell.Cell;
+import cellsociety.cell.wator.WaTorCell;
+import cellsociety.grid.Grid;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +28,11 @@ public class SharkCell extends LivingWaTorCell{
     // TODO: clean this method up
 
     @Override
-    public List<List<WaTorCell>> setWhatToDoNext(List<WaTorCell> neighbors, List<List<WaTorCell>> nextGrid) {
+    public Grid<WaTorCell> setWhatToDoNext(List<WaTorCell> neighbors, Grid<WaTorCell> nextGrid) {
 
         // if shark has no energy, it dies and becomes an EMPTY cell
         if (energy == 0) {
-            nextGrid.get(getRow()).set(getCol(), new EmptyCell(getRow(), getCol()));
+            nextGrid.set(getNextRow(), getNextCol(), new EmptyCell(getRow(), getCol()));
             return nextGrid;
         }
 
@@ -51,7 +53,7 @@ public class SharkCell extends LivingWaTorCell{
         }
         // if no potential empty spaces to move to, don't move
         if (potentialNewPositions.isEmpty()) {
-            nextGrid.get(getRow()).set(getCol(), this);
+            nextGrid.set(getNextRow(), getNextCol(), this);
             return nextGrid;
         }
         // choose randomly from the potential spaces to move to from above
@@ -59,7 +61,7 @@ public class SharkCell extends LivingWaTorCell{
         setNextRow(newPosition.get(Cell.ROW_INDEX));
         setNextCol(newPosition.get(Cell.COL_INDEX));
 
-        nextGrid.get(getNextRow()).set(getNextCol(), this);
+        nextGrid.set(getNextRow(), getNextCol(), this);
 
         if (willEatFish) {
             energy += ENERGY_FOR_EATING_FISH;

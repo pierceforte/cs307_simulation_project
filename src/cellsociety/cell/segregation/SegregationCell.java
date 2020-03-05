@@ -1,6 +1,8 @@
 package cellsociety.cell.segregation;
 
 import cellsociety.cell.Cell;
+import cellsociety.cell.wator.WaTorCell;
+import cellsociety.grid.Grid;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,7 +16,7 @@ public class SegregationCell extends Cell {
     public static final String AGENT_B = "2";
     public static final double DEFAULT_SATISFACTION_MIN = 0.75;
 
-    private Map<String, BiFunction<List<SegregationCell>, List<List<SegregationCell>>, List<List<SegregationCell>>>> handleCell = Map.of(
+    private Map<String, BiFunction<List<SegregationCell>,  Grid<SegregationCell>, Grid<SegregationCell>>> handleCell = Map.of(
             EMPTY, (neighbors, nextGrid) -> handleEmptyCell(neighbors, nextGrid),
             AGENT_A, (neighbors, nextGrid) -> handleAgentCell(neighbors, nextGrid),
             AGENT_B, (neighbors, nextGrid) -> handleAgentCell(neighbors, nextGrid));
@@ -23,24 +25,24 @@ public class SegregationCell extends Cell {
         super(state, row, col);
     }
 
-    public List<List<SegregationCell>> setWhatToDoNext(List<SegregationCell> neighbors, List<List<SegregationCell>> nextGrid){
+    public Grid<SegregationCell> setWhatToDoNext(List<SegregationCell> neighbors, Grid<SegregationCell> nextGrid){
         return handleCell.get(getState()).apply(neighbors, nextGrid);
     }
 
-    private List<List<SegregationCell>> handleEmptyCell(List<SegregationCell> neighbors, List<List<SegregationCell>> nextGrid) {
+    private Grid<SegregationCell> handleEmptyCell(List<SegregationCell> neighbors, Grid<SegregationCell> nextGrid) {
         return nextGrid;
     }
 
-    private List<List<SegregationCell>> handleAgentCell(List<SegregationCell> neighbors, List<List<SegregationCell>> nextGrid) {
+    private Grid<SegregationCell> handleAgentCell(List<SegregationCell> neighbors, Grid<SegregationCell> nextGrid) {
         double satisfaction = getSatisfaction(neighbors);
         if (satisfaction < DEFAULT_SATISFACTION_MIN) {
             List<Integer> newPosition = getRandomNewPosition(nextGrid);
             int myCurRow = getRow();
             int myCurCol = getCol();
-            nextGrid.get(myCurRow).set(myCurCol, new SegregationCell(EMPTY, myCurRow, myCurCol));
+            nextGrid.set(myCurRow, myCurCol, new SegregationCell(EMPTY, myCurRow, myCurCol));
             int myNewRow = newPosition.get(Cell.ROW_INDEX);
             int myNewCol = newPosition.get(Cell.COL_INDEX);
-            nextGrid.get(myNewRow).set(myNewCol, this);
+            nextGrid.set(myNewRow, myNewCol, this);
             setRow(myNewRow);
             setCol(myNewCol);
         }
@@ -63,10 +65,11 @@ public class SegregationCell extends Cell {
         return numAlikeNeighbors/numTotalNeighbors;
     }
 
-    private List<Integer> getRandomNewPosition(List<List<SegregationCell>> nextGrid) {
+    private List<Integer> getRandomNewPosition(Grid<SegregationCell> nextGrid) {
         List<List<Integer>> potentialNewPositions = new ArrayList<>();
-        for (List<SegregationCell> row : nextGrid) {
-            for (SegregationCell cell : row) {
+        for (int row = 0; row < nextGrid.getNumRows(); row++) {
+            for (int col = 0; col < nextGrid.getNumCols(); col++) {
+                SegregationCell cell = nextGrid.get(row, col);
                 if (cell.getState().equals(EMPTY)) {
                     potentialNewPositions.add(List.of(cell.getRow(), cell.getCol()));
                 }

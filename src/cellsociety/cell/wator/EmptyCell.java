@@ -1,4 +1,6 @@
-package cellsociety.cell.WaTor;
+package cellsociety.cell.wator;
+
+import cellsociety.grid.Grid;
 
 import java.util.List;
 
@@ -10,7 +12,7 @@ public class EmptyCell extends WaTorCell {
     }
 
     @Override
-    public List<List<WaTorCell>> setWhatToDoNext(List<WaTorCell> neighbors, List<List<WaTorCell>> nextGrid) {
+    public Grid<WaTorCell> setWhatToDoNext(List<WaTorCell> neighbors, Grid<WaTorCell> nextGrid) {
         return nextGrid;
     }
 

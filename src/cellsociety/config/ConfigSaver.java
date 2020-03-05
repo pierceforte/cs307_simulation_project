@@ -1,4 +1,4 @@
-package cellsociety.cell.config;
+package cellsociety.config;
 
 import cellsociety.cell.Cell;
 import cellsociety.simulation.GOLSimModel;

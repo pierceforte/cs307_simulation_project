@@ -1,6 +1,7 @@
-package cellsociety.cell.WaTor;
+package cellsociety.cell.wator;
 
 import cellsociety.cell.Cell;
+import cellsociety.grid.Grid;
 
 import java.util.*;
 
@@ -32,6 +33,6 @@ public abstract class WaTorCell extends Cell {
         this.nextCol = nextCol;
     }
 
-    public abstract List<List<WaTorCell>> setWhatToDoNext(List<WaTorCell> neighbors, List<List<WaTorCell>> nextGrid);
+    public abstract Grid<WaTorCell> setWhatToDoNext(List<WaTorCell> neighbors, Grid<WaTorCell> nextGrid);
 
 }

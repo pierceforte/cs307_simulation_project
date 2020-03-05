@@ -2,8 +2,8 @@ package cellsociety;
 
 import cellsociety.cell.Cell;
 import cellsociety.cell.GOL.GOLCell;
-import cellsociety.cell.config.ConfigReader;
-import cellsociety.cell.config.ConfigSaver;
+import cellsociety.config.ConfigReader;
+import cellsociety.config.ConfigSaver;
 import cellsociety.simulation.GOLSimModel;
 import cellsociety.simulation.SimController;
 import cellsociety.simulation.SimModel;

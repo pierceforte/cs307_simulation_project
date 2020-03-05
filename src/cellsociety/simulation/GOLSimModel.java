@@ -1,6 +1,7 @@
 package cellsociety.simulation;
 
 import cellsociety.cell.GOL.GOLCell;
+import cellsociety.grid.Grid;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,27 +33,22 @@ public class GOLSimModel extends SimModel<GOLCell> {
         return grid;
     }
 
+    //TODO: eliminate duplication here and in FireSimModel and SegregationSimModel
     @Override
-    protected void setNextStates(List<List<GOLCell>> cells) {
-        for (List<GOLCell> row : cells) {
-            for (GOLCell cell : row) {
-                determineAndSetNextState(cell, getNeighbors(cell));
+    protected void setNextStates(Grid<GOLCell> grid) {
+        // TODO: try to put this in executeForAll runnable
+        for (int row = 0; row < grid.getNumRows(); row++) {
+            for (int col = 0; col < grid.getNumCols(); col++) {
+                GOLCell cell = grid.get(row,col);
+                cell.setWhatToDoNext(getNeighbors(cell));
             }
         }
     }
 
+    //TODO: eliminate duplication here and in FireSimModel
     @Override
-    protected void determineAndSetNextState(GOLCell cell, List<GOLCell> neighbors) {
-        cell.setWhatToDoNext(neighbors);
-    }
-
-    @Override
-    protected void updateStates(List<List<GOLCell>> cells) {
-        for (List<GOLCell> row : cells) {
-            for (GOLCell cell : row) {
-                cell.updateState();
-            }
-        }
+    protected void updateStates(Grid<GOLCell> grid) {
+        grid.executeForAllCells(cell -> cell.updateState());
     }
 
     @Override
@@ -62,6 +58,6 @@ public class GOLSimModel extends SimModel<GOLCell> {
 
     @Override
     protected List<GOLCell> getNeighbors(GOLCell cell) {
-        return getGridModel().getAllNeighbors(cell);
+        return getGrid().getAllNeighbors(cell);
     }
 }

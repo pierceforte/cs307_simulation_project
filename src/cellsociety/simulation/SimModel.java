@@ -1,35 +1,29 @@
 package cellsociety.simulation;
 
-import cellsociety.cell.config.ConfigReader;
 import cellsociety.cell.Cell;
-import cellsociety.grid.GridModel;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+import cellsociety.grid.Grid;
 
 import java.util.List;
 
 public abstract class SimModel <T extends Cell>{
-    private GridModel gridModel;
+    private Grid grid;
     private SimController simController;
     private SimView simView;
 
     public SimModel(List<List<String>> cellStates, SimController simController) {
         List<List<T>> grid = createGrid(cellStates);
-        this.gridModel = new GridModel(grid);
+        this.grid = new Grid(grid);
         this.simController = simController;
     }
 
     public void update() {
-        List<List<T>> cells = gridModel.getCells();
-        setNextStates(cells);
-        updateStates(cells);
+        setNextStates(grid);
+        updateStates(grid);
     }
 
     //repetitive method here for testing MVC
     public List<List<T>> getCells(){
-        return gridModel.getCells();
+        return grid.getCells();
     }
 
     public SimController getSimController() {
@@ -42,18 +36,16 @@ public abstract class SimModel <T extends Cell>{
 
     protected abstract List<List<T>> createGrid(List<List<String>> cellStates);
 
-    protected abstract void setNextStates(List<List<T>> cells);
+    protected abstract void setNextStates(Grid<T> grid);
 
-    protected abstract void determineAndSetNextState(T cell, List<T> neighbors);
-
-    protected abstract void updateStates(List<List<T>> cells);
+    protected abstract void updateStates(Grid<T> grid);
 
     protected abstract String getConfigFileIdentifier();
 
     protected abstract List<T> getNeighbors(T cell);
 
-    protected GridModel getGridModel(){
-        return gridModel;
+    protected Grid getGrid(){
+        return grid;
     }
 
 }

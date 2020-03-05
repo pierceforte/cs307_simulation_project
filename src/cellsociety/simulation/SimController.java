@@ -1,8 +1,8 @@
 package cellsociety.simulation;
 
 import cellsociety.MainController;
-import cellsociety.cell.config.ConfigReader;
-import cellsociety.cell.config.ConfigSaver;
+import cellsociety.config.ConfigReader;
+import cellsociety.config.ConfigSaver;
 import javafx.scene.Node;
 
 import java.lang.reflect.Constructor;

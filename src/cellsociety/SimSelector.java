@@ -1,6 +1,6 @@
 package cellsociety;
 
-import cellsociety.cell.config.ConfigSaver;
+import cellsociety.config.ConfigSaver;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;

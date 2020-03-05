@@ -1,24 +1,32 @@
 package cellsociety.grid;
 
 import cellsociety.cell.Cell;
-import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
-public class GridModel<T extends Cell> {
+public class Grid<T extends Cell> {
     private List<List<T>> cells;
 
-    public GridModel(List<List<T>> cells) {
+    public Grid(List<List<T>> cells) {
         this.cells = cells;
+    }
+
+    public Grid(Grid<T> gridToCopy) {
+        this.cells = new ArrayList<>(gridToCopy.getCells());
     }
 
     public List<List<T>> getCells() {
         return cells;
     }
 
-    public T getCellAt(int row, int col){
+    public T get(int row, int col){
         return cells.get(row).get(col);
+    }
+
+    public <C extends T> void set(int row, int col, C cell){
+        cells.get(row).set(col, cell);
     }
 
     public int getNumRows(){
@@ -28,7 +36,6 @@ public class GridModel<T extends Cell> {
     public int getNumCols(){
         return cells.get(0).size();
     }
-
 
     public List<T> getAllNeighbors(T cell) {
         List<T> neighbors = new ArrayList<>();
@@ -85,4 +92,13 @@ public class GridModel<T extends Cell> {
 
         return diagonalNeighbors;
     }
+
+    public void executeForAllCells(Consumer<T> lambda) {
+        for (List<T> row : cells) {
+            for (T cell : row) {
+                lambda.accept(cell);
+            }
+        }
+    }
+
 }
