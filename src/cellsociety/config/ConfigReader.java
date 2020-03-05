@@ -42,8 +42,8 @@ public class ConfigReader {
         quantityOfRows = Integer.valueOf(dimensions[NUM_ROWS_INDEX]);
         quantityOfColumns = Integer.valueOf(dimensions[NUM_COLS_INDEX]);
         for(int r = 0; r < quantityOfRows; r++) {
-                List<String> row = getRowInfo(input.next(), r);
-                results.add(row);
+            List<String> row = getRowInfo(input.next(), r);
+            results.add(row);
         }
         manualQuantityOfRows = results.size();
         manualQuantityOfColumns = results.get(0).size();

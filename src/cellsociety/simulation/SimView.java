@@ -131,6 +131,23 @@ public class SimView {
     }
 
 
+
+    private void handleButtonClick(ActionEvent event){
+        if(event.getSource() == playBttn){
+            controller.start();
+        } else if (event.getSource() == pauseBttn){
+            controller.pause();
+        }
+        else if (event.getSource() == stepBttn) {
+            controller.update(true);
+            controller.pause();
+        }
+        else if (event.getSource() == exitBttn) {
+            handleExitRequest();
+        }
+    }
+
+
     public <T extends Cell> void update(List<List<T>> cells) {
         Group root = new Group();
 

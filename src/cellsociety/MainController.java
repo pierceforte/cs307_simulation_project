@@ -17,6 +17,7 @@ import javafx.util.Duration;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;
+import java.util.Map;
 
 public class MainController extends Application {
     public static final String STYLESHEET = "style.css";
@@ -32,6 +33,14 @@ public class MainController extends Application {
     public static final int DEFAULT_FONT_SIZE = 5;
     public static final String DEFAULT_FONT = "Verdana";
     public static final DecimalFormat df2 = new DecimalFormat("#.##");
+
+    public static final String STARTING_MESSAGE = "  ";
+    public static final Map<String, Class> BUTTON_NAME_TO_SIM_CLASS = Map.of(
+            "Game of Life", GOLSimModel.class,
+            "Wa-Tor", WaTorSimModel.class,
+            "Segregation", SegregationSimModel.class,
+            "RPS", RPSModel.class);
+
 
     private Group root = new Group();
     private Scene myScene;
