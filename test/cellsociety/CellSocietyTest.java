@@ -273,7 +273,7 @@ public class CellSocietyTest extends DukeApplicationTest {
 
     Below are the initial configuration tests for Game of Life.
     There are 5 Still Lifes, 1 Oscillator (Blinker), and 1 Spaceship (Glider)
-    
+
      */
     @Test
     public void testGOLBeehiveConfig() {

@@ -59,6 +59,11 @@ public class Grid<T extends Cell> {
         int col = cell.getCol();
         int topRow = cells.size()-1;
         int topCol = cells.get(0).size()-1;
+        int[] rowdiffarray = {-1,-1,-1,0,0,1,1,1};
+        int[] coldiffarray = {-1,0,1,-1,1,-1,0,1};
+        int lengthofarrayscol_row = rowdiffarray.length;
+
+
 
         if (row != 0) {
             cardinalNeighbors.add(cells.get(row-1).get(col));
@@ -97,6 +102,7 @@ public class Grid<T extends Cell> {
         }
 
         return diagonalNeighbors;
+
     }
 
     public void executeForAllCells(Consumer<T> lambda) {

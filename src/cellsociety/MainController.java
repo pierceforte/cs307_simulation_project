@@ -33,6 +33,14 @@ public class MainController extends Application {
     public static final String DEFAULT_FONT = "Verdana";
     public static final DecimalFormat df2 = new DecimalFormat("#.##");
 
+    public static final String STARTING_MESSAGE = "  ";
+    public static final Map<String, Class> BUTTON_NAME_TO_SIM_CLASS = Map.of(
+            "Game of Life", GOLSimModel.class,
+            "Wa-Tor", WaTorSimModel.class,
+            "Segregation", SegregationSimModel.class,
+            "RPS", RPSModel.class);
+
+
     private Group root = new Group();
     private Scene myScene;
     private Stage myStage;

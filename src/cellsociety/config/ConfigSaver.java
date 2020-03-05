@@ -3,6 +3,7 @@ package cellsociety.config;
 import cellsociety.cell.Cell;
 import cellsociety.simulation.FireSimModel;
 import cellsociety.simulation.GOLSimModel;
+import cellsociety.simulation.RPSModel;
 import cellsociety.simulation.SegregationSimModel;
 import cellsociety.simulation.WaTorSimModel;
 
@@ -20,13 +21,22 @@ public class ConfigSaver<T extends Cell> {
             GOLSimModel.class, GOLSimModel.CONFIG_FILE_PREFIX,
             WaTorSimModel.class, WaTorSimModel.CONFIG_FILE_PREFIX,
             SegregationSimModel.class, SegregationSimModel.CONFIG_FILE_PREFIX,
+<<<<<<< HEAD:src/cellsociety/config/ConfigSaver.java
             FireSimModel.class, FireSimModel.CONFIG_FILE_PREFIX
             );
+=======
+            RPSModel.class, RPSModel.CONFIG_FILE_PREFIX
+    );
+>>>>>>> sna19:src/cellsociety/cell/config/ConfigSaver.java
     public static final Map<String, Class> DIRECTORY_TO_SIM_CLASS = Map.of(
             GOLSimModel.CONFIG_FILE_PREFIX, GOLSimModel.class,
             WaTorSimModel.CONFIG_FILE_PREFIX, WaTorSimModel.class,
             SegregationSimModel.CONFIG_FILE_PREFIX, SegregationSimModel.class,
+<<<<<<< HEAD:src/cellsociety/config/ConfigSaver.java
             FireSimModel.CONFIG_FILE_PREFIX, FireSimModel.class);
+=======
+            RPSModel.CONFIG_FILE_PREFIX, RPSModel.class);
+>>>>>>> sna19:src/cellsociety/cell/config/ConfigSaver.java
 
     public ConfigSaver(List<List<T>> cells, String fileName, String author, String description, Class modelClass) {
         String simDirectory = SIM_CLASS_NAME_TO_DIRECTORY.get(modelClass);
