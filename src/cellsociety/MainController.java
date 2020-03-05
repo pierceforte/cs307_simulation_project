@@ -17,6 +17,7 @@ import javafx.util.Duration;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;
+import java.util.Map;
 
 public class MainController extends Application {
     public static final String STYLESHEET = "style.css";
