@@ -21,7 +21,6 @@ public class Grid<T extends Cell> {
                 cells.get(row).add(gridToCopy.get(row, col));
             }
         }
-        //this.cells = new ArrayList<>(gridToCopy.getCells());
     }
 
     public List<List<T>> getCells() {

@@ -28,7 +28,7 @@ public class SharkCell extends LivingWaTorCell{
     @Override
     public Grid<WaTorCell> setWhatToDoNext(List<WaTorCell> neighbors, Grid<WaTorCell> nextGrid) {
         // if shark has no energy, it dies and becomes an EMPTY cell
-        if (energy == 0) {
+        if (energy == 0)
             nextGrid.set(getNextRow(), getNextCol(), new EmptyCell(getRow(), getCol()));
             return nextGrid;
         }
