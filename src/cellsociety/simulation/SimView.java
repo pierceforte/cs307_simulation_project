@@ -3,6 +3,7 @@ package cellsociety.simulation;
 import cellsociety.InputStage;
 import cellsociety.MainController;
 import cellsociety.cell.FileNameVerifier;
+import cellsociety.grid.Grid;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -47,6 +48,12 @@ public class SimView {
     }
 
     private void createControls(){
+       VBox vbox = new VBox(5);
+       vbox.getChildren().addAll(createButtonControls(), createColorControls());
+       bPane.setBottom(vbox);
+    }
+
+    private HBox createButtonControls(){
         playBttn = new Button(myResources.getString("PlayBttn"));
         pauseBttn = new Button(myResources.getString("PauseBttn"));
         stepBttn = new Button(myResources.getString("StepBttn"));
@@ -55,15 +62,8 @@ public class SimView {
         Slider speedSlider = new Slider(0, 2, 1);
         speedSlider.setBlockIncrement(0.2);
 
-        gridPane = new GridPane();
-        gridPane.add(playBttn, 1, 0);
-        gridPane.add(pauseBttn, 2, 0);
-        gridPane.add(stepBttn, 3, 0);
-        gridPane.add(exitBttn, 4, 0);
-        gridPane.add(speedLabel, 5, 0);
-        gridPane.add(speedSlider, 6, 0);
-
-        bPane.setBottom(gridPane);
+        HBox hbox = new HBox(5);
+        hbox.getChildren().addAll(playBttn, pauseBttn, stepBttn, exitBttn, speedLabel, speedSlider);
 
         playBttn.setOnAction(event -> controller.start());
         pauseBttn.setOnAction(event -> controller.pause());
@@ -78,11 +78,19 @@ public class SimView {
             }
         });
 
+        return hbox;
     }
 
-    private void handleSpeedChange() {
-        controller.changeRate(speedSlider.getValue());
+    private HBox createColorControls(){
+        HBox hbox = new HBox(5);
+        ColorPicker colorPicker0 = new ColorPicker();
+        ColorPicker colorPicker1 = new ColorPicker();
+        ColorPicker colorPicker2 = new ColorPicker();
+
+        return hbox;
     }
+    
+
 
     //TODO: cleanup this code
     public boolean userRestartedSimulation() {
@@ -131,12 +139,15 @@ public class SimView {
                 CellView cellView = new CellView(cell,size, xOffset, yOffset, cellViewIdNum);
                 cellViewIdNum++;
                 root.getChildren().add(cellView);
-
             }
         }
         bPane.setCenter(root);
     }
 
+
+    private void setColors(){
+
+    }
 
     private Button createButton(String text, String id, double xPos, double yPos, double width, double height) {
         Button button = new Button(text);
@@ -150,6 +161,19 @@ public class SimView {
 
     // TODO: refactor everything below
 
+    private void getCellCustomizer(){
+        controller.pause();
+
+        InputStage stage = new InputStage("Pick custom colors", InputStage.DEFAULT_WIDTH, InputStage.DEFAULT_HEIGHT);
+        GridPane pane = new GridPane();
+
+        ColorPicker colorPicker0 = new ColorPicker();
+        ColorPicker colorPicker1 = new ColorPicker();
+        ColorPicker colorPicker2 = new ColorPicker();
+
+
+
+    }
     private void handleExitRequest() {
         controller.pause();
 
