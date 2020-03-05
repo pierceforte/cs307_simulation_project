@@ -3,6 +3,7 @@ package cellsociety.simulation;
 import cellsociety.cell.GOL.GOLCell;
 import cellsociety.cell.RPSCell;
 import cellsociety.cell.Segregation.SegregationCell;
+import cellsociety.grid.GridModel;
 
 import java.util.*;
 
@@ -16,7 +17,7 @@ public class RPSModel extends SimModel<RPSCell>{
 
     public RPSModel(List<List<String>> cellStates, SimController simController) {
         super(cellStates, simController);
-     //
+        playablehands = createGrid(cellStates);
     }
 
     @Override
