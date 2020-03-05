@@ -77,6 +77,10 @@ public class MainController extends Application {
         myAnimation.play();
     }
 
+    public void changeAnimationSpeed(double change){
+        myAnimation.setRate(FRAMES_PER_SECOND * change);
+    }
+
     public <T extends SimModel> void beginSimulation(Class<T> simTypeClassName, String csvFilePath) {
         Scene simulationScene = setupSimulation(simTypeClassName, csvFilePath);
         myStage.setScene(simulationScene);

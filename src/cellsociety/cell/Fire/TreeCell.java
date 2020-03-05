@@ -4,18 +4,17 @@ import java.util.Random;
 
 public class TreeCell extends FireCell{
     public static final String STATE = FireCell.TREE;
-    private double probCatch;
+    public static final double PROB_CATCH_FIRE = 0.5;
 
 
-    public TreeCell(int row, int col, double probCatch) {
+    public TreeCell(int row, int col) {
         super(STATE, row, col);
-        this.probCatch = probCatch;
     }
 
 
     @Override
     public void setWhatToDoNext(List<FireCell> neighbors) {
-        if(Math.random() < probCatch){
+        if(Math.random() < PROB_CATCH_FIRE){
             setNextState(BURNING);
         } else setNextState(TREE);
     }

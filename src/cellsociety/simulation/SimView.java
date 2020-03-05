@@ -3,6 +3,8 @@ package cellsociety.simulation;
 import cellsociety.InputStage;
 import cellsociety.MainController;
 import cellsociety.cell.FileNameVerifier;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -10,9 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import cellsociety.cell.Cell;
 import cellsociety.cell.CellView;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -32,6 +32,7 @@ public class SimView {
     private Button pauseBttn;
     private Button stepBttn;
     private Button exitBttn;
+    private Slider speedSlider;
 
     public SimView(SimController controller){
         Locale locale = new Locale("en", "US");
@@ -47,25 +48,42 @@ public class SimView {
 
     private void createControls(){
         playBttn = new Button(myResources.getString("PlayBttn"));
-        playBttn.setId("playBttn");
         pauseBttn = new Button(myResources.getString("PauseBttn"));
-        pauseBttn.setId("pauseBttn");
         stepBttn = new Button(myResources.getString("StepBttn"));
-        stepBttn.setId("stepBttn");
         exitBttn = new Button(myResources.getString("ExitBttn"));
-        exitBttn.setId("exitBttn");
+        Label speedLabel = new Label(myResources.getString("ChangeSpeed"));
+        Slider speedSlider = new Slider(0, 2, 1);
+        speedSlider.setBlockIncrement(0.2);
+
         gridPane = new GridPane();
         gridPane.add(playBttn, 1, 0);
         gridPane.add(pauseBttn, 2, 0);
         gridPane.add(stepBttn, 3, 0);
         gridPane.add(exitBttn, 4, 0);
+        gridPane.add(speedLabel, 5, 0);
+        gridPane.add(speedSlider, 6, 0);
+
         bPane.setBottom(gridPane);
 
-        playBttn.setOnAction(event -> handleButtonClick(event));
-        pauseBttn.setOnAction(event -> handleButtonClick(event));
-        stepBttn.setOnAction(event -> handleButtonClick(event));
-        exitBttn.setOnAction(event -> handleButtonClick(event));
+        playBttn.setOnAction(event -> controller.start());
+        pauseBttn.setOnAction(event -> controller.pause());
+        stepBttn.setOnAction(event -> controller.stepFrame());
+        exitBttn.setOnAction(event -> handleExitRequest());
+        speedSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, //
+                                Number oldValue, Number newValue) {
+                System.out.println(newValue);
+                controller.changeRate((Double) newValue);
+            }
+        });
+
     }
+
+    private void handleSpeedChange() {
+        controller.changeRate(speedSlider.getValue());
+    }
+
     //TODO: cleanup this code
     public boolean userRestartedSimulation() {
         Stage input = new Stage();
@@ -97,21 +115,6 @@ public class SimView {
     }
 
 
-    private void handleButtonClick(ActionEvent event){
-        if(event.getSource() == playBttn){
-            controller.start();
-        } else if (event.getSource() == pauseBttn){
-            controller.pause();
-        }
-        else if (event.getSource() == stepBttn) {
-            controller.update(true);
-            controller.pause();
-        }
-        else if (event.getSource() == exitBttn) {
-            handleExitRequest();
-        }
-    }
-
     public <T extends Cell> void update(List<List<T>> cells) {
         Group root = new Group();
 
@@ -128,10 +131,12 @@ public class SimView {
                 CellView cellView = new CellView(cell,size, xOffset, yOffset, cellViewIdNum);
                 cellViewIdNum++;
                 root.getChildren().add(cellView);
+
             }
         }
         bPane.setCenter(root);
     }
+
 
     private Button createButton(String text, String id, double xPos, double yPos, double width, double height) {
         Button button = new Button(text);
@@ -241,6 +246,9 @@ public class SimView {
 
         stage.showAndWait();
     }
+
+
+
 
 
 }
