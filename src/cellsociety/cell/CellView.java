@@ -1,5 +1,7 @@
 package cellsociety.cell;
 
+import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -14,7 +16,14 @@ public class CellView <T extends Cell> extends Rectangle {
         setId("cellView" + idNum);
         getStyleClass().add("cell");
         getStyleClass().add("state" + cell.getState());
+
+
+
     }
+
+
+
+
 
 
 }

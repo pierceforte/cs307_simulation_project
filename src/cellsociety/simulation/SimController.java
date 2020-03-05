@@ -13,6 +13,12 @@ import java.util.Map;
 public class SimController {
     public static final String CONFIG_FILE_SUFFIX = "Config.csv";
 
+
+    //for modifying animation timeline
+    public static final int FRAMES_PER_SECOND = 5;
+    public static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
+    public static final double SECOND_DELAY = 1.0 / FRAMES_PER_SECOND;
+
     //TODO: find a way to include this info in the specific SimModel
     public static final Map<Class, String> CLASS_TO_FILE_ID = Map.of(
             GOLSimModel.class, GOLSimModel.CONFIG_FILE_PREFIX,
@@ -58,6 +64,15 @@ public class SimController {
         isActive = false;
     }
 
+    public void stepFrame(){
+        update(true);
+        pause();
+    }
+
+    public void changeRate(double change){
+        mainController.changeAnimationSpeed(change);
+    }
+
     public void update(boolean overrideActiveStatus) {
         if (isActive || overrideActiveStatus){
             model.update();
@@ -66,6 +81,7 @@ public class SimController {
             mainController.addToRoot(getView());
         }
     }
+
 
     public Node getView(){
         return view.getRoot();

@@ -9,8 +9,8 @@ import java.util.List;
 
 public class FireSimModel extends SimModel<FireCell> {
     // TODO: make probCatch and probTree adjustable/initializable
-    private double probCatch = 0.5; //chance that tree will catch fire
-    private double probTree = 0.5; //chance that tree will grow on empty cell
+    public static final String CONFIG_FILE_PREFIX = "Fire";
+
 
     public FireSimModel(List<List<String>> cells, SimController simController){
         super(cells, simController);
@@ -24,9 +24,9 @@ public class FireSimModel extends SimModel<FireCell> {
             for (int col = 0; col < cellStates.size(); col++) {
                 FireCell cell;
                 if (cellStates.get(row).get(col).equals(FireCell.EMPTY)) {
-                    cell = new EmptyCell(row, col, probTree);
+                    cell = new EmptyCell(row, col);
                 } else if (cellStates.get(row).get(col).equals(FireCell.TREE)) {
-                    cell = new TreeCell(row, col, probCatch);
+                    cell = new TreeCell(row, col);
                 }
                 // TODO: throw error if invalid state
                 else {
@@ -65,8 +65,9 @@ public class FireSimModel extends SimModel<FireCell> {
 
     @Override
     protected String getConfigFileIdentifier() {
-        return null;
+        return CONFIG_FILE_PREFIX;
     }
+
 
     @Override
     protected List<FireCell> getNeighbors(FireCell cell) {
