@@ -1,7 +1,5 @@
 package cellsociety.cell.wator;
 
-import cellsociety.cell.Cell;
-import cellsociety.cell.wator.WaTorCell;
 import cellsociety.grid.Grid;
 
 import java.util.ArrayList;
@@ -29,13 +27,11 @@ public class SharkCell extends LivingWaTorCell{
 
     @Override
     public Grid<WaTorCell> setWhatToDoNext(List<WaTorCell> neighbors, Grid<WaTorCell> nextGrid) {
-
         // if shark has no energy, it dies and becomes an EMPTY cell
         if (energy == 0) {
             nextGrid.set(getNextRow(), getNextCol(), new EmptyCell(getRow(), getCol()));
             return nextGrid;
         }
-
         List<List<Integer>> potentialNewPositions = new ArrayList<>();
         // first look for any nearby fish
         for (WaTorCell cell : neighbors) {
@@ -43,26 +39,28 @@ public class SharkCell extends LivingWaTorCell{
                 potentialNewPositions.add(List.of(cell.getRow(), cell.getCol()));
             }
         }
-        boolean willEatFish = false;
+        boolean willEatFish = !potentialNewPositions.isEmpty();
         // if no fish, look for potential empty spaces to move to
-        if (potentialNewPositions.isEmpty()) {
+        if (!willEatFish) {
             potentialNewPositions = getAdjacentEnterableCells(neighbors, nextGrid, List.of(SHARK));
-        }
-        else {
-            willEatFish = true;
         }
         // if no potential empty spaces to move to, don't move
         if (potentialNewPositions.isEmpty()) {
             nextGrid.set(getNextRow(), getNextCol(), this);
             return nextGrid;
         }
-        // choose randomly from the potential spaces to move to from above
-        List<Integer> newPosition = getRandomNewPosition(potentialNewPositions);
-        setNextRow(newPosition.get(Cell.ROW_INDEX));
-        setNextCol(newPosition.get(Cell.COL_INDEX));
+        nextGrid = setNextPosition(potentialNewPositions, nextGrid);
+        nextGrid = handleReproduction(nextGrid);
+        updateEnergy(willEatFish, neighbors);
+        return nextGrid;
+    }
 
-        nextGrid.set(getNextRow(), getNextCol(), this);
+    @Override
+    protected int getChrononsToReproduce() {
+        return CHRONONS_TO_REPRODUCE;
+    }
 
+    private void updateEnergy(boolean willEatFish, List<WaTorCell> neighbors) {
         if (willEatFish) {
             energy += ENERGY_FOR_EATING_FISH;
             for (WaTorCell cell : neighbors) {
@@ -74,14 +72,6 @@ public class SharkCell extends LivingWaTorCell{
         else {
             energy--;
         }
-        nextGrid = handleReproduction(nextGrid);
-
-        return nextGrid;
-    }
-
-    @Override
-    protected int getChrononsToReproduce() {
-        return CHRONONS_TO_REPRODUCE;
     }
 
 }

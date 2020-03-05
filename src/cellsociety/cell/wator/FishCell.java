@@ -21,14 +21,8 @@ public class FishCell extends LivingWaTorCell {
             nextGrid.set(getRow(), getCol(), this);
             return nextGrid;
         }
-        List<Integer> newPosition = getRandomNewPosition(potentialNewPositions);
-        setNextRow(newPosition.get(Cell.ROW_INDEX));
-        setNextCol(newPosition.get(Cell.COL_INDEX));
-
-        nextGrid.set(getNextRow(), getNextCol(), this);
-
+        nextGrid = setNextPosition(potentialNewPositions, nextGrid);
         nextGrid = handleReproduction(nextGrid);
-
         return nextGrid;
     }
 
