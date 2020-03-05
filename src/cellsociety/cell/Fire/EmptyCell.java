@@ -4,17 +4,16 @@ import java.util.List;
 
 public class EmptyCell extends FireCell {
     public static final String STATE = FireCell.EMPTY;
-    private double probTree;
+    public static final double PROB_TREE = 0.5;
 
-    public EmptyCell(int row, int col, double probTree) {
+    public EmptyCell(int row, int col) {
         super(STATE, row, col);
-        this.probTree = probTree;
 
     }
 
     @Override
     public void setWhatToDoNext(List<FireCell> neighbors) {
-        if (Math.random() < probTree){
+        if (Math.random() < PROB_TREE){
             setNextState(TREE);
         } else {
             setNextState(EMPTY);
