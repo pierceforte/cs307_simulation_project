@@ -1,10 +1,12 @@
 package cellsociety.simulation;
 
 import cellsociety.cell.GOL.GOLCell;
+import cellsociety.cell.segregation.SegregationCell;
 import cellsociety.grid.Grid;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class GOLSimModel extends SimModel<GOLCell> {
     public static final String CONFIG_FILE_PREFIX = "GOL";
@@ -14,23 +16,9 @@ public class GOLSimModel extends SimModel<GOLCell> {
     }
 
     @Override
-    protected List<List<GOLCell>> createGrid(List<List<String>> cellStates) {
-        List<List<GOLCell>> grid = new ArrayList<>();
-        for (int row = 0; row < cellStates.size(); row++) {
-            grid.add(new ArrayList<>());
-            for (int col = 0; col < cellStates.size(); col++) {
-                GOLCell cell;
-                if (cellStates.get(row).get(col).equals(GOLCell.DEAD)) {
-                    cell = new GOLCell(GOLCell.DEAD, row, col);
-                }
-                // TODO: throw error if invalid state
-                else {
-                    cell = new GOLCell(GOLCell.ALIVE, row, col);
-                }
-                grid.get(row).add(cell);
-            }
-        }
-        return grid;
+    protected Map<String, Class> getCellTypesMap() {
+        return Map.of(GOLCell.DEAD, GOLCell.class,
+                GOLCell.ALIVE, GOLCell.class);
     }
 
     //TODO: eliminate duplication here and in FireSimModel and SegregationSimModel

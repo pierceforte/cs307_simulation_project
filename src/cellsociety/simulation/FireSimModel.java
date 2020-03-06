@@ -4,10 +4,14 @@ import cellsociety.cell.Fire.BurningCell;
 import cellsociety.cell.Fire.EmptyCell;
 import cellsociety.cell.Fire.FireCell;
 import cellsociety.cell.Fire.TreeCell;
+import cellsociety.cell.wator.FishCell;
+import cellsociety.cell.wator.SharkCell;
+import cellsociety.cell.wator.WaTorCell;
 import cellsociety.grid.Grid;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class FireSimModel extends SimModel<FireCell> {
@@ -20,26 +24,10 @@ public class FireSimModel extends SimModel<FireCell> {
     }
 
     @Override
-    protected List<List<FireCell>> createGrid(List<List<String>> cellStates) {
-        List<List<FireCell>> grid = new ArrayList<>();
-        for (int row = 0; row < cellStates.size(); row++) {
-            grid.add(new ArrayList<>());
-            for (int col = 0; col < cellStates.size(); col++) {
-                FireCell cell;
-                if (cellStates.get(row).get(col).equals(FireCell.EMPTY)) {
-                    cell = new EmptyCell(row, col);
-                } else if (cellStates.get(row).get(col).equals(FireCell.TREE)) {
-                    cell = new TreeCell(row, col);
-                }
-                // TODO: throw error if invalid state
-                else {
-                    cell = new BurningCell(row, col);
-                }
-                grid.get(row).add(cell);
-            }
-        }
-        return grid;
-
+    protected Map<String, Class> getCellTypesMap() {
+        return Map.of(FireCell.EMPTY, EmptyCell.class,
+                FireCell.TREE, TreeCell.class,
+                FireCell.BURNING, BurningCell.class);
     }
 
     @Override

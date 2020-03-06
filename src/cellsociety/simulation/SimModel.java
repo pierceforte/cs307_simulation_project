@@ -4,6 +4,7 @@ import cellsociety.cell.Cell;
 import cellsociety.grid.Grid;
 
 import java.util.List;
+import java.util.Map;
 
 public abstract class SimModel <T extends Cell>{
     private Grid grid;
@@ -11,8 +12,7 @@ public abstract class SimModel <T extends Cell>{
     private SimView simView;
 
     public SimModel(List<List<String>> cellStates, SimController simController) {
-        List<List<T>> grid = createGrid(cellStates);
-        this.grid = new Grid(grid);
+        this.grid = new Grid(cellStates, getCellTypesMap());
         this.simController = simController;
     }
 
@@ -40,7 +40,7 @@ public abstract class SimModel <T extends Cell>{
         return simView;
     }
 
-    protected abstract List<List<T>> createGrid(List<List<String>> cellStates);
+    protected abstract Map<String, Class> getCellTypesMap();
 
     protected abstract void setNextStates(Grid<T> grid);
 

@@ -50,7 +50,7 @@ public class SimController {
         isActive = true;
         mainController.addToRoot(view.getRoot());
         //root.getChildren().add(view.getRoot());
-        view.update(model.getCells());
+        view.update(model.getGrid());
         mainController.clearRoot();
         mainController.addToRoot(getView());
     }
@@ -76,7 +76,7 @@ public class SimController {
     public void update(boolean overrideActiveStatus) {
         if (isActive || overrideActiveStatus){
             model.update();
-            view.update(model.getCells());
+            view.update(model.getGrid());
             mainController.clearRoot();
             mainController.addToRoot(getView());
         }
@@ -112,6 +112,6 @@ public class SimController {
     }
 
     public void saveConfig(String fileName, String author, String description) {
-        new ConfigSaver<>(model.getCells(), fileName, author, description, model.getClass());
+        new ConfigSaver<>(model.getGrid(), fileName, author, description, model.getClass());
     }
 }

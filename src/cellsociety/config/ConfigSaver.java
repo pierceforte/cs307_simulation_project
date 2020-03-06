@@ -1,6 +1,7 @@
 package cellsociety.config;
 
 import cellsociety.cell.Cell;
+import cellsociety.grid.Grid;
 import cellsociety.simulation.FireSimModel;
 import cellsociety.simulation.GOLSimModel;
 import cellsociety.simulation.SegregationSimModel;
@@ -28,10 +29,10 @@ public class ConfigSaver<T extends Cell> {
             SegregationSimModel.CONFIG_FILE_PREFIX, SegregationSimModel.class,
             FireSimModel.CONFIG_FILE_PREFIX, FireSimModel.class);
 
-    public ConfigSaver(List<List<T>> cells, String fileName, String author, String description, Class modelClass) {
+    public ConfigSaver(Grid<T> grid, String fileName, String author, String description, Class modelClass) {
         String simDirectory = SIM_CLASS_NAME_TO_DIRECTORY.get(modelClass);
         new File(PATH_TO_CONFIGS + simDirectory + "/" + fileName).mkdir();
-        saveCSV(cells, fileName, simDirectory);
+        saveCSV(grid, fileName, simDirectory);
         saveProperties(fileName, author, description, simDirectory);
     }
     
@@ -41,20 +42,20 @@ public class ConfigSaver<T extends Cell> {
 
     // TODO: throw exceptions in method signature
 
-   private void saveCSV(List<List<T>> cells, String fileName, String simDirectory) {
+   private void saveCSV(Grid<T> grid, String fileName, String simDirectory) {
         try {
             PrintWriter pw = new PrintWriter("resources/configs/" + simDirectory + "/" + fileName + "/" + fileName + CSV_EXTENSION);
-            int rows = cells.size();
-            int cols = cells.get(0).size();
+            int rows = grid.getNumRows();
+            int cols = grid.getNumCols();
             pw.println(rows + ConfigReader.SPLIT_REGEX + cols);
 
             for (int row = 0; row < rows; row++) {
                 if (cols == 0) {
                     break;
                 }
-                String line = cells.get(row).get(0).getState();
+                String line = grid.get(row, 0).getState();
                 for (int col = 1; col < cols; col++) {
-                    line += ConfigReader.SPLIT_REGEX + cells.get(row).get(col).getState();
+                    line += ConfigReader.SPLIT_REGEX + grid.get(row, col).getState();
                 }
                 pw.println(line);
             }
