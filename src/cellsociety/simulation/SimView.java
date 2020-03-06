@@ -36,6 +36,7 @@ public class SimView {
     private Button exitBttn;
     private Slider speedSlider;
     private HashMap<String, Color> cellColors;
+    private Group cellViewsRoot;
 
     public SimView(SimController controller){
         Locale locale = new Locale("en", "US");
@@ -45,7 +46,7 @@ public class SimView {
         createControls();
     }
 
-    public Node getRoot(){
+    public BorderPane getRoot(){
         return bPane;
     }
 
@@ -87,7 +88,8 @@ public class SimView {
         return hbox;
     }
 
-    //TODO: refactor this method
+    //TODO: refactor this method and implement a loop which adds color pickers based on the
+    //  properties file for the current simulation
     private HBox createColorControls(){
         cellColors = new HashMap<>();
         HBox hbox = new HBox(5);
@@ -138,7 +140,9 @@ public class SimView {
     }
 
 
-    public <T extends Cell> void update(Grid<T> grid) {
+    public <T extends Cell> Group update(Grid<T> grid) {
+        bPane.getChildren().remove(cellViewsRoot);
+
         Group root = new Group();
         int rows = grid.getNumRows();
         int cols = grid.getNumCols();
@@ -169,6 +173,12 @@ public class SimView {
             }
         }
         bPane.setCenter(root);
+        cellViewsRoot = root;
+        return root;
+    }
+
+    public Group getCellViewsRoot() {
+        return cellViewsRoot;
     }
 
     private Color getCustomColor(Cell cell){

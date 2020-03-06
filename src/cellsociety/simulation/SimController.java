@@ -13,7 +13,6 @@ import java.util.Map;
 public class SimController {
     public static final String CONFIG_FILE_SUFFIX = "Config.csv";
 
-
     //for modifying animation timeline
     public static final int FRAMES_PER_SECOND = 5;
     public static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
@@ -48,11 +47,6 @@ public class SimController {
             System.exit(0);
         }
         isActive = true;
-        mainController.addToRoot(view.getRoot());
-        //root.getChildren().add(view.getRoot());
-        view.update(model.getGrid());
-        mainController.clearRoot();
-        mainController.addToRoot(getView());
     }
 
 
@@ -77,8 +71,6 @@ public class SimController {
         if (isActive || overrideActiveStatus){
             model.update();
             view.update(model.getGrid());
-            mainController.clearRoot();
-            mainController.addToRoot(getView());
         }
     }
 
@@ -87,7 +79,7 @@ public class SimController {
         view.update(model.getGrid());
     }
 
-    public Node getView(){
+    public Node getViewRoot(){
         return view.getRoot();
     }
 

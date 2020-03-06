@@ -33,7 +33,7 @@ public class MainController extends Application {
     public static final String DEFAULT_FONT = "Verdana";
     public static final DecimalFormat df2 = new DecimalFormat("#.##");
 
-    private Group root = new Group();
+    private Group myRoot = new Group();
     private Scene myScene;
     private Stage myStage;
     private Pane myIntroPane;
@@ -43,7 +43,7 @@ public class MainController extends Application {
     private double myTime;
     private SimModel mySimModel;
     private SimController mySimController;
-    private boolean isSimulationActive = false;
+    private boolean isMySimulationActive = false;
 
     @Override
     public void start(Stage stage) {
@@ -66,6 +66,10 @@ public class MainController extends Application {
         myStage.setTitle(TITLE);
         myStage.show();
         setMyAnimation(myStage);
+    }
+
+    public Group getMyRoot() {
+        return myRoot;
     }
 
     public void setMyStage(Stage stage) {
@@ -91,17 +95,18 @@ public class MainController extends Application {
     public <T extends SimModel> void beginSimulation(Class<T> simTypeClassName, String csvFilePath) {
         Scene simulationScene = setupSimulation(simTypeClassName, csvFilePath);
         myStage.setScene(simulationScene);
-        isSimulationActive = true;
+        isMySimulationActive = true;
     }
 
     private <T extends SimModel> Scene setupSimulation(Class<T> simTypeClassName, String csvFilePath) {
-        root = new Group();
+        myRoot = new Group();
         String [] csvFilePathFromResources = csvFilePath.split("/");
         String validCsvFilePath = String.join("/",
                 Arrays.copyOfRange(csvFilePathFromResources, csvFilePathFromResources.length-4, csvFilePathFromResources.length));
         mySimController = new SimController(simTypeClassName, this, validCsvFilePath);
-        myScene = new Scene(root, WIDTH, HEIGHT, BACKGROUND);
-        myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode(), root));
+        myRoot.getChildren().add(mySimController.getViewRoot());
+        myScene = new Scene(myRoot, WIDTH, HEIGHT, BACKGROUND);
+        myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode(), myRoot));
 
         //testing adding of css styles
         myScene.getStylesheets().add(STYLESHEET);
@@ -109,7 +114,7 @@ public class MainController extends Application {
     }
 
     public void step(double elapsedTime) {
-        if (isSimulationActive) {
+        if (isMySimulationActive) {
             if (mySimController.isEnded()) {
                 returnToIntroScreen();
             }
@@ -120,11 +125,11 @@ public class MainController extends Application {
     }
 
     public void clearRoot() {
-        root.getChildren().clear();
+        myRoot.getChildren().clear();
     }
 
     public <T extends Node> void addToRoot(T node) {
-        root.getChildren().add(node);
+        myRoot.getChildren().add(node);
     }
 
     public SimController getCurSimController() {
@@ -132,8 +137,8 @@ public class MainController extends Application {
     }
 
     private void returnToIntroScreen() {
-        isSimulationActive = false;
-        root.getChildren().clear();
+        isMySimulationActive = false;
+        myRoot.getChildren().clear();
         myAnimation.stop();
         start(myStage);
     }
