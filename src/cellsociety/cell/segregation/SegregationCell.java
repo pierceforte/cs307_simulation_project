@@ -1,7 +1,6 @@
 package cellsociety.cell.segregation;
 
 import cellsociety.cell.Cell;
-import cellsociety.cell.WaTor.WaTorCell;
 import cellsociety.grid.Grid;
 
 import java.util.ArrayList;
