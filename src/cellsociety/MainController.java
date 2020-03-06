@@ -68,6 +68,14 @@ public class MainController extends Application {
         setMyAnimation(myStage);
     }
 
+    public void setMyStage(Stage stage) {
+        myStage = stage;
+    }
+
+    public Stage getMyStage() {
+        return myStage;
+    }
+
     public void setMyAnimation(Stage s) {
         KeyFrame frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e -> step(SECOND_DELAY));
         myAnimation = new Timeline();

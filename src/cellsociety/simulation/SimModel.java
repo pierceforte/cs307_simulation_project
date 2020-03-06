@@ -27,6 +27,10 @@ public abstract class SimModel <T extends Cell>{
         update();
     }
 
+    public Grid getGrid(){
+        return grid;
+    }
+
     //repetitive method here for testing MVC
     public List<List<T>> getCells(){
         return grid.getCells();
@@ -49,9 +53,5 @@ public abstract class SimModel <T extends Cell>{
     protected abstract String getConfigFileIdentifier();
 
     protected abstract List<T> getNeighbors(T cell);
-
-    protected Grid getGrid(){
-        return grid;
-    }
 
 }

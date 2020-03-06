@@ -55,9 +55,13 @@ public class SimView {
 
     private HBox createButtonControls(){
         playBttn = new Button(myResources.getString("PlayBttn"));
+        playBttn.setId("playBttn");
         pauseBttn = new Button(myResources.getString("PauseBttn"));
+        pauseBttn.setId("pauseBttn");
         stepBttn = new Button(myResources.getString("StepBttn"));
+        stepBttn.setId("stepBttn");
         exitBttn = new Button(myResources.getString("ExitBttn"));
+        exitBttn.setId("exitBttn");
         Label speedLabel = new Label(myResources.getString("ChangeSpeed"));
         Slider speedSlider = new Slider(0, 2, 1);
         speedSlider.setBlockIncrement(0.2);

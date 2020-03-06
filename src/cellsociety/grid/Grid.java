@@ -27,7 +27,7 @@ public class Grid<T extends Cell> {
     public Grid(List<List<String>> cellStates, Map<String, Class> cellTypeMap) {
         for (int row = 0; row < cellStates.size(); row++) {
             cells.add(new ArrayList<>());
-            for (int col = 0; col < cellStates.size(); col++) {
+            for (int col = 0; col < cellStates.get(0).size(); col++) {
                 String state = cellStates.get(row).get(col);
                 T cell = createCell(state, cellTypeMap, row, col);
                 cells.get(row).add(cell);

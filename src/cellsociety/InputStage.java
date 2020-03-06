@@ -40,6 +40,7 @@ public class InputStage {
         this.height = height;
         myScene = new Scene(myPane, width, height);
         myStage.setScene(myScene);
+        myPane.setId("inputPane");
     }
 
     public Text addTextToCenterX(String textString, double yPos) {
