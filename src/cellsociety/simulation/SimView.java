@@ -18,7 +18,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -35,7 +34,6 @@ public class SimView {
     private Button stepBttn;
     private Button exitBttn;
     private Slider speedSlider;
-    private HashMap<String, Color> cellColors;
 
     public SimView(SimController controller){
         Locale locale = new Locale("en", "US");
@@ -82,18 +80,11 @@ public class SimView {
         return hbox;
     }
 
-    //TODO: refactor this method
     private HBox createColorControls(){
-        cellColors = new HashMap<>();
         HBox hbox = new HBox(5);
-        ColorPicker picker0 = new ColorPicker();
-        ColorPicker picker1 = new ColorPicker();
-        ColorPicker picker2 = new ColorPicker();
-
-        hbox.getChildren().addAll(picker0, picker1, picker2);
-        picker0.setOnAction(event -> cellColors.put("0", picker0.getValue()));
-        picker1.setOnAction(event -> cellColors.put("1", picker1.getValue()));
-        picker2.setOnAction(event -> cellColors.put("2", picker1.getValue()));
+        ColorPicker colorPicker0 = new ColorPicker();
+        ColorPicker colorPicker1 = new ColorPicker();
+        ColorPicker colorPicker2 = new ColorPicker();
 
         return hbox;
     }
@@ -162,26 +153,17 @@ public class SimView {
         for (List<T> row : cells) {
             for (T cell : row) {
                 CellView cellView = new CellView(cell,size, xOffset, yOffset, cellViewIdNum);
-                if (cellColors.get(cell.getState()) != null){
-                    cellView.getStyleClass().removeAll();
-                    cellView.setFill(getCustomColor(cell));
-                    System.out.println(cellView.getFill());
-                } else {
-                    cellView.getStyleClass().add("state" + cell.getState());
-                }
-
                 cellViewIdNum++;
                 root.getChildren().add(cellView);
                 cellView.setOnMouseClicked(event -> controller.handleClick(cellView.getRow(), cellView.getCol()));
-
             }
         }
         bPane.setCenter(root);
     }
 
 
-    private Color getCustomColor(Cell cell){
-        return cellColors.get(cell.getState());
+    private void setColors(){
+
     }
 
     private Button createButton(String text, String id, double xPos, double yPos, double width, double height) {
@@ -196,7 +178,19 @@ public class SimView {
 
     // TODO: refactor everything below
 
+    private void getCellCustomizer(){
+        controller.pause();
 
+        InputStage stage = new InputStage("Pick custom colors", InputStage.DEFAULT_WIDTH, InputStage.DEFAULT_HEIGHT);
+        GridPane pane = new GridPane();
+
+        ColorPicker colorPicker0 = new ColorPicker();
+        ColorPicker colorPicker1 = new ColorPicker();
+        ColorPicker colorPicker2 = new ColorPicker();
+
+
+
+    }
     private void handleExitRequest() {
         controller.pause();
 

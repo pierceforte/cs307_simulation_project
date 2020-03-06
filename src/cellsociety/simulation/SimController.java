@@ -87,7 +87,6 @@ public class SimController {
         view.update(model.getCells());
     }
 
-
     public Node getView(){
         return view.getRoot();
     }
