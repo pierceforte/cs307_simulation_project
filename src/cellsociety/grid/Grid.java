@@ -1,18 +1,18 @@
 package cellsociety.grid;
 
 import cellsociety.cell.Cell;
-import cellsociety.cell.wator.EmptyCell;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class Grid<T extends Cell> {
     private List<List<T>> cells = new ArrayList<>();
-
-    public Grid(List<List<T>> cells) {
-        this.cells = cells;
-    }
+    private int topRow;
+    private int topCol;
 
     public Grid(Grid<T> gridToCopy) {
         for (int row = 0; row < gridToCopy.getNumRows(); row++) {
@@ -21,8 +21,22 @@ public class Grid<T extends Cell> {
                 cells.get(row).add(gridToCopy.get(row, col));
             }
         }
+        setTopRowAndCol();
     }
 
+    public Grid(List<List<String>> cellStates, Map<String, Class> cellTypeMap) {
+        for (int row = 0; row < cellStates.size(); row++) {
+            cells.add(new ArrayList<>());
+            for (int col = 0; col < cellStates.size(); col++) {
+                String state = cellStates.get(row).get(col);
+                T cell = createCell(state, cellTypeMap, row, col);
+                cells.get(row).add(cell);
+            }
+        }
+        setTopRowAndCol();
+    }
+
+    //TODO: delete this method
     public List<List<T>> getCells() {
         return cells;
     }
@@ -45,20 +59,16 @@ public class Grid<T extends Cell> {
 
     public List<T> getAllNeighbors(T cell) {
         List<T> neighbors = new ArrayList<>();
-
         neighbors.addAll(getCardinalNeighbors(cell));
         neighbors.addAll(getDiagonalNeighbors(cell));
-
         return neighbors;
     }
 
-    // TODO: eliminate duplication of first 5 lines
+    // TODO: eliminate duplication of first 3 lines
     public List<T> getCardinalNeighbors(T cell) {
         List<T> cardinalNeighbors = new ArrayList<>();
         int row = cell.getRow();
         int col = cell.getCol();
-        int topRow = cells.size()-1;
-        int topCol = cells.get(0).size()-1;
 
         if (row != 0) {
             cardinalNeighbors.add(cells.get(row-1).get(col));
@@ -80,8 +90,6 @@ public class Grid<T extends Cell> {
         List<T> diagonalNeighbors = new ArrayList<>();
         int row = cell.getRow();
         int col = cell.getCol();
-        int topRow = cells.size()-1;
-        int topCol = cells.get(0).size()-1;
 
         if (row != 0 && col != 0) {
             diagonalNeighbors.add(cells.get(row-1).get(col-1));
@@ -105,6 +113,42 @@ public class Grid<T extends Cell> {
                 lambda.accept(cell);
             }
         }
+    }
+
+    private boolean constructorHasStateParam(Class cellClass) {
+        try {
+            cellClass.getConstructor(String.class, int.class, int.class);
+            return true;
+        }
+        catch (NoSuchMethodException e) {
+            return false;
+        }
+    }
+
+    private T createCell(String state, Map<String, Class> cellTypeMap, int row, int col) {
+        Class cellClass = cellTypeMap.get(state);
+        try {
+            Constructor<?> constructor;
+            T cell;
+            if (constructorHasStateParam(cellClass)) {
+                constructor = cellClass.getConstructor(String.class, int.class, int.class);
+                cell = (T) constructor.newInstance(state, row, col);
+            }
+            else {
+                constructor = cellClass.getConstructor(int.class, int.class);
+                cell = (T) constructor.newInstance(row, col);
+            }
+            return cell;
+        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            //logError(e);
+            System.exit(0);
+            return null;
+        }
+    }
+
+    private void setTopRowAndCol() {
+        topRow = getNumRows()-1;
+        topCol = getNumCols()-1;
     }
 
 }

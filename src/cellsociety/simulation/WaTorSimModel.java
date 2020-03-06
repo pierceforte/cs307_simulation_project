@@ -19,26 +19,10 @@ public class WaTorSimModel extends SimModel <WaTorCell> {
     }
 
     @Override
-    protected List<List<WaTorCell>> createGrid(List<List<String>> cellStates) {
-        List<List<WaTorCell>> grid = new ArrayList<>();
-        for (int row = 0; row < cellStates.size(); row++) {
-            grid.add(new ArrayList<>());
-            for (int col = 0; col < cellStates.size(); col++) {
-                WaTorCell cell;
-                if (cellStates.get(row).get(col).equals(WaTorCell.EMPTY)) {
-                    cell = new EmptyCell(row, col);
-                }
-                else if (cellStates.get(row).get(col).equals(WaTorCell.FISH)) {
-                    cell = new FishCell(row, col);
-                }
-                // TODO: throw error if invalid state
-                else {
-                    cell = new SharkCell(row, col);
-                }
-                grid.get(row).add(cell);
-            }
-        }
-        return grid;
+    protected Map<String, Class> getCellTypesMap() {
+        return Map.of(WaTorCell.EMPTY, EmptyCell.class,
+                WaTorCell.FISH, FishCell.class,
+                WaTorCell.SHARK, SharkCell.class);
     }
 
     @Override

@@ -6,6 +6,7 @@ import cellsociety.grid.Grid;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class SegregationSimModel extends SimModel<SegregationCell> {
@@ -19,26 +20,10 @@ public class SegregationSimModel extends SimModel<SegregationCell> {
     }
 
     @Override
-    protected List<List<SegregationCell>> createGrid(List<List<String>> cellStates) {
-        List<List<SegregationCell>> grid = new ArrayList<>();
-        for (int row = 0; row < cellStates.size(); row++) {
-            grid.add(new ArrayList<>());
-            for (int col = 0; col < cellStates.size(); col++) {
-                SegregationCell cell;
-                if (cellStates.get(row).get(col).equals(SegregationCell.EMPTY)) {
-                    cell = new SegregationCell(SegregationCell.EMPTY, row, col);
-                }
-                else if (cellStates.get(row).get(col).equals(SegregationCell.AGENT_A)) {
-                    cell = new SegregationCell(SegregationCell.AGENT_A, row, col);
-                }
-                // TODO: throw error if invalid state
-                else {
-                    cell = new SegregationCell(SegregationCell.AGENT_B, row, col);
-                }
-                grid.get(row).add(cell);
-            }
-        }
-        return grid;
+    protected Map<String, Class> getCellTypesMap() {
+        return Map.of(SegregationCell.EMPTY, SegregationCell.class,
+                SegregationCell.AGENT_A, SegregationCell.class,
+                SegregationCell.AGENT_B, SegregationCell.class);
     }
 
     @Override

@@ -3,6 +3,7 @@ package cellsociety.simulation;
 import cellsociety.InputStage;
 import cellsociety.MainController;
 import cellsociety.cell.FileNameVerifier;
+import cellsociety.grid.Grid;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -115,23 +116,25 @@ public class SimView {
     }
 
 
-    public <T extends Cell> void update(List<List<T>> cells) {
+    public <T extends Cell> void update(Grid<T> grid) {
         Group root = new Group();
+        int rows = grid.getNumRows();
+        int cols = grid.getNumCols();
 
         // divide by the large dimension so everything fits on screen
-        double size = ((double) MainController.WIDTH) / Math.max(cells.get(0).size(), cells.size());
+        double size = ((double) MainController.WIDTH) / Math.max(cols, rows);
         // TODO: get these to work (the calculations are correct, but changing xPos and yPos in cellView
         //  doesn't do work
-        double xOffset = size * Math.max(0, cells.size() - cells.get(0).size())/2;
-        double yOffset = size * Math.max(0, cells.get(0).size() - cells.size())/2;
+        double xOffset = size * Math.max(0, rows - cols)/2;
+        double yOffset = size * Math.max(0, cols - rows)/2;
 
         int cellViewIdNum = 0;
-        for (List<T> row : cells) {
-            for (T cell : row) {
-                CellView cellView = new CellView(cell,size, xOffset, yOffset, cellViewIdNum);
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                T cell = grid.get(row, col);
+                CellView cellView = new CellView(cell, size, xOffset, yOffset, cellViewIdNum);
                 cellViewIdNum++;
                 root.getChildren().add(cellView);
-
             }
         }
         bPane.setCenter(root);
