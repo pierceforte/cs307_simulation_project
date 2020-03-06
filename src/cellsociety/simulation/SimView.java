@@ -73,6 +73,7 @@ public class SimView {
             @Override
             public void changed(ObservableValue<? extends Number> observable, //
                                 Number oldValue, Number newValue) {
+                System.out.println(newValue);
                 controller.changeRate((Double) newValue);
             }
         });
@@ -88,7 +89,7 @@ public class SimView {
 
         return hbox;
     }
-
+    
 
 
     //TODO: cleanup this code
@@ -155,7 +156,6 @@ public class SimView {
                 CellView cellView = new CellView(cell,size, xOffset, yOffset, cellViewIdNum);
                 cellViewIdNum++;
                 root.getChildren().add(cellView);
-                cellView.setOnMouseClicked(event -> controller.handleClick(cellView.getRow(), cellView.getCol()));
             }
         }
         bPane.setCenter(root);

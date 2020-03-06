@@ -82,10 +82,6 @@ public class SimController {
         }
     }
 
-    public void handleClick(int row, int col){
-        model.clickResponse(row, col);
-        view.update(model.getCells());
-    }
 
     public Node getView(){
         return view.getRoot();

@@ -1,7 +1,7 @@
 package cellsociety.grid;
 
 import cellsociety.cell.Cell;
-import cellsociety.cell.WaTor.EmptyCell;
+import cellsociety.cell.wator.EmptyCell;
 
 import java.util.ArrayList;
 import java.util.List;

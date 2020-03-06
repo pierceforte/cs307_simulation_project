@@ -1,6 +1,9 @@
 package cellsociety.simulation;
 
-import cellsociety.cell.WaTor.*;
+import cellsociety.cell.wator.FishCell;
+import cellsociety.cell.wator.SharkCell;
+import cellsociety.cell.wator.EmptyCell;
+import cellsociety.cell.wator.WaTorCell;
 import cellsociety.grid.Grid;
 
 import java.util.*;

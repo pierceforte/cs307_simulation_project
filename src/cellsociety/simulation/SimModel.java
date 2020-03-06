@@ -21,12 +21,6 @@ public abstract class SimModel <T extends Cell>{
         updateStates(grid);
     }
 
-    public void clickResponse(int row, int col){
-        Cell cell = grid.get(row, col);
-        cell.setNextState("1");
-        update();
-    }
-
     //repetitive method here for testing MVC
     public List<List<T>> getCells(){
         return grid.getCells();
