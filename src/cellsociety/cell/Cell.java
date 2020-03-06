@@ -31,6 +31,7 @@ public class Cell {
         this.nextState = nextState;
     }
 
+
     public void updateState(){
         this.state = this.nextState;
     }

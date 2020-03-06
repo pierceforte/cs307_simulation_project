@@ -17,10 +17,12 @@ public class CellView <T extends Cell> extends Rectangle {
         this.cell = cell;
         setId("cellView" + idNum);
         getStyleClass().add("cell");
-        getStyleClass().add("state" + cell.getState());
 
     }
 
+    public void setDefaultStyle(){
+        getStyleClass().add("state" + cell.getState());
+    }
 
     public int getRow(){
         return cell.getRow();
