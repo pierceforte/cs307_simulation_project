@@ -1,7 +1,7 @@
 package cellsociety.simulation;
 
 import cellsociety.cell.GOL.GOLCell;
-import cellsociety.cell.segregation.SegregationCell;
+import cellsociety.cell.Segregation.SegregationCell;
 import cellsociety.grid.Grid;
 
 import java.util.ArrayList;

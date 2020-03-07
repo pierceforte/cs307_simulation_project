@@ -1,4 +1,4 @@
-package cellsociety.cell.segregation;
+package cellsociety.cell.Segregation;
 
 import cellsociety.cell.Cell;
 import cellsociety.grid.Grid;
