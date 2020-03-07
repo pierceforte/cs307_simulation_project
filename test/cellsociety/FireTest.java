@@ -50,8 +50,6 @@ public class FireTest extends CellSocietyTest {
         testCellChangeState(0, 0, empty.getState(), FireCell.TREE, model);
     }
 
-
-
     @Test
     public void testBurningCellExtinguish(){
         testCellChangeState(4, 4, FireCell.BURNING, FireCell.EMPTY, createModelFromStart(FireSimModel.class));

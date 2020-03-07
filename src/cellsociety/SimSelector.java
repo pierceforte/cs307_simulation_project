@@ -26,6 +26,7 @@ public class SimSelector {
 
     public Button createSelectorButton() {
         mySimSelectorButton = new Button(myResources.getString("SelectSim"));
+        mySimSelectorButton.setId("fileSelectorButton");
         mySimSelectorButton.setPrefWidth(150);
         mySimSelectorButton.setPrefHeight(30);
         mySimSelectorButton.setTranslateX(MainController.WIDTH/2 - mySimSelectorButton.getPrefWidth()/2);

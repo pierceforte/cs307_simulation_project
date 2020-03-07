@@ -12,6 +12,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GOLTest extends CellSocietyTest {
+    public static final String GOL_CONFIG_TESTS_PATH = "test_configs/GOL/";
 
     @Test
     public void testGOLGridPopulation() {
@@ -63,59 +64,59 @@ public class GOLTest extends CellSocietyTest {
     @Test
     public void testGOLBeehiveConfig() {
         SimModel simModel = createModelFromFile(GOLSimModel.class,
-                GOL_CONFIG_TESTS_PATH + "beehive" + GOL_CONFIG_TESTS_EXTENSION);
+                GOL_CONFIG_TESTS_PATH + "beehive" + CONFIG_TESTS_EXTENSION);
         testGOLStillLifes(simModel);
     }
 
     @Test
     public void testGOLBlockConfig() {
         SimModel simModel = createModelFromFile(GOLSimModel.class,
-                GOL_CONFIG_TESTS_PATH + "block" + GOL_CONFIG_TESTS_EXTENSION);
+                GOL_CONFIG_TESTS_PATH + "block" + CONFIG_TESTS_EXTENSION);
         testGOLStillLifes(simModel);
     }
 
     @Test
     public void testGOLBoatConfig() {
         SimModel simModel = createModelFromFile(GOLSimModel.class,
-                GOL_CONFIG_TESTS_PATH + "boat" + GOL_CONFIG_TESTS_EXTENSION);
+                GOL_CONFIG_TESTS_PATH + "boat" + CONFIG_TESTS_EXTENSION);
         testGOLStillLifes(simModel);
     }
 
     @Test
     public void testGOLLoafConfig() {
         SimModel simModel = createModelFromFile(GOLSimModel.class,
-                GOL_CONFIG_TESTS_PATH + "loaf" + GOL_CONFIG_TESTS_EXTENSION);
+                GOL_CONFIG_TESTS_PATH + "loaf" + CONFIG_TESTS_EXTENSION);
         testGOLStillLifes(simModel);
     }
 
     @Test
     public void testGOLTubConfig() {
         SimModel simModel = createModelFromFile(GOLSimModel.class,
-                GOL_CONFIG_TESTS_PATH + "tub" + GOL_CONFIG_TESTS_EXTENSION);
+                GOL_CONFIG_TESTS_PATH + "tub" + CONFIG_TESTS_EXTENSION);
         testGOLStillLifes(simModel);
     }
 
     @Test
     public void testGOLBlinkerConfig() {
         SimModel simModel1 = createModelFromFile(GOLSimModel.class,
-                GOL_CONFIG_TESTS_PATH + "blinker1" + GOL_CONFIG_TESTS_EXTENSION);
+                GOL_CONFIG_TESTS_PATH + "blinker1" + CONFIG_TESTS_EXTENSION);
         SimModel simModel2 = createModelFromFile(GOLSimModel.class,
-                GOL_CONFIG_TESTS_PATH + "blinker2" + GOL_CONFIG_TESTS_EXTENSION);
+                GOL_CONFIG_TESTS_PATH + "blinker2" + CONFIG_TESTS_EXTENSION);
         testGOLStateLoops(List.of(simModel1, simModel2));
     }
 
     @Test
     public void testGOLGliderConfig() {
         SimModel simModel1 = createModelFromFile(GOLSimModel.class,
-                GOL_CONFIG_TESTS_PATH + "glider1" + GOL_CONFIG_TESTS_EXTENSION);
+                GOL_CONFIG_TESTS_PATH + "glider1" + CONFIG_TESTS_EXTENSION);
         SimModel simModel2 = createModelFromFile(GOLSimModel.class,
-                GOL_CONFIG_TESTS_PATH + "glider2" + GOL_CONFIG_TESTS_EXTENSION);
+                GOL_CONFIG_TESTS_PATH + "glider2" + CONFIG_TESTS_EXTENSION);
         SimModel simModel3 = createModelFromFile(GOLSimModel.class,
-                GOL_CONFIG_TESTS_PATH + "glider3" + GOL_CONFIG_TESTS_EXTENSION);
+                GOL_CONFIG_TESTS_PATH + "glider3" + CONFIG_TESTS_EXTENSION);
         SimModel simModel4 = createModelFromFile(GOLSimModel.class,
-                GOL_CONFIG_TESTS_PATH + "glider4" + GOL_CONFIG_TESTS_EXTENSION);
+                GOL_CONFIG_TESTS_PATH + "glider4" + CONFIG_TESTS_EXTENSION);
         SimModel simModel5 = createModelFromFile(GOLSimModel.class,
-                GOL_CONFIG_TESTS_PATH + "glider5" + GOL_CONFIG_TESTS_EXTENSION);
+                GOL_CONFIG_TESTS_PATH + "glider5" + CONFIG_TESTS_EXTENSION);
         testGOLStateLoops(List.of(simModel1, simModel2, simModel3, simModel4, simModel5));
     }
 

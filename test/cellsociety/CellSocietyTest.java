@@ -30,8 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class CellSocietyTest extends DukeApplicationTest {
 
-    public static final String GOL_CONFIG_TESTS_PATH = "test_configs/GOL/";
-    public static final String GOL_CONFIG_TESTS_EXTENSION = ".csv";
+    public static final String CONFIG_TESTS_EXTENSION = ".csv";
 
     private MainController myMainController;
     private SimController mySimController;

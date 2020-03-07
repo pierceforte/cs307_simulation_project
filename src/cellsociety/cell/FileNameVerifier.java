@@ -21,7 +21,7 @@ public class FileNameVerifier {
         myFileName = fileName;
         myModelClass = modelClass;
         Locale locale = new Locale("en", "US");
-        myResources = ResourceBundle.getBundle("default", locale);
+        myResources = ResourceBundle.getBundle("errors", locale);
     }
 
     public String verify() {
