@@ -22,8 +22,7 @@ public abstract class SimModel <T extends Cell>{
     }
 
     public void clickResponse(int row, int col){
-        grid.get(row, col).setNextState("1");
-        update();
+        grid.get(row, col).setState("1");
     }
 
     public Grid getGrid(){
