@@ -10,14 +10,18 @@ import cellsociety.simulation.SimController;
 import cellsociety.simulation.SimModel;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -208,6 +212,52 @@ public class CellSocietyTest extends DukeApplicationTest {
         assertTrue(notTheSame);
     }
 
+    // TODO: find a way to interact with file chooser from test
+    @Test
+    public void testFileChooser() {
+        // assert that file selector button is not yet present
+        assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, () -> lookup("#fileSelectorButton").query());
+        // begin application
+        startApplication();
+        // assert that pause and play buttons are now present
+        assertNotNull(lookup("#fileSelectorButton").query());
+        Button fileSelectorButton = lookup("#fileSelectorButton").query();
+        fireButtonEvent(fileSelectorButton);
+    }
+
+    @Test
+    public void testExitSimulationWithoutSave() {
+
+        testInputPathToEnsureQuitPane();
+
+        // choose to quit
+        Button quitBttn = lookup("#quitBttn").query();
+        fireButtonEvent(quitBttn);
+
+        // assert that ensure quit pane is now closed
+        assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, () -> lookup("#ensureQuitPane").query());
+
+        /*
+        NOTE: we cannot test that the quit button returns to the intro screen because we override the main controller's
+        start method such that it automatically begins a simulation.
+         */
+
+    }
+
+    @Test
+    public void testResumeSimulationWithoutSave() {
+
+        testInputPathToEnsureQuitPane();
+
+        // choose to quit
+        Button resumeBttn = lookup("#resumeBttn").query();
+        fireButtonEvent(resumeBttn);
+
+        // assert that ensure quit pane is now closed
+        assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, () -> lookup("#ensureQuitPane").query());
+
+    }
+
     protected SimModel createModelFromFile(Class simTypeClassName, String initialConfigFile) {
         final SimController[] simController = new SimController[1];
         javafxRun(() -> {
@@ -285,7 +335,6 @@ public class CellSocietyTest extends DukeApplicationTest {
         mySimModel = simModel;
     }
 
-
     protected void testCellChangeState(int row, int col, String initialState, String updatedState, SimModel model) {
         Grid cells = model.getGrid();
         // get a cell
@@ -296,5 +345,49 @@ public class CellSocietyTest extends DukeApplicationTest {
         model.update();
         // assert that this cell's updated state is correct
         assertEquals(updatedState, loneCell.getState());
+    }
+
+    protected <T extends Cell, S extends SimModel> void testGridPopulation(Class<S> simClass, String configName) {
+        setMySimModel(createModelFromStart(simClass));
+        Grid<T> gridFromModel = getMySimModel().getGrid();
+
+        ConfigReader data = new ConfigReader("configs/" + ConfigSaver.SIM_CLASS_NAME_TO_DIRECTORY.get(simClass) +
+                "/" + configName + "/" + configName + ConfigSaver.CSV_EXTENSION);
+        List<List<String>> cellStatesFromFile = data.getCellList();
+
+        assertEquals(data.getManualQuantityOfColumns(),data.getQuantityOfColumns());
+        assertEquals(data.getManualQuantityOfRows(),data.getQuantityOfRows());
+        for (int row = 0; row < gridFromModel.getNumRows(); row++) {
+            for (int col = 0; col < gridFromModel.getNumCols(); col++) {
+                assertEquals(cellStatesFromFile.get(row).get(col), gridFromModel.get(row, col).getState());
+            }
+        }
+    }
+
+    private void testInputPathToEnsureQuitPane() {
+        startApplicationFromFile(GOLSimModel.class, "resources/configs/GOL/GOLConfig/GOLConfig.csv");
+
+        // assert exit button is present
+        assertNotNull(lookup("#exitBttn").query());
+        Button exitBttn = lookup("#exitBttn").query();
+
+        // press button to exit
+        fireButtonEvent(exitBttn);
+        // assert that exit simulation prompts are now present
+        assertNotNull(lookup("#exitRequestPane").query());
+        assertNotNull(lookup("#beginSaveBttn").query());
+        assertNotNull(lookup("#noSaveBttn").query());
+        Button noSaveBttn = lookup("#noSaveBttn").query();
+
+        // assert that ensure user wants to quit pane is not yet present
+        assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, () -> lookup("#ensureQuitPane").query());
+
+        // choose not to save
+        fireButtonEvent(noSaveBttn);
+
+        // assert that ensure user wants to quit pane and its buttons are now present
+        assertNotNull(lookup("#ensureQuitPane").query());
+        assertNotNull(lookup("#resumeBttn").query());
+        assertNotNull(lookup("#quitBttn").query());
     }
 }

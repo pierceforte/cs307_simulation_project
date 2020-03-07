@@ -28,7 +28,7 @@ public class SimSelector {
         mySimSelectorButton.setOnAction(e -> {
             activateMySimSelectorButton();
         });
-        mySimSelectorButton.setId("FileSelectorButton");
+        mySimSelectorButton.setId("fileSelectorButton");
         return mySimSelectorButton;
     }
 
@@ -58,7 +58,8 @@ public class SimSelector {
     }
 
     private void handleInvalidDirectory(String simTypeDirectory) {
-        InputStage errorStage = new InputStage("Invalid Directory Selection", InputStage.DEFAULT_WIDTH, InputStage.DEFAULT_HEIGHT);
+        InputStage errorStage = new InputStage("Invalid Directory Selection", InputStage.DEFAULT_WIDTH, InputStage.DEFAULT_HEIGHT,
+                "invalidDirectoryPane");
         String message;
         if (!ConfigSaver.DIRECTORY_TO_SIM_CLASS.containsKey(simTypeDirectory)) {
             message = "The directory selected must be in one of the following directories: ";

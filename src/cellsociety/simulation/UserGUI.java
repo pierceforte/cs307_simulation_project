@@ -27,7 +27,6 @@ public class UserGUI {
         this.controller = controller;
         Locale locale = new Locale("en", "US");
         myResources = ResourceBundle.getBundle("default", locale);
-
     }
 
     private Button createButton(String text, String id, double xPos, double yPos, double width, double height) {
@@ -40,43 +39,10 @@ public class UserGUI {
         return button;
     }
 
-
-
-    //TODO: cleanup this code
-    public boolean userRestartedSimulation() {
-        Stage input = new Stage();
-        input.setTitle(myResources.getString("StartSim"));
-        final boolean[] ret = {false};
-        Button restartBttn = createButton(myResources.getString("RestartBttn"),"restartBttn", 0, 0, 100, 30);
-        Button continueBttn = createButton(myResources.getString("ContinueBttn"), "continueBttn", 100, 0, 100, 30);
-
-        restartBttn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent t) {
-                input.close();
-                ret[0] = true;
-            }
-        });
-        continueBttn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent t) {
-                input.close();
-                ret[0] = false;
-            }
-        });
-
-        Pane pane = new Pane();
-        pane.getChildren().addAll(restartBttn, continueBttn);
-
-        input.setScene(new Scene(pane, 200, 30));
-        input.showAndWait();
-
-        return ret[0];
-    }
-
-
     protected void handleExitRequest() {
         controller.pause();
 
-        InputStage stage = new InputStage("Exit", InputStage.DEFAULT_WIDTH, InputStage.DEFAULT_HEIGHT);
+        InputStage stage = new InputStage("Exit", InputStage.DEFAULT_WIDTH, InputStage.DEFAULT_HEIGHT, "exitRequestPane");
 
         Button beginSaveBttn = createButton("Save", "beginSaveBttn", 300/2 - 100/2, 100, 100, 30);
         Button noSaveBttn = createButton("Quit", "noSaveBttn", 300/2 - 100/2, 140, 100, 30);
@@ -89,8 +55,8 @@ public class UserGUI {
         });
         noSaveBttn.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent t) {
-                stage.close();
                 ensureUserWantsToQuit();
+                stage.close();
             }
         });
 
@@ -100,7 +66,8 @@ public class UserGUI {
     }
 
     private void letUserSaveConfig() {
-        InputStage stage = new InputStage("Save Current Configuration", InputStage.DEFAULT_WIDTH, InputStage.DEFAULT_HEIGHT);
+        InputStage stage = new InputStage("Save Current Configuration", InputStage.DEFAULT_WIDTH,
+                InputStage.DEFAULT_HEIGHT, "saveConfigPane");
 
         stage.addTextToCenterX("Configuration File Name", 50);
         TextField fileNameField = stage.addTextFieldToCenterX(75);
@@ -144,7 +111,7 @@ public class UserGUI {
     }
 
     private void ensureUserWantsToQuit() {
-        InputStage stage = new InputStage("Resume or Quit", InputStage.DEFAULT_WIDTH, InputStage.DEFAULT_HEIGHT);
+        InputStage stage = new InputStage("Resume or Quit", InputStage.DEFAULT_WIDTH, InputStage.DEFAULT_HEIGHT, "ensureQuitPane");
 
         stage.addTextToCenterX("Are you sure you want to Quit the simulation?", 150);
 

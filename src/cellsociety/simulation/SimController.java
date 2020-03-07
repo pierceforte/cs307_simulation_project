@@ -49,7 +49,6 @@ public class SimController {
         isActive = true;
     }
 
-
     public void start() {
         isActive = true;
     }
