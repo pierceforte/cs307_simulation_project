@@ -114,6 +114,7 @@ public class SimView {
             }});
         return hbox;
     }
+
     //TODO: refactor this method and implement a loop which adds color pickers based on the
     //  properties file for the current simulation
     private HBox createColorControls(){

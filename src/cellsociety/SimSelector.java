@@ -78,18 +78,14 @@ public class SimSelector {
         }
         errorStage.addErrorMessageToCenterX(message, 100);
 
-        Button okButton = new Button();
+        Button okButton = new Button(myResources.getString("Ok"));
         okButton.setId(myResources.getString("Ok"));
         okButton.setPrefWidth(100);
         okButton.setPrefHeight(30);
         okButton.setTranslateX(InputStage.DEFAULT_WIDTH/2 - okButton.getPrefWidth()/2);
         okButton.setTranslateY(250);
 
-        okButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent t) {
-                errorStage.close();
-            }
-        });
+        okButton.setOnAction(t -> errorStage.close());
 
         errorStage.addNodeToPane(okButton);
 

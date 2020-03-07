@@ -17,6 +17,8 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
+import java.util.List;
+
 public class InputStage {
     public static final Color BACKGROUND = Color.LIGHTBLUE;
     public static final double DEFAULT_WIDTH = 300;
@@ -93,6 +95,10 @@ public class InputStage {
 
     public <T extends Node> void addNodeToPane(T node) {
         myPane.getChildren().add(node);
+    }
+
+    public <T extends Node> void addNodesToPane(List<T> nodes) {
+        myPane.getChildren().addAll(nodes);
     }
 
     public void close() {

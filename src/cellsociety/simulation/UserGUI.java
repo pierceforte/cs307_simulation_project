@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -41,26 +42,26 @@ public class UserGUI {
 
     protected void handleExitRequest() {
         controller.pause();
-        InputStage stage = new InputStage("Exit", InputStage.DEFAULT_WIDTH, InputStage.DEFAULT_HEIGHT, "exitRequestPane");
-        Button beginSaveBttn = createButton("Save", "beginSaveBttn", 300/2 - 100/2, 100, 100, 30);
-        Button noSaveBttn = createButton("Quit", "noSaveBttn", 300/2 - 100/2, 140, 100, 30);
+        InputStage stage = new InputStage(myResources.getString("ExitPaneTitle"), InputStage.DEFAULT_WIDTH, 300, "exitRequestPane");
+        Button beginSaveBttn = createButton(myResources.getString("Save"), "beginSaveBttn", 300/2 - 100/2, 80, 100, 30);
+        Button cancelExitBttn = createButton(myResources.getString("Cancel"), "cancelExitBttn",300/2 - 100/2, 120, 100, 30);
+        Button noSaveBttn = createButton(myResources.getString("Quit"), "noSaveBttn", 300/2 - 100/2, 160, 100, 30);
 
 
-        beginSaveBttn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent t) {
-                letUserSaveConfig();
-                stage.close();
-            }
+        beginSaveBttn.setOnAction(t -> {
+            letUserSaveConfig();
+            stage.close();
         });
-        noSaveBttn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent t) {
-                ensureUserWantsToQuit();
-                stage.close();
-            }
+        cancelExitBttn.setOnAction(t -> {
+            controller.start();
+            stage.close();
+        });
+        noSaveBttn.setOnAction(t -> {
+            ensureUserWantsToQuit();
+            stage.close();
         });
 
-        stage.addNodeToPane(beginSaveBttn);
-        stage.addNodeToPane(noSaveBttn);
+        stage.addNodesToPane(List.of(beginSaveBttn, cancelExitBttn, noSaveBttn));
         stage.showAndWait();
     }
 
@@ -78,59 +79,48 @@ public class UserGUI {
         stage.addTextToCenterX(myResources.getString("Description"), 250);
         TextArea descriptionField  = stage.addTextAreaToCenterX(275);
 
-        Button saveBttn = createButton(myResources.getString("SaveConfigBttn"), "saveBttn", 300/2 - 100/2, 500, 100, 30);
-        Button cancelSaveBttn = createButton(myResources.getString("CancelBttn"), "cancelSaveBttn", 300/2 - 100/2, 540, 100, 30);
+        Button saveBttn = createButton(myResources.getString("Save"), "saveBttn", 300/2 - 100/2, 500, 100, 30);
+        Button cancelSaveBttn = createButton(myResources.getString("Cancel"), "cancelSaveBttn", 300/2 - 100/2, 540, 100, 30);
 
-        saveBttn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent t) {
-                FileNameVerifier fileNameVerifier = new FileNameVerifier(fileNameField.getText(), controller.getModel().getClass());
-                stage.removeErrorMessage();
-                String errorMessage = fileNameVerifier.verify();
-                if (errorMessage.equals(FileNameVerifier.NAME_IS_VALID)) {
-                    controller.saveConfig(fileNameField.getText(), authorField.getText(), descriptionField.getText());
-                    ensureUserWantsToQuit();
-                    stage.close();
-                }
-                else {
-                    stage.addErrorMessageToCenterX(errorMessage, 590);
-                }
-            }
-        });
-        cancelSaveBttn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent t) {
-                controller.start();
+        saveBttn.setOnAction(t -> {
+            FileNameVerifier fileNameVerifier = new FileNameVerifier(fileNameField.getText(), controller.getModel().getClass());
+            stage.removeErrorMessage();
+            String errorMessage = fileNameVerifier.verify();
+            if (errorMessage.equals(FileNameVerifier.NAME_IS_VALID)) {
+                controller.saveConfig(fileNameField.getText(), authorField.getText(), descriptionField.getText());
+                ensureUserWantsToQuit();
                 stage.close();
             }
+            else {
+                stage.addErrorMessageToCenterX(errorMessage, 590);
+            }
+        });
+        cancelSaveBttn.setOnAction(t -> {
+            controller.start();
+            stage.close();
         });
 
-        stage.addNodeToPane(saveBttn);
-        stage.addNodeToPane(cancelSaveBttn);
-
+        stage.addNodesToPane(List.of(saveBttn, cancelSaveBttn));
         stage.showAndWait();
     }
 
     private void ensureUserWantsToQuit() {
-        InputStage stage = new InputStage(myResources.getString("QuitOrNot"), InputStage.DEFAULT_WIDTH, InputStage.DEFAULT_HEIGHT, "ensureQuitPane");
+        InputStage stage = new InputStage(myResources.getString("QuitOrNot"), InputStage.DEFAULT_WIDTH, 300, "ensureQuitPane");
 
-        stage.addTextToCenterX(myResources.getString("ConfirmQuit"), 150);
+        stage.addTextToCenterX(myResources.getString("ConfirmQuit"), 100);
 
-        Button resumeBttn = createButton(myResources.getString("Resume"), "resumeBttn", 300/2 - 100/2, 400, 100, 30);
-        Button quitBttn = createButton(myResources.getString("Quit"), "quitBttn", 300/2 - 100/2, 440, 100, 30);
+        Button resumeBttn = createButton(myResources.getString("Resume"), "resumeBttn", 300/2 - 100/2, 150, 100, 30);
+        Button quitBttn = createButton(myResources.getString("Quit"), "quitBttn", 300/2 - 100/2, 190, 100, 30);
 
-        resumeBttn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent t) {
-                controller.start();
-                stage.close();
-            }
+        resumeBttn.setOnAction(t -> {
+            controller.start();
+            stage.close();
         });
-        quitBttn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent t) {
-                controller.setIsEnded(true);
-                stage.close();
-            }
+        quitBttn.setOnAction(t -> {
+            controller.setIsEnded(true);
+            stage.close();
         });
-        stage.addNodeToPane(resumeBttn);
-        stage.addNodeToPane(quitBttn);
+        stage.addNodesToPane(List.of(resumeBttn, quitBttn));
         stage.showAndWait();
     }
 }
