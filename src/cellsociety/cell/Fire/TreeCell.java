@@ -6,7 +6,6 @@ public class TreeCell extends FireCell{
     public static final String STATE = FireCell.TREE;
     public static final double PROB_CATCH_FIRE = 0.5;
 
-
     public TreeCell(int row, int col) {
         super(STATE, row, col);
     }
@@ -14,8 +13,16 @@ public class TreeCell extends FireCell{
 
     @Override
     public void setWhatToDoNext(List<FireCell> neighbors) {
-        if(Math.random() < PROB_CATCH_FIRE){
+        int burningNeighbours = 0;
+        for (FireCell cell : neighbors){
+            if (cell.getState().equals(FireCell.BURNING)){
+                burningNeighbours++;
+            }
+        }
+
+        if(rnd.nextDouble() < PROB_CATCH_FIRE | burningNeighbours == 1){
             setNextState(BURNING);
         } else setNextState(TREE);
     }
+
 }

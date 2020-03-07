@@ -112,18 +112,14 @@ public class SimView {
             public void changed(ObservableValue<? extends Number> observable, //
                                 Number oldValue, Number newValue) {
                 controller.changeRate((Double) newValue);
-            }
-        });
-
+            }});
         return hbox;
     }
-
     //TODO: refactor this method and implement a loop which adds color pickers based on the
     //  properties file for the current simulation
     private HBox createColorControls(){
         cellColors = new HashMap<>();
         HBox hbox = new HBox(5);
-
         ColorPicker picker0 = new ColorPicker();
         ColorPicker picker1 = new ColorPicker();
         ColorPicker picker2 = new ColorPicker();
@@ -133,8 +129,7 @@ public class SimView {
         picker1.setOnAction(event -> cellColors.put("1", picker1.getValue()));
         picker2.setOnAction(event -> cellColors.put("2", picker1.getValue()));
 
-        return hbox;
-    }
+        return hbox; }
 
     private Color getCustomColor(Cell cell){
         return cellColors.get(cell.getState());

@@ -2,7 +2,15 @@ package cellsociety.config;
 
 import cellsociety.cell.Cell;
 import cellsociety.grid.Grid;
+<<<<<<< HEAD
 import cellsociety.simulation.*;
+=======
+import cellsociety.simulation.FireSimModel;
+import cellsociety.simulation.GOLSimModel;
+import cellsociety.simulation.SegregationSimModel;
+import cellsociety.simulation.WaTorSimModel;
+import cellsociety.simulation.PercolationSimModel;
+>>>>>>> 7f285aac42557aa664c080f2f5c6853cd59c1c35
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -18,15 +26,26 @@ public class ConfigSaver<T extends Cell> {
             GOLSimModel.class, GOLSimModel.CONFIG_FILE_PREFIX,
             WaTorSimModel.class, WaTorSimModel.CONFIG_FILE_PREFIX,
             SegregationSimModel.class, SegregationSimModel.CONFIG_FILE_PREFIX,
+<<<<<<< HEAD
             RPSModel.class, RPSModel.CONFIG_FILE_PREFIX,
             FireSimModel.class, FireSimModel.CONFIG_FILE_PREFIX
             );
+=======
+            FireSimModel.class, FireSimModel.CONFIG_FILE_PREFIX,
+            PercolationSimModel.class, PercolationSimModel.CONFIG_FILE_PREFIX
+    );
+>>>>>>> 7f285aac42557aa664c080f2f5c6853cd59c1c35
     public static final Map<String, Class> DIRECTORY_TO_SIM_CLASS = Map.of(
             GOLSimModel.CONFIG_FILE_PREFIX, GOLSimModel.class,
             WaTorSimModel.CONFIG_FILE_PREFIX, WaTorSimModel.class,
             SegregationSimModel.CONFIG_FILE_PREFIX, SegregationSimModel.class,
+<<<<<<< HEAD
             RPSModel.CONFIG_FILE_PREFIX, RPSModel.class,
             FireSimModel.CONFIG_FILE_PREFIX, FireSimModel.class);
+=======
+            FireSimModel.CONFIG_FILE_PREFIX, FireSimModel.class,
+            PercolationSimModel.CONFIG_FILE_PREFIX, PercolationSimModel.class);
+>>>>>>> 7f285aac42557aa664c080f2f5c6853cd59c1c35
 
     public ConfigSaver(Grid<T> grid, String fileName, String author, String description, Class modelClass) {
         String simDirectory = SIM_CLASS_NAME_TO_DIRECTORY.get(modelClass);

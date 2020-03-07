@@ -17,7 +17,9 @@ public class Cell {
         this.col = col;
     }
 
-
+    public void setState(String state) {
+        this.state = state;
+    }
 
     public String getState(){
         return state;
@@ -48,11 +50,9 @@ public class Cell {
     public int getCol() {
         return col;
     }
-
     public void setRow(int row) {
         this.row = row;
     }
-
     public void setCol(int col) {
         this.col = col;
     }

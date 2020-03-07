@@ -23,7 +23,9 @@ public class SimController {
             GOLSimModel.class, GOLSimModel.CONFIG_FILE_PREFIX,
             WaTorSimModel.class, WaTorSimModel.CONFIG_FILE_PREFIX,
             RPSModel.class, RPSModel.CONFIG_FILE_PREFIX,
-            SegregationSimModel.class, SegregationSimModel.CONFIG_FILE_PREFIX);
+            SegregationSimModel.class, SegregationSimModel.CONFIG_FILE_PREFIX,
+            PercolationSimModel.class, PercolationSimModel.CONFIG_FILE_PREFIX);
+
 
     //TODO: not sure if we want this dependency
     private MainController mainController;
@@ -49,7 +51,6 @@ public class SimController {
         }
         isActive = true;
     }
-
 
     public void start() {
         isActive = true;

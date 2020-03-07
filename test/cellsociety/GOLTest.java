@@ -1,11 +1,8 @@
 package cellsociety;
 
 import cellsociety.cell.Cell;
-import cellsociety.config.ConfigReader;
-import cellsociety.config.ConfigSaver;
 import cellsociety.grid.Grid;
 import cellsociety.cell.GOL.GOLCell;
-import cellsociety.simulation.FireSimModel;
 import cellsociety.simulation.GOLSimModel;
 import cellsociety.simulation.SimModel;
 import org.junit.jupiter.api.Test;

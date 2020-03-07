@@ -31,7 +31,7 @@ public class InputStage {
     private double height;
     private Text myErrorMessage;
 
-    public InputStage(String title, double width, double height) {
+    public InputStage(String title, double width, double height, String id) {
         myStage = new Stage();
         myStage.setTitle(title);
         myPane = new Pane();
@@ -40,7 +40,7 @@ public class InputStage {
         this.height = height;
         myScene = new Scene(myPane, width, height);
         myStage.setScene(myScene);
-        myPane.setId("inputPane");
+        myPane.setId(id);
     }
 
     public Text addTextToCenterX(String textString, double yPos) {
@@ -72,12 +72,13 @@ public class InputStage {
 
     public void addErrorMessageToCenterX(String errorMessage, double yPos) {
         myErrorMessage = addTextToCenterX(errorMessage, yPos);
+        myErrorMessage.setId("errorMessage");
         myErrorMessage.setTextAlignment(TextAlignment.CENTER);
         myErrorMessage.setWrappingWidth(200);
-
         if (myErrorMessage.getLayoutBounds().getWidth() >= 200) {
             myErrorMessage.setX(width/2 - myErrorMessage.getWrappingWidth()/2);
         }
+
     }
 
     public void removeErrorMessage() {
