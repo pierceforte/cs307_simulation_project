@@ -31,11 +31,6 @@ public abstract class SimModel <T extends Cell>{
         return grid;
     }
 
-    //repetitive method here for testing MVC
-    public List<List<T>> getCells(){
-        return grid.getCells();
-    }
-
     public SimController getSimController() {
         return simController;
     }
