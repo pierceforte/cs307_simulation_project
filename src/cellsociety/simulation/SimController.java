@@ -34,18 +34,16 @@ public class SimController {
 
     //TODO: cleanup constructor
     public <T extends SimModel> SimController(Class<T> simTypeClassName, MainController mainController, String csvFileName) {
-        view = new SimView(this);
         this.mainController = mainController;
-        System.out.println(csvFileName);
         ConfigReader data = new ConfigReader(csvFileName);
         List<List<String>> listOfCells = data.getCellList();
-
         try {
             Constructor<?> constructor = simTypeClassName.getConstructor(List.class, SimController.class);
             this.model = (SimModel) constructor.newInstance(listOfCells, this);
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             System.exit(0);
         }
+        view = new SimView(this);
         isActive = true;
     }
 

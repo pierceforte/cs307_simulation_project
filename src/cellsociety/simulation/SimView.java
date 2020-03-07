@@ -11,8 +11,10 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class SimView {
@@ -37,7 +39,7 @@ public class SimView {
         this.controller = controller;
         gui = new UserGUI(controller);
         bPane = new BorderPane();
-        createControls();
+        createControls(controller.getModel().getCellTypesMap());
     }
 
     public <T extends Cell> Group update(Grid<T> grid) {
@@ -80,9 +82,10 @@ public class SimView {
         return bPane;
     }
 
-    private void createControls(){
+    private void createControls(Map<String, Class> cellTypesMap){
        VBox vbox = new VBox(5);
-       vbox.getChildren().addAll(createButtonControls(), createColorControls());
+       cellColors = new HashMap<>();
+       vbox.getChildren().addAll(createButtonControls(), createColorControls(cellTypesMap));
        bPane.setBottom(vbox);
     }
 
@@ -117,17 +120,22 @@ public class SimView {
 
     //TODO: refactor this method and implement a loop which adds color pickers based on the
     //  properties file for the current simulation
-    private HBox createColorControls(){
-        cellColors = new HashMap<>();
+    private HBox createColorControls(Map<String, Class> cellTypesMap){
         HBox hbox = new HBox(5);
-        ColorPicker picker0 = new ColorPicker();
-        ColorPicker picker1 = new ColorPicker();
-        ColorPicker picker2 = new ColorPicker();
 
-        hbox.getChildren().addAll(picker0, picker1, picker2);
-        picker0.setOnAction(event -> cellColors.put("0", picker0.getValue()));
-        picker1.setOnAction(event -> cellColors.put("1", picker1.getValue()));
-        picker2.setOnAction(event -> cellColors.put("2", picker1.getValue()));
+        for (String state : cellTypesMap.keySet()) {
+            Color color;
+            try {
+                color = Color.web(myResources.getString("State" + state));
+            } catch (Exception e) {
+                System.out.println("here");
+                color = null; // Not defined
+            }
+
+            ColorPicker picker = new ColorPicker(color);
+            hbox.getChildren().add(picker);
+            picker.setOnAction(event -> cellColors.put(state, picker.getValue()));
+        }
 
         return hbox; }
 
