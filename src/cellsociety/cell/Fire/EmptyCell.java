@@ -13,7 +13,7 @@ public class EmptyCell extends FireCell {
 
     @Override
     public void setWhatToDoNext(List<FireCell> neighbors) {
-        if (Math.random() < PROB_TREE){
+        if (rnd.nextDouble() < PROB_TREE){
             setNextState(TREE);
         } else {
             setNextState(EMPTY);

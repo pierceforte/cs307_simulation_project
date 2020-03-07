@@ -286,14 +286,14 @@ public class CellSocietyTest extends DukeApplicationTest {
     }
 
 
-    protected void testCellChangeState(int row, int col, String initialState, String updatedState) {
-        Grid cells = mySimModel.getGrid();
+    protected void testCellChangeState(int row, int col, String initialState, String updatedState, SimModel model) {
+        Grid cells = model.getGrid();
         // get a cell
         Cell loneCell = cells.get(row, col);
         // assert that this cell's initial state is correct
         assertEquals(initialState, loneCell.getState());
         // update simulation (one step)
-        getMySimModel().update();
+        model.update();
         // assert that this cell's updated state is correct
         assertEquals(updatedState, loneCell.getState());
     }
