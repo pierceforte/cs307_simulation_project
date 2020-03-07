@@ -165,6 +165,20 @@ public class CellSocietyTest extends DukeApplicationTest {
         assertTrue(updatedNumLines > initialNumLines);
     }
 
+    // Cell Tests
+    @Test
+    public void testSetRow(){
+        Cell c = new Cell("on", 2, 4);
+        c.setRow(3);
+        assertEquals(3, c.getRow());
+    }
+    @Test
+    public void testSetCol(){
+        Cell c = new Cell("on", 2, 4);
+        c.setCol(3);
+        assertEquals(3, c.getCol());
+    }
+
     // TODO: refactor
     @Test
     public void testPauseAndPlaySimulationButtons() {
