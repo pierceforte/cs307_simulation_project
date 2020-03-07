@@ -383,7 +383,7 @@ public class CellSocietyTest extends DukeApplicationTest {
     protected SimModel createModelFromFile(Class simTypeClassName, String initialConfigFile) {
         final SimController[] simController = new SimController[1];
         javafxRun(() -> {
-            simController[0] = new SimController(GOLSimModel.class, new MainController(), initialConfigFile);
+            simController[0] = new SimController(simTypeClassName, new MainController(), initialConfigFile);
         });
         return simController[0].getModel();
     }

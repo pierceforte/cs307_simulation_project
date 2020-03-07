@@ -18,6 +18,10 @@ public class SharkCell extends LivingWaTorCell{
         energy = DEFAULT_SHARK_ENERGY;
     }
 
+    public int getEnergy() {
+        return energy;
+    }
+
     public List<Integer> getPosOfFishToEatNext() {
         return posOfFishToEatNext;
     }
