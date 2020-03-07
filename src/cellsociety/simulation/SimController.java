@@ -91,10 +91,6 @@ public class SimController {
         return isActive;
     }
 
-    public void setIsActive(boolean isActive) {
-        this.isActive = isActive;
-    }
-
     public void setIsEnded(boolean isEnded) {
         this.isEnded = isEnded;
     }

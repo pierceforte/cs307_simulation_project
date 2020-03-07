@@ -62,7 +62,6 @@ public class SimView {
                 if (cellColors.get(cell.getState()) != null){
                     cellView.getStyleClass().removeAll();
                     cellView.setFill(getCustomColor(cell));
-                    System.out.println(cellView.getFill());
                 } else {
                     cellView.setDefaultStyle();
                 }

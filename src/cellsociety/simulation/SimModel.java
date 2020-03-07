@@ -22,21 +22,12 @@ public abstract class SimModel <T extends Cell>{
     }
 
     public void clickResponse(int row, int col){
-        Cell cell = grid.get(row, col);
-        cell.setNextState("1");
+        grid.get(row, col).setNextState("1");
         update();
     }
 
     public Grid getGrid(){
         return grid;
-    }
-
-    public SimController getSimController() {
-        return simController;
-    }
-
-    public SimView getSimView() {
-        return simView;
     }
 
     protected abstract Map<String, Class> getCellTypesMap();

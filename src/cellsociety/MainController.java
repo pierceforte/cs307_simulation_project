@@ -68,8 +68,8 @@ public class MainController extends Application {
         setMyAnimation(myStage);
     }
 
-    public Group getMyRoot() {
-        return myRoot;
+    public void setMySimulationActiveStatus(boolean activeStatus) {
+        isMySimulationActive = activeStatus;
     }
 
     public void setMyStage(Stage stage) {
