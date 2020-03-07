@@ -1,25 +1,17 @@
 package cellsociety.simulation;
 
-import cellsociety.InputStage;
 import cellsociety.MainController;
-import cellsociety.cell.FileNameVerifier;
 import cellsociety.grid.Grid;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import cellsociety.cell.Cell;
 import cellsociety.cell.CellView;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -48,10 +40,46 @@ public class SimView {
         createControls();
     }
 
+    public <T extends Cell> Group update(Grid<T> grid) {
+        bPane.getChildren().remove(cellViewsRoot);
+
+        Group root = new Group();
+        int rows = grid.getNumRows();
+        int cols = grid.getNumCols();
+
+        // divide by the large dimension so everything fits on screen
+        double size = ((double) MainController.WIDTH) / Math.max(cols, rows);
+        // TODO: get these to work (the calculations are correct, but changing xPos and yPos in cellView
+        //  doesn't do work
+        double xOffset = size * Math.max(0, rows - cols)/2;
+        double yOffset = size * Math.max(0, cols - rows)/2;
+
+        int cellViewIdNum = 0;
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                T cell = grid.get(row, col);
+                CellView cellView = new CellView(cell, size, xOffset, yOffset, cellViewIdNum);
+                if (cellColors.get(cell.getState()) != null){
+                    cellView.getStyleClass().removeAll();
+                    cellView.setFill(getCustomColor(cell));
+                    System.out.println(cellView.getFill());
+                } else {
+                    cellView.setDefaultStyle();
+                }
+
+                cellViewIdNum++;
+                root.getChildren().add(cellView);
+                cellView.setOnMouseClicked(event -> controller.handleClick(cellView.getRow(), cellView.getCol()));
+            }
+        }
+        bPane.setCenter(root);
+        cellViewsRoot = root;
+        return root;
+    }
+
     public BorderPane getRoot(){
         return bPane;
     }
-
 
     private void createControls(){
        VBox vbox = new VBox(5);
@@ -108,59 +136,8 @@ public class SimView {
         return hbox;
     }
 
-
-
-
-    public <T extends Cell> Group update(Grid<T> grid) {
-        bPane.getChildren().remove(cellViewsRoot);
-
-        Group root = new Group();
-        int rows = grid.getNumRows();
-        int cols = grid.getNumCols();
-
-        // divide by the large dimension so everything fits on screen
-        double size = ((double) MainController.WIDTH) / Math.max(cols, rows);
-        // TODO: get these to work (the calculations are correct, but changing xPos and yPos in cellView
-        //  doesn't do work
-        double xOffset = size * Math.max(0, rows - cols)/2;
-        double yOffset = size * Math.max(0, cols - rows)/2;
-
-        int cellViewIdNum = 0;
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < cols; col++) {
-                T cell = grid.get(row, col);
-                CellView cellView = new CellView(cell, size, xOffset, yOffset, cellViewIdNum);
-                if (cellColors.get(cell.getState()) != null){
-                    cellView.getStyleClass().removeAll();
-                    cellView.setFill(getCustomColor(cell));
-                    System.out.println(cellView.getFill());
-                } else {
-                    cellView.setDefaultStyle();
-                }
-
-                cellViewIdNum++;
-                root.getChildren().add(cellView);
-                cellView.setOnMouseClicked(event -> controller.handleClick(cellView.getRow(), cellView.getCol()));
-            }
-        }
-        bPane.setCenter(root);
-        cellViewsRoot = root;
-        return root;
-    }
-
-    public Group getCellViewsRoot() {
-        return cellViewsRoot;
-    }
-
     private Color getCustomColor(Cell cell){
         return cellColors.get(cell.getState());
     }
-
-
-
-
-
-
-
 
 }

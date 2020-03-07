@@ -8,6 +8,7 @@ import cellsociety.grid.Grid;
 import cellsociety.simulation.GOLSimModel;
 import cellsociety.simulation.SimController;
 import cellsociety.simulation.SimModel;
+import cellsociety.simulation.WaTorSimModel;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
@@ -285,7 +286,6 @@ public class CellSocietyTest extends DukeApplicationTest {
         mySimModel = simModel;
     }
 
-
     protected void testCellChangeState(int row, int col, String initialState, String updatedState) {
         Grid cells = mySimModel.getGrid();
         // get a cell
@@ -296,5 +296,22 @@ public class CellSocietyTest extends DukeApplicationTest {
         getMySimModel().update();
         // assert that this cell's updated state is correct
         assertEquals(updatedState, loneCell.getState());
+    }
+
+    protected <T extends Cell, S extends SimModel> void testGridPopulation(Class<S> simClass, String configName) {
+        setMySimModel(createModelFromStart(simClass));
+        Grid<T> gridFromModel = getMySimModel().getGrid();
+
+        ConfigReader data = new ConfigReader("configs/" + ConfigSaver.SIM_CLASS_NAME_TO_DIRECTORY.get(simClass) +
+                "/" + configName + "/" + configName + ConfigSaver.CSV_EXTENSION);
+        List<List<String>> cellStatesFromFile = data.getCellList();
+
+        assertEquals(data.getManualQuantityOfColumns(),data.getQuantityOfColumns());
+        assertEquals(data.getManualQuantityOfRows(),data.getQuantityOfRows());
+        for (int row = 0; row < gridFromModel.getNumRows(); row++) {
+            for (int col = 0; col < gridFromModel.getNumCols(); col++) {
+                assertEquals(cellStatesFromFile.get(row).get(col), gridFromModel.get(row, col).getState());
+            }
+        }
     }
 }

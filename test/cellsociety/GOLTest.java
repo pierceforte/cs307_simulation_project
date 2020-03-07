@@ -5,6 +5,7 @@ import cellsociety.config.ConfigReader;
 import cellsociety.config.ConfigSaver;
 import cellsociety.grid.Grid;
 import cellsociety.cell.GOL.GOLCell;
+import cellsociety.simulation.FireSimModel;
 import cellsociety.simulation.GOLSimModel;
 import cellsociety.simulation.SimModel;
 import org.junit.jupiter.api.Test;
@@ -16,21 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class GOLTest extends CellSocietyTest {
 
     @Test
-    public <T extends Cell> void testGOLGridPopulation() {
-        setMySimModel(createModelFromStart(GOLSimModel.class));
-        Grid<T> gridFromModel = getMySimModel().getGrid();
-
-        ConfigReader data = new ConfigReader("configs/" + ConfigSaver.SIM_CLASS_NAME_TO_DIRECTORY.get(GOLSimModel.class) +
-                "/GOLConfig/GOLConfig.csv");
-        List<List<String>> cellStatesFromFile = data.getCellList();
-
-        assertEquals(data.getManualQuantityOfColumns(),data.getQuantityOfColumns());
-        assertEquals(data.getManualQuantityOfRows(),data.getQuantityOfRows());
-        for (int row = 0; row < gridFromModel.getNumRows(); row++) {
-            for (int col = 0; col < gridFromModel.getNumCols(); col++) {
-                assertEquals(cellStatesFromFile.get(row).get(col), gridFromModel.get(row, col).getState());
-            }
-        }
+    public void testGOLGridPopulation() {
+        testGridPopulation(GOLSimModel.class, "GOLConfig");
     }
 
     @Test
@@ -165,7 +153,6 @@ public class GOLTest extends CellSocietyTest {
             }
         }
     }
-
 
     private void testGOLCellStateChange(int row, int col, String initialState, String updatedStated) {
         createModelFromStart(GOLSimModel.class);
