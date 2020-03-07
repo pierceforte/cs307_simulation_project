@@ -41,11 +41,10 @@ public class UserGUI {
 
     protected void handleExitRequest() {
         controller.pause();
-
         InputStage stage = new InputStage("Exit", InputStage.DEFAULT_WIDTH, InputStage.DEFAULT_HEIGHT, "exitRequestPane");
-
         Button beginSaveBttn = createButton("Save", "beginSaveBttn", 300/2 - 100/2, 100, 100, 30);
         Button noSaveBttn = createButton("Quit", "noSaveBttn", 300/2 - 100/2, 140, 100, 30);
+
 
         beginSaveBttn.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent t) {
@@ -66,31 +65,31 @@ public class UserGUI {
     }
 
     private void letUserSaveConfig() {
-        InputStage stage = new InputStage("Save Current Configuration", InputStage.DEFAULT_WIDTH,
+        InputStage stage = new InputStage(myResources.getString("SaveConfig"), InputStage.DEFAULT_WIDTH,
                 InputStage.DEFAULT_HEIGHT, "saveConfigPane");
 
-        stage.addTextToCenterX("Configuration File Name", 50);
+        stage.addTextToCenterX(myResources.getString("FileName"), 50);
         TextField fileNameField = stage.addTextFieldToCenterX(75);
+        fileNameField.setId("fileNameField");
 
-        stage.addTextToCenterX("Author", 150);
+        stage.addTextToCenterX(myResources.getString("Author"), 150);
         TextField authorField = stage.addTextFieldToCenterX(175);
 
-        stage.addTextToCenterX("Description", 250);
+        stage.addTextToCenterX(myResources.getString("Description"), 250);
         TextArea descriptionField  = stage.addTextAreaToCenterX(275);
 
-        Button saveBttn = createButton("Save Configuration", "saveBttn", 300/2 - 100/2, 500, 100, 30);
-        Button cancelSaveBttn = createButton("Cancel", "cancelSaveBttn", 300/2 - 100/2, 540, 100, 30);
+        Button saveBttn = createButton(myResources.getString("SaveConfigBttn"), "saveBttn", 300/2 - 100/2, 500, 100, 30);
+        Button cancelSaveBttn = createButton(myResources.getString("CancelBttn"), "cancelSaveBttn", 300/2 - 100/2, 540, 100, 30);
 
         saveBttn.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent t) {
                 FileNameVerifier fileNameVerifier = new FileNameVerifier(fileNameField.getText(), controller.getModel().getClass());
                 stage.removeErrorMessage();
-
                 String errorMessage = fileNameVerifier.verify();
                 if (errorMessage.equals(FileNameVerifier.NAME_IS_VALID)) {
-                    stage.close();
                     controller.saveConfig(fileNameField.getText(), authorField.getText(), descriptionField.getText());
                     ensureUserWantsToQuit();
+                    stage.close();
                 }
                 else {
                     stage.addErrorMessageToCenterX(errorMessage, 590);
@@ -99,8 +98,8 @@ public class UserGUI {
         });
         cancelSaveBttn.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent t) {
-                stage.close();
                 controller.start();
+                stage.close();
             }
         });
 
@@ -111,29 +110,27 @@ public class UserGUI {
     }
 
     private void ensureUserWantsToQuit() {
-        InputStage stage = new InputStage("Resume or Quit", InputStage.DEFAULT_WIDTH, InputStage.DEFAULT_HEIGHT, "ensureQuitPane");
+        InputStage stage = new InputStage(myResources.getString("QuitOrNot"), InputStage.DEFAULT_WIDTH, InputStage.DEFAULT_HEIGHT, "ensureQuitPane");
 
-        stage.addTextToCenterX("Are you sure you want to Quit the simulation?", 150);
+        stage.addTextToCenterX(myResources.getString("ConfirmQuit"), 150);
 
-        Button resumeBttn = createButton("Resume", "resumeBttn", 300/2 - 100/2, 400, 100, 30);
-        Button quitBttn = createButton("Quit", "quitBttn", 300/2 - 100/2, 440, 100, 30);
+        Button resumeBttn = createButton(myResources.getString("Resume"), "resumeBttn", 300/2 - 100/2, 400, 100, 30);
+        Button quitBttn = createButton(myResources.getString("Quit"), "quitBttn", 300/2 - 100/2, 440, 100, 30);
 
         resumeBttn.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent t) {
-                stage.close();
                 controller.start();
+                stage.close();
             }
         });
         quitBttn.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent t) {
-                stage.close();
                 controller.setIsEnded(true);
+                stage.close();
             }
         });
-
         stage.addNodeToPane(resumeBttn);
         stage.addNodeToPane(quitBttn);
-
         stage.showAndWait();
     }
 }

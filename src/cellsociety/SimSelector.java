@@ -9,18 +9,23 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class SimSelector {
 
     private MainController myMainController;
     private Button mySimSelectorButton;
+    private ResourceBundle myResources;
 
     public SimSelector(MainController mainController) {
         myMainController = mainController;
+        Locale locale = new Locale("en", "US");
+        myResources = ResourceBundle.getBundle("default", locale);
     }
 
     public Button createSelectorButton() {
-        mySimSelectorButton = new Button("Select Simulation");
+        mySimSelectorButton = new Button(myResources.getString("SelectSim"));
         mySimSelectorButton.setPrefWidth(150);
         mySimSelectorButton.setPrefHeight(30);
         mySimSelectorButton.setTranslateX(MainController.WIDTH/2 - mySimSelectorButton.getPrefWidth()/2);
@@ -28,7 +33,6 @@ public class SimSelector {
         mySimSelectorButton.setOnAction(e -> {
             activateMySimSelectorButton();
         });
-        mySimSelectorButton.setId("fileSelectorButton");
         return mySimSelectorButton;
     }
 
@@ -58,23 +62,23 @@ public class SimSelector {
     }
 
     private void handleInvalidDirectory(String simTypeDirectory) {
-        InputStage errorStage = new InputStage("Invalid Directory Selection", InputStage.DEFAULT_WIDTH, InputStage.DEFAULT_HEIGHT,
+        InputStage errorStage = new InputStage(myResources.getString("InvalidDir"), InputStage.DEFAULT_WIDTH, InputStage.DEFAULT_HEIGHT,
                 "invalidDirectoryPane");
         String message;
         if (!ConfigSaver.DIRECTORY_TO_SIM_CLASS.containsKey(simTypeDirectory)) {
-            message = "The directory selected must be in one of the following directories: ";
+            message = myResources.getString("DoesNotContainClass");
             for (String key : ConfigSaver.DIRECTORY_TO_SIM_CLASS.keySet()) {
                 message += "resources/configs/" + key + "/, ";
             }
             message = message.substring(0, message.length()-2);
         }
         else {
-            message = "A directory with one csv and one properties file of the same names must be chosen.";
+            message = myResources.getString("MustHaveSameNames");
         }
         errorStage.addErrorMessageToCenterX(message, 100);
 
-        Button okButton = new Button("OK");
-        okButton.setId("okBttn");
+        Button okButton = new Button();
+        okButton.setId(myResources.getString("Ok"));
         okButton.setPrefWidth(100);
         okButton.setPrefHeight(30);
         okButton.setTranslateX(InputStage.DEFAULT_WIDTH/2 - okButton.getPrefWidth()/2);
