@@ -44,7 +44,6 @@ public class SimController {
             Constructor<?> constructor = simTypeClassName.getConstructor(List.class, SimController.class);
             this.model = (SimModel) constructor.newInstance(listOfCells, this);
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            //logError(e);
             System.exit(0);
         }
         isActive = true;
@@ -58,10 +57,7 @@ public class SimController {
         isActive = false;
     }
 
-    public void stepFrame(){
-        update(true);
-        pause();
-    }
+    public void stepFrame(){ update(true);pause(); }
 
     public void changeRate(double change){
         mainController.changeAnimationSpeed(change);
