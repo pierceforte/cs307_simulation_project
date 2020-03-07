@@ -56,4 +56,5 @@ public class FireSimModel extends SimModel<FireCell> {
     protected List<FireCell> getNeighbors(FireCell cell) {
         return getGrid().getCardinalNeighbors(cell);
     }
+
 }

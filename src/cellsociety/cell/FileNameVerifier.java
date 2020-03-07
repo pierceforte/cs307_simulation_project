@@ -5,6 +5,8 @@ import cellsociety.config.ConfigSaver;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class FileNameVerifier {
     public static final String NAME_IS_VALID = "VALID";
@@ -13,18 +15,21 @@ public class FileNameVerifier {
 
     private String myFileName;
     private Class myModelClass;
+    private ResourceBundle myResources;
 
     public FileNameVerifier(String fileName, Class modelClass) {
         myFileName = fileName;
         myModelClass = modelClass;
+        Locale locale = new Locale("en", "US");
+        myResources = ResourceBundle.getBundle("default", locale);
     }
 
     public String verify() {
         if (myFileName.isEmpty()) {
-            return "A file name must be entered.";
+            return myResources.getString("EmptyFileName");
         }
         else if (fileExists()) {
-            return "A simulation with the name \"" + myFileName + "\" already exists.";
+            return String.format(myResources.getString("FileAlreadyExists"), myFileName);
         }
         else if (containsIllegalCharacters()) {
             return getIllegalCharactersMessage();
@@ -57,7 +62,7 @@ public class FileNameVerifier {
                 illegalCharactersInName.add(illegalString);
             }
         }
-        String message = "File name must not include the characters: ";
+        String message = myResources.getString("NoIllegalCharacters");
 
         for (String illegalString : illegalCharactersInName) {
             message += illegalString + " ";

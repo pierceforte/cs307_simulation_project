@@ -1696,6 +1696,7 @@ java.lang.Exception: My test exception
 	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:58)
 java.lang.Exception: My test exception
 	at cellsociety.CellSocietyTest.testLogErrorFunction(CellSocietyTest.java:159)
+	at cellsociety.CellSocietyTest.testLogErrorFunction(CellSocietyTest.java:156)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
