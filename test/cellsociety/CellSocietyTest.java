@@ -11,8 +11,6 @@ import cellsociety.simulation.SimModel;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 
@@ -20,11 +18,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.security.Key;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -204,29 +199,14 @@ public class CellSocietyTest extends DukeApplicationTest {
         assertFalse(myMainController.getCurSimController().isActive());
 
         // check that cells during the pause are the same as the cells before the pause
-        for (int row = 0; row < grid.getNumRows(); row++) {
-            System.out.println();
-            for (int col = 0; col < grid.getNumCols(); col++) {
-                assertEquals(prePauseCellStates.get(row).get(col), grid.get(row, col).getState());
-            }
-        }
+        assertStatesListAndGridEqual(prePauseCellStates, grid);
 
         // play and check that simulation is active
         fireButtonEvent(playButton);
         assertTrue(myMainController.getCurSimController().isActive());
         step();
 
-        boolean notTheSame = false;
-        for (int row = 0; row < grid.getNumRows(); row++) {
-            System.out.println();
-            for (int col = 0; col < grid.getNumCols(); col++) {
-                if (!prePauseCellStates.get(row).get(col).equals(grid.get(row, col).getState())) {
-                    notTheSame = true;
-                    break;
-                }
-            }
-        }
-        assertTrue(notTheSame);
+        assertStatesListAndGridNotEqual(prePauseCellStates, grid);
     }
 
     // TODO: find a way to interact with file chooser from test
@@ -479,11 +459,29 @@ public class CellSocietyTest extends DukeApplicationTest {
 
         assertEquals(data.getManualQuantityOfColumns(),data.getQuantityOfColumns());
         assertEquals(data.getManualQuantityOfRows(),data.getQuantityOfRows());
-        for (int row = 0; row < gridFromModel.getNumRows(); row++) {
-            for (int col = 0; col < gridFromModel.getNumCols(); col++) {
-                assertEquals(cellStatesFromFile.get(row).get(col), gridFromModel.get(row, col).getState());
+        assertStatesListAndGridEqual(cellStatesFromFile, gridFromModel);
+    }
+
+    protected <T extends Cell> void assertStatesListAndGridEqual(List<List<String>> cellStates, Grid<T> grid) {
+        for (int row = 0; row < grid.getNumRows(); row++) {
+            for (int col = 0; col < grid.getNumCols(); col++) {
+                assertEquals(cellStates.get(row).get(col), grid.get(row, col).getState());
             }
         }
+    }
+
+    protected <T extends Cell> void assertStatesListAndGridNotEqual(List<List<String>> cellStates, Grid<T> grid) {
+        boolean notTheSame = false;
+        for (int row = 0; row < grid.getNumRows(); row++) {
+            System.out.println();
+            for (int col = 0; col < grid.getNumCols(); col++) {
+                if (!cellStates.get(row).get(col).equals(grid.get(row, col).getState())) {
+                    notTheSame = true;
+                    break;
+                }
+            }
+        }
+        assertTrue(notTheSame);
     }
 
     private void testInputPathToExitRequestPane() {
