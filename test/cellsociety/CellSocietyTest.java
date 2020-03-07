@@ -234,8 +234,10 @@ public class CellSocietyTest extends DukeApplicationTest {
 
     protected <T extends SimModel> SimModel createModelFromStart(Class<T> simTypeClassName) {
         javafxRun(() -> {
+            String simName = ConfigSaver.SIM_CLASS_NAME_TO_DIRECTORY.get(simTypeClassName);
+            String simConfig = simName + "Config";
             SimController mySimController = new SimController(simTypeClassName, new MainController(),
-                    "configs/" + ConfigSaver.SIM_CLASS_NAME_TO_DIRECTORY.get(simTypeClassName) + "/GOLConfig/GOLConfig.csv");
+                    "configs/" + simName + "/" + simConfig + "/" + simConfig + ".csv" );
             mySimModel = mySimController.getModel();
         });
         return mySimModel;
