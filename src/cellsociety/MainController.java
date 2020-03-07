@@ -23,7 +23,7 @@ public class MainController extends Application {
     public static final String TITLE = "Cell Society";
     public static final int WIDTH = 600;
     public static final int GRID_HEIGHT = 600;
-    public static final int HEIGHT = 630;
+    public static final int HEIGHT = 680;
     public static final Paint BACKGROUND = Color.BEIGE;
     public static final int FRAMES_PER_SECOND = 5;
     public static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
