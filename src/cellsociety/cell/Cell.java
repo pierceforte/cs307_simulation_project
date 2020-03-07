@@ -17,7 +17,9 @@ public class Cell {
         this.col = col;
     }
 
-
+    public void setState(String state) {
+        this.state = state;
+    }
 
     public String getState(){
         return state;
