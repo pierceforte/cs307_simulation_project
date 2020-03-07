@@ -41,9 +41,7 @@ public class UserGUI {
 
     protected void handleExitRequest() {
         controller.pause();
-
         InputStage stage = new InputStage("Exit", InputStage.DEFAULT_WIDTH, InputStage.DEFAULT_HEIGHT, "exitRequestPane");
-
         Button beginSaveBttn = createButton("Save", "beginSaveBttn", 300/2 - 100/2, 100, 100, 30);
         Button noSaveBttn = createButton("Quit", "noSaveBttn", 300/2 - 100/2, 140, 100, 30);
 
@@ -71,6 +69,7 @@ public class UserGUI {
 
         stage.addTextToCenterX("Configuration File Name", 50);
         TextField fileNameField = stage.addTextFieldToCenterX(75);
+        fileNameField.setId("fileNameField");
 
         stage.addTextToCenterX("Author", 150);
         TextField authorField = stage.addTextFieldToCenterX(175);
@@ -85,12 +84,11 @@ public class UserGUI {
             @Override public void handle(ActionEvent t) {
                 FileNameVerifier fileNameVerifier = new FileNameVerifier(fileNameField.getText(), controller.getModel().getClass());
                 stage.removeErrorMessage();
-
                 String errorMessage = fileNameVerifier.verify();
                 if (errorMessage.equals(FileNameVerifier.NAME_IS_VALID)) {
-                    stage.close();
                     controller.saveConfig(fileNameField.getText(), authorField.getText(), descriptionField.getText());
                     ensureUserWantsToQuit();
+                    stage.close();
                 }
                 else {
                     stage.addErrorMessageToCenterX(errorMessage, 590);
@@ -99,8 +97,8 @@ public class UserGUI {
         });
         cancelSaveBttn.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent t) {
-                stage.close();
                 controller.start();
+                stage.close();
             }
         });
 
@@ -120,20 +118,18 @@ public class UserGUI {
 
         resumeBttn.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent t) {
-                stage.close();
                 controller.start();
+                stage.close();
             }
         });
         quitBttn.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent t) {
-                stage.close();
                 controller.setIsEnded(true);
+                stage.close();
             }
         });
-
         stage.addNodeToPane(resumeBttn);
         stage.addNodeToPane(quitBttn);
-
         stage.showAndWait();
     }
 }

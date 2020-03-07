@@ -10,15 +10,18 @@ import cellsociety.simulation.SimController;
 import cellsociety.simulation.SimModel;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.Key;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -111,11 +114,12 @@ public class CellSocietyTest extends DukeApplicationTest {
         Button exitBttn = lookup("#exitBttn").query();
 
         // assert that exit simulation prompts are not present before pressing exit button
-        assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, () -> lookup("#inputPane").query());
+        assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, () -> lookup("#exitRequestPane").query());
         // press button to exit
         fireButtonEvent(exitBttn);
+
         // assert that exit simulation prompts are now present
-        assertNotNull(lookup("#inputPane").query());
+        assertNotNull(lookup("#exitRequestPane").query());
     }
 
     // TODO: remove this test (only here because it may have useful code)
@@ -246,7 +250,6 @@ public class CellSocietyTest extends DukeApplicationTest {
 
     @Test
     public void testResumeSimulationWithoutSave() {
-
         testInputPathToEnsureQuitPane();
 
         // choose to quit
@@ -255,6 +258,112 @@ public class CellSocietyTest extends DukeApplicationTest {
 
         // assert that ensure quit pane is now closed
         assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, () -> lookup("#ensureQuitPane").query());
+
+    }
+
+    @Test
+    public void testSaveConfigWithInvalidBlankName() {
+        testInputPathToSaveConfigPane();
+        Button saveBttn = lookup("#saveBttn").query();
+
+        // assert that error message is not present
+        assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, () -> lookup("#errorMessage").query());
+
+        // try to save with no file name
+        fireButtonEvent(saveBttn);
+
+        // assert that save config pane is still present and error has been placed on screen
+        assertNotNull(lookup("#saveConfigPane").query());
+        assertNotNull(lookup("#errorMessage").query());
+    }
+
+    @Test
+    public void testSaveConfigWithInvalidCharacters() {
+        testInputPathToSaveConfigPane();
+        Button saveBttn = lookup("#saveBttn").query();
+
+        // assert that file name text field is not null
+        assertNotNull(lookup("#fileNameField").query());
+        TextField fileNameField = lookup("#fileNameField").query();
+
+        // add some invalid characters to textfield
+        fileNameField.appendText("*&\'");
+
+        // try to save simulation
+        fireButtonEvent(saveBttn);
+
+        // assert that save config pane is still present and error has been placed on screen
+        assertNotNull(lookup("#saveConfigPane").query());
+        assertNotNull(lookup("#errorMessage").query());
+    }
+
+    @Test
+    public void testSaveConfigWithInvalidExistingName() {
+        testInputPathToSaveConfigPane();
+        Button saveBttn = lookup("#saveBttn").query();
+
+        // assert that file name text field is not null
+        assertNotNull(lookup("#fileNameField").query());
+        TextField fileNameField = lookup("#fileNameField").query();
+
+        // input name of a file that already exists
+        fileNameField.appendText("GOLConfig");
+
+        // try to save simulation
+        fireButtonEvent(saveBttn);
+
+        // assert that save config pane is still present and error has been placed on screen
+        assertNotNull(lookup("#saveConfigPane").query());
+        assertNotNull(lookup("#errorMessage").query());
+    }
+
+    @Test
+    public void testSaveConfigWithValidName() {
+        String dirPath = "resources/configs/GOL/testSaveConfigWithValidName";
+        // we need to first delete the directory created by this test to properly run test
+        deleteDirectory(new File(dirPath));
+        testInputPathToSaveConfigPane();
+        Button saveBttn = lookup("#saveBttn").query();
+
+        // assert that file name text field is not null
+        assertNotNull(lookup("#fileNameField").query());
+        TextField fileNameField = lookup("#fileNameField").query();
+
+        // input name of a file that does NOT already exist
+        fileNameField.appendText("testSaveConfigWithValidName");
+
+        // assert that ensure quit pane has not yet been presented
+        assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, () -> lookup("#ensureQuitPane").query());
+
+        // try to save simulation
+        fireButtonEvent(saveBttn);
+
+        // assert that error has NOT been placed on screen
+        assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, () -> lookup("#errorMessage").query());
+
+        // assert that ensure quit pane and quit button are now present
+        assertNotNull(lookup("#ensureQuitPane").query());
+        assertNotNull(lookup("#quitBttn").query());
+
+        // assert that the saved simulation now exists in its own directory
+        File dirOfSavedSim = new File(dirPath);
+        assertTrue(dirOfSavedSim.isDirectory());
+    }
+
+    @Test
+    public void testCancelSaveConfig() {
+        testInputPathToSaveConfigPane();
+
+        // assert that save config pane and cancel save button are present
+        assertNotNull(lookup("#saveConfigPane").query());
+        assertNotNull(lookup("#cancelSaveBttn").query());
+        Button cancelSaveBttn = lookup("#cancelSaveBttn").query();
+
+        // choose to cancel save
+        fireButtonEvent(cancelSaveBttn);
+
+        // assert that save config pane is no longer present
+        assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, () -> lookup("#saveConfigPane").query());
 
     }
 
@@ -364,7 +473,7 @@ public class CellSocietyTest extends DukeApplicationTest {
         }
     }
 
-    private void testInputPathToEnsureQuitPane() {
+    private void testInputPathToExitRequestPane() {
         startApplicationFromFile(GOLSimModel.class, "resources/configs/GOL/GOLConfig/GOLConfig.csv");
 
         // assert exit button is present
@@ -377,6 +486,12 @@ public class CellSocietyTest extends DukeApplicationTest {
         assertNotNull(lookup("#exitRequestPane").query());
         assertNotNull(lookup("#beginSaveBttn").query());
         assertNotNull(lookup("#noSaveBttn").query());
+
+    }
+
+    private void testInputPathToEnsureQuitPane() {
+        testInputPathToExitRequestPane();
+
         Button noSaveBttn = lookup("#noSaveBttn").query();
 
         // assert that ensure user wants to quit pane is not yet present
@@ -389,5 +504,31 @@ public class CellSocietyTest extends DukeApplicationTest {
         assertNotNull(lookup("#ensureQuitPane").query());
         assertNotNull(lookup("#resumeBttn").query());
         assertNotNull(lookup("#quitBttn").query());
+    }
+
+    private void testInputPathToSaveConfigPane() {
+        testInputPathToExitRequestPane();
+
+        // assert that save config pane is not yet present
+        assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, () -> lookup("#saveConfigPane").query());
+
+        // choose to save
+        Button beginSaveBttn = lookup("#beginSaveBttn").query();
+        fireButtonEvent(beginSaveBttn);
+
+        // assert that save config pane and save button are now present
+        assertNotNull(lookup("#saveConfigPane").query());
+        assertNotNull(lookup("#saveBttn").query());
+    }
+
+    // taken from https://javarevisited.blogspot.com/2015/03/how-to-delete-directory-in-java-with-files.html#ixzz6FyxCk2Al
+    private void deleteDirectory(File dir) {
+        if (dir.isDirectory()) {
+            File[] children = dir.listFiles();
+            for (int i = 0; i < children.length; i++) {
+                deleteDirectory(children[i]);
+            }
+        }
+        dir.delete();
     }
 }

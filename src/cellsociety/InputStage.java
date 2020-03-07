@@ -72,12 +72,13 @@ public class InputStage {
 
     public void addErrorMessageToCenterX(String errorMessage, double yPos) {
         myErrorMessage = addTextToCenterX(errorMessage, yPos);
+        myErrorMessage.setId("errorMessage");
         myErrorMessage.setTextAlignment(TextAlignment.CENTER);
         myErrorMessage.setWrappingWidth(200);
-
         if (myErrorMessage.getLayoutBounds().getWidth() >= 200) {
             myErrorMessage.setX(width/2 - myErrorMessage.getWrappingWidth()/2);
         }
+
     }
 
     public void removeErrorMessage() {
