@@ -32,4 +32,7 @@ public class FireTest extends CellSocietyTest {
             }
         }
     }
+
+
+
 }

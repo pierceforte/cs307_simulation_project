@@ -141,11 +141,11 @@ public class GOLTest extends CellSocietyTest {
         // a new model with the expected configuration)
         for (int modelNum = 1; modelNum < models.size(); modelNum++) {
             referenceModel.update();
-            List<List<Cell>> referenceModelCells = referenceModel.getCells();
-            List<List<Cell>> expectedModelCells = models.get(modelNum).getCells();
-            for (int row = 0; row < referenceModelCells.size(); row++) {
-                for (int col = 0; col < referenceModelCells.get(0).size(); col++) {
-                    assertEquals(referenceModelCells.get(row).get(col).getState(), expectedModelCells.get(row).get(col).getState());
+            Grid referenceModelCells = referenceModel.getGrid();
+            Grid expectedModelCells = models.get(modelNum).getGrid();
+            for (int row = 0; row < referenceModelCells.getNumRows(); row++) {
+                for (int col = 0; col < referenceModelCells.getNumCols(); col++) {
+                    assertEquals(referenceModelCells.get(row, col).getState(), expectedModelCells.get(row, col).getState());
                 }
             }
         }
@@ -169,10 +169,10 @@ public class GOLTest extends CellSocietyTest {
 
     private void testGOLCellStateChange(int row, int col, String initialState, String updatedStated) {
         createModelFromStart(GOLSimModel.class);
-        List<List<Cell>> cells = getMySimModel().getCells();
+        Grid cells = getMySimModel().getGrid();
 
         // get a cell
-        Cell loneCell = cells.get(row).get(col);
+        Cell loneCell = cells.get(row, col);
         // assert that this cell's initial state is correct
         assertEquals(initialState, loneCell.getState());
         // update simulation (one step)
