@@ -1,11 +1,8 @@
 package cellsociety;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
@@ -49,6 +46,7 @@ public class InputStage {
         Text text = new Text(textString);
         text.setX(width/2 - text.getLayoutBounds().getWidth()/2);
         text.setY(yPos);
+        wrapAndAlignText(text);
         addNodeToPane(text);
         return text;
     }
@@ -75,17 +73,26 @@ public class InputStage {
     public void addErrorMessageToCenterX(String errorMessage, double yPos) {
         myErrorMessage = addTextToCenterX(errorMessage, yPos);
         myErrorMessage.setId("errorMessage");
-        myErrorMessage.setTextAlignment(TextAlignment.CENTER);
-        myErrorMessage.setWrappingWidth(200);
-        if (myErrorMessage.getLayoutBounds().getWidth() >= 200) {
-            myErrorMessage.setX(width/2 - myErrorMessage.getWrappingWidth()/2);
-        }
-
+        wrapAndAlignText(myErrorMessage);
     }
 
     public void removeErrorMessage() {
         if (myPane.getChildren().contains(myErrorMessage)) {
             removeNodeFromPane(myErrorMessage);
+        }
+    }
+
+    public void wrapAndAlignText(Text text) {
+        text.setTextAlignment(TextAlignment.CENTER);
+        text.setWrappingWidth(width-50);
+        if (text.getLayoutBounds().getWidth() >= width-50) {
+            text.setX(width/2 - text.getWrappingWidth()/2);
+        }
+    }
+
+    public void addEllipsisIfNecessary(Text text, double maxHeight, int maxCharacters) {
+        if (text.getLayoutBounds().getHeight() > maxHeight) {
+            text.setText(text.getText().substring(0, maxCharacters) + "...");
         }
     }
 

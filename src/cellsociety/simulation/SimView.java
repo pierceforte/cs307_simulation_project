@@ -30,6 +30,7 @@ public class SimView {
     private Button pauseBttn;
     private Button stepBttn;
     private Button exitBttn;
+    private Button detailsBttn;
     private Slider speedSlider;
     private HashMap<String, Color> cellColors;
     private Group cellViewsRoot;
@@ -39,7 +40,7 @@ public class SimView {
         myDefaultResources = defaultResources;
         mySimResources = simResources;
         this.controller = controller;
-        gui = new UserGUI(controller, myDefaultResources);
+        gui = new UserGUI(controller, myDefaultResources, mySimResources);
         bPane = new BorderPane();
         createControls(controller.getModel().getOrderedCellTypesMap());
     }
@@ -103,9 +104,11 @@ public class SimView {
         Label speedLabel = new Label(myDefaultResources.getString("ChangeSpeed"));
         Slider speedSlider = new Slider(0, 2, 1);
         speedSlider.setBlockIncrement(0.2);
+        detailsBttn = new Button(myDefaultResources.getString("DetailsBttn"));
+        detailsBttn.setId("detailsBttn");
 
         HBox hbox = new HBox(5);
-        hbox.getChildren().addAll(playBttn, pauseBttn, stepBttn, exitBttn, speedLabel, speedSlider);
+        hbox.getChildren().addAll(playBttn, pauseBttn, stepBttn, exitBttn, speedLabel, speedSlider, detailsBttn);
 
         playBttn.setOnAction(event -> controller.start());
         pauseBttn.setOnAction(event -> controller.pause());
@@ -117,6 +120,7 @@ public class SimView {
                                 Number oldValue, Number newValue) {
                 controller.changeRate((Double) newValue);
             }});
+        detailsBttn.setOnAction(event -> gui.createDetailsPane());
         return hbox;
     }
 
