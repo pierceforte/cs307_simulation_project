@@ -21,7 +21,7 @@ public class SegregationTest extends CellSocietyTest {
     @Test
     public void testSatisfiedInitConfig() {
         SimModel simModel = createModelFromFile(SegregationSimModel.class,
-                SEGREGATION_CONFIG_TESTS_PATH + "satisfied_agents" + CONFIG_TESTS_EXTENSION);
+                SEGREGATION_CONFIG_TESTS_PATH + "satisfied_agents/satisfied_agents" + CONFIG_TESTS_EXTENSION);
         Grid<SegregationCell> grid = simModel.getGrid();
         List<List<String>> initStates = getListOfCellStates(grid);
         simModel.update();
@@ -31,7 +31,7 @@ public class SegregationTest extends CellSocietyTest {
     @Test
     public void testUnsatisfiedInitConfig() {
         SimModel simModel = createModelFromFile(SegregationSimModel.class,
-                SEGREGATION_CONFIG_TESTS_PATH + "unsatisfied_agents" + CONFIG_TESTS_EXTENSION);
+                SEGREGATION_CONFIG_TESTS_PATH + "unsatisfied_agents/unsatisfied_agents" + CONFIG_TESTS_EXTENSION);
         Grid<SegregationCell> grid = simModel.getGrid();
         List<List<String>> initStates = getListOfCellStates(grid);
         simModel.update();
@@ -41,7 +41,7 @@ public class SegregationTest extends CellSocietyTest {
     @Test
     public void testUnsatisfiedMovement() {
         SimModel simModel = createModelFromFile(SegregationSimModel.class,
-                SEGREGATION_CONFIG_TESTS_PATH + "known_unsatisfied_movement" + CONFIG_TESTS_EXTENSION);
+                SEGREGATION_CONFIG_TESTS_PATH + "known_unsatisfied_movement/known_unsatisfied_movement" + CONFIG_TESTS_EXTENSION);
         Grid<SegregationCell> grid = simModel.getGrid();
         // assert agent B and empty cell are in correct initial positions
         assertTrue(grid.get(1,2).getState().equals(SegregationCell.EMPTY));

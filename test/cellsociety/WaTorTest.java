@@ -1,14 +1,15 @@
 package cellsociety;
 
+import cellsociety.backend.SimModel;
+import cellsociety.backend.WaTorSimModel;
 import cellsociety.cell.wator.FishCell;
 import cellsociety.cell.wator.SharkCell;
 import cellsociety.cell.wator.WaTorCell;
 import cellsociety.grid.Grid;
-import cellsociety.backend.SimModel;
-import cellsociety.backend.WaTorSimModel;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class WaTorTest extends CellSocietyTest {
     public static final String WATOR_CONFIG_TESTS_PATH = "test_configs/WaTor/";
@@ -21,7 +22,7 @@ public class WaTorTest extends CellSocietyTest {
     @Test
     public void testSharkToEatFish() {
         SimModel simModel = createModelFromFile(WaTorSimModel.class,
-                WATOR_CONFIG_TESTS_PATH + "shark_to_eat_fish" + CONFIG_TESTS_EXTENSION);
+                WATOR_CONFIG_TESTS_PATH + "shark_to_eat_fish/shark_to_eat_fish" + CONFIG_TESTS_EXTENSION);
         Grid<WaTorCell> grid = simModel.getGrid();
 
         // assert fish and shark are in right spots
@@ -44,7 +45,7 @@ public class WaTorTest extends CellSocietyTest {
     @Test
     public void testFishMovesProperly() {
         SimModel simModel = createModelFromFile(WaTorSimModel.class,
-                WATOR_CONFIG_TESTS_PATH + "single_fish" + CONFIG_TESTS_EXTENSION);
+                WATOR_CONFIG_TESTS_PATH + "single_fish/single_fish" + CONFIG_TESTS_EXTENSION);
         Grid<WaTorCell> grid = simModel.getGrid();
 
         // assert fish is in right spot
@@ -59,7 +60,7 @@ public class WaTorTest extends CellSocietyTest {
     @Test
     public void testFishReproduction() {
         SimModel simModel = createModelFromFile(WaTorSimModel.class,
-                WATOR_CONFIG_TESTS_PATH + "single_fish" + CONFIG_TESTS_EXTENSION);
+                WATOR_CONFIG_TESTS_PATH + "single_fish/single_fish" + CONFIG_TESTS_EXTENSION);
         Grid<WaTorCell> grid = simModel.getGrid();
 
         // assert that only 1 fish exists before reproduction timer is complete
@@ -77,7 +78,7 @@ public class WaTorTest extends CellSocietyTest {
     @Test
     public void testSharkDeath() {
         SimModel simModel = createModelFromFile(WaTorSimModel.class,
-                WATOR_CONFIG_TESTS_PATH + "single_shark" + CONFIG_TESTS_EXTENSION);
+                WATOR_CONFIG_TESTS_PATH + "single_shark/single_shark" + CONFIG_TESTS_EXTENSION);
         Grid<WaTorCell> grid = simModel.getGrid();
 
         // assert that 1 shark exists before energy runs out
