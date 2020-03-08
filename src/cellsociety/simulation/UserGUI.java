@@ -24,10 +24,9 @@ public class UserGUI {
     private SimController controller;
     private ResourceBundle myResources;
 
-    public UserGUI(SimController controller){
+    public UserGUI(SimController controller, ResourceBundle resources){
         this.controller = controller;
-        Locale locale = new Locale("en", "US");
-        myResources = ResourceBundle.getBundle("default", locale);
+        myResources = resources;
     }
 
     private Button createButton(String text, String id, double xPos, double yPos, double width, double height) {

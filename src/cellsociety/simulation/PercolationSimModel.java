@@ -5,6 +5,7 @@ import cellsociety.grid.Grid;
 
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class PercolationSimModel extends SimModel<PercolationCell>{
     public static final String CONFIG_FILE_PREFIX = "Percolation";
@@ -14,10 +15,12 @@ public class PercolationSimModel extends SimModel<PercolationCell>{
     }
 
     @Override
-    protected Map<String, Class> getCellTypesMap() {
-        return Map.of(PercolationCell.OPEN, PercolationCell.class,
-                PercolationCell.CLOSED, PercolationCell.class,
-                PercolationCell.FULL, PercolationCell.class);
+    protected TreeMap<String, Class> getOrderedCellTypesMap() {
+        TreeMap<String, Class> cellTypes = new TreeMap<>();
+        cellTypes.put(PercolationCell.OPEN, PercolationCell.class);
+        cellTypes.put(PercolationCell.CLOSED, PercolationCell.class);
+        cellTypes.put(PercolationCell.FULL, PercolationCell.class);
+        return cellTypes;
     }
 
     @Override

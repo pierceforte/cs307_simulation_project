@@ -5,6 +5,7 @@ import cellsociety.grid.Grid;
 
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public abstract class SimModel <T extends Cell>{
     private Grid grid;
@@ -12,7 +13,7 @@ public abstract class SimModel <T extends Cell>{
     private SimView simView;
 
     public SimModel(List<List<String>> cellStates, SimController simController) {
-        this.grid = new Grid(cellStates, getCellTypesMap());
+        this.grid = new Grid(cellStates, getOrderedCellTypesMap());
         this.simController = simController;
     }
 
@@ -29,7 +30,7 @@ public abstract class SimModel <T extends Cell>{
         return grid;
     }
 
-    protected abstract Map<String, Class> getCellTypesMap();
+    protected abstract TreeMap<String, Class> getOrderedCellTypesMap();
 
     protected abstract void setNextStates(Grid<T> grid);
 

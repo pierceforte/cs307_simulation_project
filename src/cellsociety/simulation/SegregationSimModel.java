@@ -1,12 +1,14 @@
 package cellsociety.simulation;
 
 import cellsociety.cell.Fire.FireCell;
+import cellsociety.cell.percolation.PercolationCell;
 import cellsociety.cell.segregation.SegregationCell;
 import cellsociety.grid.Grid;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.function.Consumer;
 
 public class SegregationSimModel extends SimModel<SegregationCell> {
@@ -20,10 +22,12 @@ public class SegregationSimModel extends SimModel<SegregationCell> {
     }
 
     @Override
-    protected Map<String, Class> getCellTypesMap() {
-        return Map.of(SegregationCell.EMPTY, SegregationCell.class,
-                SegregationCell.AGENT_A, SegregationCell.class,
-                SegregationCell.AGENT_B, SegregationCell.class);
+    protected TreeMap<String, Class> getOrderedCellTypesMap() {
+        TreeMap<String, Class> cellTypes = new TreeMap<>();
+        cellTypes.put(SegregationCell.EMPTY, SegregationCell.class);
+        cellTypes.put(SegregationCell.AGENT_A, SegregationCell.class);
+        cellTypes.put(SegregationCell.AGENT_B, SegregationCell.class);
+        return cellTypes;
     }
 
     @Override

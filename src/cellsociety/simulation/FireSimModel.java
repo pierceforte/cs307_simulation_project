@@ -12,6 +12,7 @@ import cellsociety.grid.Grid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.function.Consumer;
 
 public class FireSimModel extends SimModel<FireCell> {
@@ -24,10 +25,12 @@ public class FireSimModel extends SimModel<FireCell> {
     }
 
     @Override
-    protected Map<String, Class> getCellTypesMap() {
-        return Map.of(FireCell.EMPTY, EmptyCell.class,
-                FireCell.TREE, TreeCell.class,
-                FireCell.BURNING, BurningCell.class);
+    protected TreeMap<String, Class> getOrderedCellTypesMap() {
+        TreeMap<String, Class> cellTypes = new TreeMap<>();
+        cellTypes.put(FireCell.EMPTY, EmptyCell.class);
+        cellTypes.put(FireCell.TREE, TreeCell.class);
+        cellTypes.put(FireCell.BURNING, BurningCell.class);
+        return cellTypes;
     }
 
     @Override

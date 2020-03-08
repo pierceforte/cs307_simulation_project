@@ -8,7 +8,9 @@ import javafx.scene.Node;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 public class SimController {
     public static final String CONFIG_FILE_SUFFIX = "Config.csv";
@@ -27,15 +29,19 @@ public class SimController {
 
     //TODO: not sure if we want this dependency
     private MainController mainController;
+    // TODO: not sure if we want bundles here (only here to reduce duplication)
+    private ResourceBundle myDefaultResources;
+    private ResourceBundle mySimResources;
     private SimModel model;
     private SimView view;
     private boolean isActive;
     private boolean isEnded;
+    private String filePath;
 
     //TODO: cleanup constructor
-    public <T extends SimModel> SimController(Class<T> simTypeClassName, MainController mainController, String csvFileName) {
+    public <T extends SimModel> SimController(Class<T> simTypeClassName, MainController mainController, String csvFilePath) {
         this.mainController = mainController;
-        ConfigReader data = new ConfigReader(csvFileName);
+        ConfigReader data = new ConfigReader(csvFilePath);
         List<List<String>> listOfCells = data.getCellList();
         try {
             Constructor<?> constructor = simTypeClassName.getConstructor(List.class, SimController.class);
@@ -43,7 +49,8 @@ public class SimController {
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             System.exit(0);
         }
-        view = new SimView(this);
+        initializeResources(csvFilePath);
+        view = new SimView(this, myDefaultResources, mySimResources);
         isActive = true;
     }
 
@@ -95,5 +102,20 @@ public class SimController {
 
     public void saveConfig(String fileName, String author, String description) {
         new ConfigSaver<>(model.getGrid(), fileName, author, description, model.getClass());
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public ResourceBundle getSimResources() {
+        return mySimResources;
+    }
+
+    private void initializeResources(String csvFilePath) {
+        filePath = csvFilePath.substring(0, csvFilePath.length()-4);
+        Locale locale = new Locale("en", "US");
+        myDefaultResources = ResourceBundle.getBundle("default", locale);
+        mySimResources = ResourceBundle.getBundle(filePath, locale);
     }
 }

@@ -107,6 +107,7 @@ public class MainController extends Application {
         myRoot.getChildren().add(mySimController.getViewRoot());
         myScene = new Scene(myRoot, WIDTH, HEIGHT, BACKGROUND);
         myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode(), myRoot));
+        myStage.setTitle(mySimController.getSimResources().getString("Title"));
 
         //testing adding of css styles
         myScene.getStylesheets().add(STYLESHEET);
