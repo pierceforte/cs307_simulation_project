@@ -64,22 +64,28 @@ public class UserGUI {
 
     protected void createDetailsPane() {
         controller.pause();
-        InputStage stage = new InputStage(myDefaultResources.getString("DetailsPaneTitle"), InputStage.DEFAULT_WIDTH, InputStage.DEFAULT_HEIGHT, "exitRequestPane");
+        InputStage stage = new InputStage(myDefaultResources.getString("DetailsPaneTitle"), InputStage.DEFAULT_WIDTH, 700
+                , "exitRequestPane");
         Button closeDetailsBttn = createButton(myDefaultResources.getString("Close"),
-                "closeDetailsBttn", InputStage.DEFAULT_WIDTH/2 - 100/2, InputStage.DEFAULT_HEIGHT-75, 100, 30);
+                "closeDetailsBttn", InputStage.DEFAULT_WIDTH/2 - 100/2, 700-75, 100, 30);
 
-        stage.addTextToCenterX(myDefaultResources.getString("FileName"), 50);
-        Text fileName = stage.addTextToCenterX(mySimResources.getString("Title"), 75);
+        stage.addTextToCenterX(myDefaultResources.getString("SimulationType"), 20);
+        Text simType = stage.addTextToCenterX(mySimResources.getString("SimType"), 45);
+        stage.addEllipsisIfNecessary(simType, 50, 105);
+        simType.setFill(Color.PURPLE);
+
+        stage.addTextToCenterX(myDefaultResources.getString("FileName"), 100);
+        Text fileName = stage.addTextToCenterX(mySimResources.getString("Title"), 125);
         stage.addEllipsisIfNecessary(fileName, 70, 160);
         fileName.setFill(Color.PURPLE);
 
-        stage.addTextToCenterX(myDefaultResources.getString("Author"), 150);
-        Text author = stage.addTextToCenterX(mySimResources.getString("Author"), 175);
+        stage.addTextToCenterX(myDefaultResources.getString("Author"), 200);
+        Text author = stage.addTextToCenterX(mySimResources.getString("Author"), 225);
         stage.addEllipsisIfNecessary(author, 70, 160);
         author.setFill(Color.PURPLE);
 
-        stage.addTextToCenterX(myDefaultResources.getString("Description"), 250);
-        Text description = stage.addTextToCenterX(mySimResources.getString("Description"), 275);
+        stage.addTextToCenterX(myDefaultResources.getString("Description"), 300);
+        Text description = stage.addTextToCenterX(mySimResources.getString("Description"), 325);
         stage.addEllipsisIfNecessary(description, 330, 700);
         description.setFill(Color.PURPLE);
 
