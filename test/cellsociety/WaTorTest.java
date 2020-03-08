@@ -4,8 +4,8 @@ import cellsociety.cell.wator.FishCell;
 import cellsociety.cell.wator.SharkCell;
 import cellsociety.cell.wator.WaTorCell;
 import cellsociety.grid.Grid;
-import cellsociety.simulation.SimModel;
-import cellsociety.simulation.WaTorSimModel;
+import cellsociety.backend.SimModel;
+import cellsociety.backend.WaTorSimModel;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

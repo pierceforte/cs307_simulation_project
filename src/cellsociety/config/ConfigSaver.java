@@ -2,12 +2,11 @@ package cellsociety.config;
 
 import cellsociety.cell.Cell;
 import cellsociety.grid.Grid;
-import cellsociety.simulation.FireSimModel;
-import cellsociety.simulation.GOLSimModel;
-import cellsociety.simulation.SegregationSimModel;
-import cellsociety.simulation.WaTorSimModel;
-import cellsociety.simulation.PercolationSimModel;
-import javafx.scene.paint.Color;
+import cellsociety.backend.FireSimModel;
+import cellsociety.backend.GOLSimModel;
+import cellsociety.backend.SegregationSimModel;
+import cellsociety.backend.WaTorSimModel;
+import cellsociety.backend.PercolationSimModel;
 
 import java.io.*;
 import java.util.*;
@@ -31,11 +30,11 @@ public class ConfigSaver<T extends Cell> {
             PercolationSimModel.CONFIG_FILE_PREFIX, PercolationSimModel.class);
 
     public ConfigSaver(Grid<T> grid, String fileName, String author, String description, Class modelClass,
-                       ResourceBundle copyBundle, Map<String, Color> stateColors) {
+                       ResourceBundle copyBundle, Map<String, String> stateColors) {
         String simDirectory = SIM_CLASS_NAME_TO_DIRECTORY.get(modelClass);
         new File(PATH_TO_CONFIGS + simDirectory + "/" + fileName).mkdir();
         saveCSV(grid, fileName, simDirectory);
-        saveProperties(fileName, author, description, simDirectory, copyBundle,stateColors);
+        saveProperties(fileName, author, description, simDirectory, copyBundle, stateColors);
     }
     
     // TODO: the saved config file will only contain the state of the cell. We need to determine if this is okay; for a simulation
@@ -75,7 +74,7 @@ public class ConfigSaver<T extends Cell> {
     }
 
     private void saveProperties(String fileName, String author, String description, String simDirectory,
-                                ResourceBundle copyBundle, Map<String, Color> stateColors) {
+                                ResourceBundle copyBundle, Map<String, String> stateColors) {
         try {
             Properties propertiesToSave = new Properties();
 
@@ -88,7 +87,7 @@ public class ConfigSaver<T extends Cell> {
             propertiesToSave.put("Description",description);
             propertiesToSave.put("CSVfile",fileName + CSV_EXTENSION);
             for (String key : stateColors.keySet()) {
-                propertiesToSave.put("State" + key, stateColors.get(key).toString());
+                propertiesToSave.put("State" + key, stateColors.get(key));
             }
 
             String propertiesFileName = "resources/configs/" + simDirectory + "/" + fileName + "/" + fileName + PROPERTIES_EXTENSION;

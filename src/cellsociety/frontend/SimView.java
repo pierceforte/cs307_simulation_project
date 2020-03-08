@@ -1,47 +1,52 @@
-package cellsociety.simulation;
+package cellsociety.frontend;
 
 import cellsociety.MainController;
 import cellsociety.grid.Grid;
+import cellsociety.SimController;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
 import cellsociety.cell.Cell;
 import cellsociety.cell.CellView;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.io.File;
+import java.util.*;
 
 public class SimView {
     public ResourceBundle myDefaultResources;
     public ResourceBundle mySimResources;
     public static final int GRID_SIZE = 400;
-    public static final Color BACKGROUND = Color.WHEAT;
     private SimController controller;
-    private UserGUI gui;
+    private UserGUI userGUI;
+    private ColorControlsGUI colorControlsGUI;
     private BorderPane bPane;
-    private GridPane gridPane;
     private Button playBttn;
     private Button pauseBttn;
     private Button stepBttn;
     private Button exitBttn;
     private Button detailsBttn;
-    private Slider speedSlider;
-    private HashMap<String, Color> cellColors;
     private Group cellViewsRoot;
 
     public SimView(SimController controller, ResourceBundle defaultResources, ResourceBundle simResources){
         myDefaultResources = defaultResources;
         mySimResources = simResources;
         this.controller = controller;
-        gui = new UserGUI(controller, this, myDefaultResources, mySimResources);
+        userGUI = new UserGUI(controller, this, myDefaultResources, mySimResources);
+
+        Map<String, Class> orderedCellTypesMap = controller.getModel().getOrderedCellTypesMap();
+        colorControlsGUI = new ColorControlsGUI(myDefaultResources, mySimResources, orderedCellTypesMap);
         bPane = new BorderPane();
-        createControls(controller.getModel().getOrderedCellTypesMap());
+
+        createControls(orderedCellTypesMap);
     }
 
     public <T extends Cell> Group update(Grid<T> grid) {
@@ -63,14 +68,7 @@ public class SimView {
             for (int col = 0; col < cols; col++) {
                 T cell = grid.get(row, col);
                 CellView cellView = new CellView(cell, size, xOffset, yOffset, cellViewIdNum);
-                if (cellColors.get(cell.getState()) != null){
-                    cellView.setFill(getCustomColor(cell));
-                } else {
-                    Color color = getColorFromSimProperties(cell.getState());
-                    cellView.setFill(color);
-                    cellColors.put(cell.getState(), color);
-                }
-
+                colorControlsGUI.setCellFill(cell, cellView);
                 cellViewIdNum++;
                 root.getChildren().add(cellView);
                 cellView.setOnMouseClicked(event -> controller.handleClick(cellView.getRow(), cellView.getCol()));
@@ -85,17 +83,18 @@ public class SimView {
         return bPane;
     }
 
-    public Map<String, Color> getCellColors() {
-        return cellColors;
+    // TODO: idk if this is the best way to do this
+    public Map<String, String> getCellFills() {
+        return colorControlsGUI.getCellFills();
     }
 
     private void createControls(Map<String, Class> cellTypesMap){
        VBox vbox = new VBox(5);
-       cellColors = new HashMap<>();
-       vbox.getChildren().addAll(createButtonControls(), createColorControls(cellTypesMap));
+       vbox.getChildren().addAll(createButtonControls(), colorControlsGUI.createColorControls(cellTypesMap));
        bPane.setBottom(vbox);
     }
 
+    // TODO: refactor
     private HBox createButtonControls(){
         playBttn = new Button(myDefaultResources.getString("PlayBttn"));
         playBttn.setId("playBttn");
@@ -107,7 +106,7 @@ public class SimView {
         exitBttn.setId("exitBttn");
         Label speedLabel = new Label(myDefaultResources.getString("ChangeSpeed"));
         Slider speedSlider = new Slider(0, 2, 1);
-        speedSlider.setBlockIncrement(0.2);
+        speedSlider.setBlockIncrement(0.1);
         detailsBttn = new Button(myDefaultResources.getString("DetailsBttn"));
         detailsBttn.setId("detailsBttn");
 
@@ -117,46 +116,14 @@ public class SimView {
         playBttn.setOnAction(event -> controller.start());
         pauseBttn.setOnAction(event -> controller.pause());
         stepBttn.setOnAction(event -> controller.stepFrame());
-        exitBttn.setOnAction(event -> gui.handleExitRequest());
+        exitBttn.setOnAction(event -> userGUI.handleExitRequest());
         speedSlider.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, //
                                 Number oldValue, Number newValue) {
                 controller.changeRate((Double) newValue);
             }});
-        detailsBttn.setOnAction(event -> gui.createDetailsPane());
+        detailsBttn.setOnAction(event -> userGUI.createDetailsPane());
         return hbox;
     }
-
-    //TODO: maybe eliminate the dependency on cellTypesMap and find a way to use properties file.
-    //  Also need to add option to add image
-    private HBox createColorControls(Map<String, Class> cellTypesMap){
-        HBox hbox = new HBox(5);
-
-        for (String state : cellTypesMap.keySet()) {
-            Color color = getColorFromSimProperties(state);
-            ColorPicker picker = new ColorPicker(color);
-            picker.setStyle("-fx-color-label-visible: false;");
-            Text cellType = new Text(mySimResources.getString("State" + state + "Title") + ":");
-            hbox.getChildren().addAll(cellType, picker);
-            picker.setOnAction(event -> cellColors.put(state, picker.getValue()));
-        }
-
-        return hbox; }
-
-    private Color getCustomColor(Cell cell){
-        return cellColors.get(cell.getState());
-    }
-
-    private Color getColorFromSimProperties(String state) {
-        Color color;
-        try {
-            color = Color.web(mySimResources.getString("State" + state));
-        } catch (Exception e) {
-            System.out.println("here");
-            color = null; // Not defined
-        }
-        return color;
-    }
-
 }

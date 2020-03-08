@@ -1,19 +1,14 @@
-package cellsociety.simulation;
+package cellsociety.backend;
 
+import cellsociety.SimController;
 import cellsociety.cell.Fire.BurningCell;
 import cellsociety.cell.Fire.EmptyCell;
 import cellsociety.cell.Fire.FireCell;
 import cellsociety.cell.Fire.TreeCell;
-import cellsociety.cell.wator.FishCell;
-import cellsociety.cell.wator.SharkCell;
-import cellsociety.cell.wator.WaTorCell;
 import cellsociety.grid.Grid;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.TreeMap;
-import java.util.function.Consumer;
 
 public class FireSimModel extends SimModel<FireCell> {
     // TODO: make probCatch and probTree adjustable/initializable
@@ -25,7 +20,7 @@ public class FireSimModel extends SimModel<FireCell> {
     }
 
     @Override
-    protected TreeMap<String, Class> getOrderedCellTypesMap() {
+    public TreeMap<String, Class> getOrderedCellTypesMap() {
         TreeMap<String, Class> cellTypes = new TreeMap<>();
         cellTypes.put(FireCell.EMPTY, EmptyCell.class);
         cellTypes.put(FireCell.TREE, TreeCell.class);

@@ -5,9 +5,8 @@ import cellsociety.cell.GOL.GOLCell;
 import cellsociety.config.ConfigReader;
 import cellsociety.config.ConfigSaver;
 import cellsociety.grid.Grid;
-import cellsociety.simulation.GOLSimModel;
-import cellsociety.simulation.SimController;
-import cellsociety.simulation.SimModel;
+import cellsociety.backend.GOLSimModel;
+import cellsociety.backend.SimModel;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -20,7 +19,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,13 +1,7 @@
 package cellsociety;
 
-import cellsociety.cell.Cell;
-import cellsociety.cell.percolation.PercolationCell;
-import cellsociety.grid.Grid;
-import cellsociety.simulation.PercolationSimModel;
-import cellsociety.simulation.SimModel;
+import cellsociety.backend.PercolationSimModel;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

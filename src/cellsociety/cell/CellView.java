@@ -1,8 +1,8 @@
 package cellsociety.cell;
 
-import javafx.event.EventHandler;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 
 /**
@@ -17,6 +17,16 @@ public class CellView <T extends Cell> extends Rectangle {
         this.cell = cell;
         setId("cellView" + idNum);
         getStyleClass().add("cell");
+    }
+
+    public void setFill(Image image) {
+        if (image == null) {
+            setFill(Color.BLACK);
+        }
+        else {
+            ImagePattern imagePattern = new ImagePattern(image);
+            setFill(imagePattern);
+        }
     }
 
     public int getRow(){

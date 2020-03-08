@@ -3,8 +3,8 @@ package cellsociety;
 import cellsociety.cell.Cell;
 import cellsociety.grid.Grid;
 import cellsociety.cell.GOL.GOLCell;
-import cellsociety.simulation.GOLSimModel;
-import cellsociety.simulation.SimModel;
+import cellsociety.backend.GOLSimModel;
+import cellsociety.backend.SimModel;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

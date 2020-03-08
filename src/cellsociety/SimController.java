@@ -1,10 +1,10 @@
-package cellsociety.simulation;
+package cellsociety;
 
-import cellsociety.MainController;
 import cellsociety.config.ConfigReader;
 import cellsociety.config.ConfigSaver;
+import cellsociety.frontend.SimView;
+import cellsociety.backend.*;
 import javafx.scene.Node;
-import javafx.scene.paint.Color;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -98,7 +98,7 @@ public class SimController {
         return isEnded;
     }
 
-    public void saveConfig(String fileName, String author, String description, Map<String, Color> stateColors) {
+    public void saveConfig(String fileName, String author, String description, Map<String, String> stateColors) {
         new ConfigSaver<>(model.getGrid(), fileName, author, description, model.getClass(), mySimResources, stateColors);
     }
 

@@ -1,7 +1,7 @@
-package cellsociety.simulation;
+package cellsociety.frontend;
 
-import cellsociety.InputStage;
-import cellsociety.cell.FileNameVerifier;
+import cellsociety.FileNameVerifier;
+import cellsociety.SimController;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -123,7 +123,7 @@ public class UserGUI {
             stage.removeErrorMessage();
             String errorMessage = fileNameVerifier.verify();
             if (errorMessage.equals(FileNameVerifier.NAME_IS_VALID)) {
-                controller.saveConfig(fileNameField.getText(), authorField.getText(), descriptionField.getText(), view.getCellColors());
+                controller.saveConfig(fileNameField.getText(), authorField.getText(), descriptionField.getText(), view.getCellFills());
                 ensureUserWantsToQuit();
                 stage.close();
             }

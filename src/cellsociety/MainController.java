@@ -1,5 +1,5 @@
 package cellsociety;
-import cellsociety.simulation.*;
+import cellsociety.backend.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;

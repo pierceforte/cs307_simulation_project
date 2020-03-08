@@ -2,8 +2,8 @@ package cellsociety;
 
 import cellsociety.cell.segregation.SegregationCell;
 import cellsociety.grid.Grid;
-import cellsociety.simulation.SegregationSimModel;
-import cellsociety.simulation.SimModel;
+import cellsociety.backend.SegregationSimModel;
+import cellsociety.backend.SimModel;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

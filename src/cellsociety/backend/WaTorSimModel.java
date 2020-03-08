@@ -1,6 +1,6 @@
-package cellsociety.simulation;
+package cellsociety.backend;
 
-import cellsociety.cell.percolation.PercolationCell;
+import cellsociety.SimController;
 import cellsociety.cell.wator.*;
 import cellsociety.grid.Grid;
 
@@ -17,7 +17,7 @@ public class WaTorSimModel extends SimModel <WaTorCell> {
     }
 
     @Override
-    protected TreeMap<String, Class> getOrderedCellTypesMap() {
+    public TreeMap<String, Class> getOrderedCellTypesMap() {
         TreeMap<String, Class> cellTypes = new TreeMap<>();
         cellTypes.put(WaTorCell.EMPTY, EmptyCell.class);
         cellTypes.put(WaTorCell.FISH, FishCell.class);

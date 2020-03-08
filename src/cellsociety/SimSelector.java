@@ -1,6 +1,7 @@
 package cellsociety;
 
 import cellsociety.config.ConfigSaver;
+import cellsociety.frontend.InputStage;
 import javafx.scene.control.Button;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;

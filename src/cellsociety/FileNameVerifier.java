@@ -1,4 +1,4 @@
-package cellsociety.cell;
+package cellsociety;
 
 import cellsociety.config.ConfigSaver;
 

@@ -1,10 +1,12 @@
-package cellsociety.simulation;
+package cellsociety.backend;
 
+import cellsociety.SimController;
 import cellsociety.cell.Cell;
+import cellsociety.frontend.SimView;
 import cellsociety.grid.Grid;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.TreeMap;
 
 public abstract class SimModel <T extends Cell>{
@@ -23,14 +25,19 @@ public abstract class SimModel <T extends Cell>{
     }
 
     public void clickResponse(int row, int col){
-        grid.get(row, col).setState("1");
+        Cell cell = grid.get(row, col);
+        String curState = cell.getState();
+        List<String> states = new ArrayList<>(getOrderedCellTypesMap().keySet());
+        int curStateIndex = states.indexOf(curState);
+        String newState = (curStateIndex == states.size()-1) ? states.get(0) : states.get(curStateIndex+1);
+        cell.setState(newState);
     }
 
     public Grid getGrid(){
         return grid;
     }
 
-    protected abstract TreeMap<String, Class> getOrderedCellTypesMap();
+    public abstract TreeMap<String, Class> getOrderedCellTypesMap();
 
     protected abstract void setNextStates(Grid<T> grid);
 

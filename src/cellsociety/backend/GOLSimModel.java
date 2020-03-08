@@ -1,16 +1,10 @@
-package cellsociety.simulation;
+package cellsociety.backend;
 
-import cellsociety.cell.Fire.BurningCell;
-import cellsociety.cell.Fire.EmptyCell;
-import cellsociety.cell.Fire.FireCell;
-import cellsociety.cell.Fire.TreeCell;
+import cellsociety.SimController;
 import cellsociety.cell.GOL.GOLCell;
-import cellsociety.cell.segregation.SegregationCell;
 import cellsociety.grid.Grid;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.TreeMap;
 
 public class GOLSimModel extends SimModel<GOLCell> {
@@ -21,7 +15,7 @@ public class GOLSimModel extends SimModel<GOLCell> {
     }
 
     @Override
-    protected TreeMap<String, Class> getOrderedCellTypesMap() {
+    public TreeMap<String, Class> getOrderedCellTypesMap() {
         TreeMap<String, Class> cellTypes = new TreeMap<>();
         cellTypes.put(GOLCell.DEAD, GOLCell.class);
         cellTypes.put(GOLCell.ALIVE, GOLCell.class);

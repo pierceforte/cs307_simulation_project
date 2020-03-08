@@ -1,4 +1,4 @@
-package cellsociety;
+package cellsociety.frontend;
 
 import javafx.geometry.Insets;
 import javafx.scene.Node;

@@ -1,10 +1,10 @@
-package cellsociety.simulation;
+package cellsociety.backend;
 
+import cellsociety.SimController;
 import cellsociety.cell.percolation.PercolationCell;
 import cellsociety.grid.Grid;
 
 import java.util.List;
-import java.util.Map;
 import java.util.TreeMap;
 
 public class PercolationSimModel extends SimModel<PercolationCell>{
@@ -15,7 +15,7 @@ public class PercolationSimModel extends SimModel<PercolationCell>{
     }
 
     @Override
-    protected TreeMap<String, Class> getOrderedCellTypesMap() {
+    public TreeMap<String, Class> getOrderedCellTypesMap() {
         TreeMap<String, Class> cellTypes = new TreeMap<>();
         cellTypes.put(PercolationCell.OPEN, PercolationCell.class);
         cellTypes.put(PercolationCell.CLOSED, PercolationCell.class);

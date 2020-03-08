@@ -1,15 +1,11 @@
-package cellsociety.simulation;
+package cellsociety.backend;
 
-import cellsociety.cell.Fire.FireCell;
-import cellsociety.cell.percolation.PercolationCell;
+import cellsociety.SimController;
 import cellsociety.cell.segregation.SegregationCell;
 import cellsociety.grid.Grid;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.TreeMap;
-import java.util.function.Consumer;
 
 public class SegregationSimModel extends SimModel<SegregationCell> {
     public static final String CONFIG_FILE_PREFIX = "Segregation";
@@ -22,7 +18,7 @@ public class SegregationSimModel extends SimModel<SegregationCell> {
     }
 
     @Override
-    protected TreeMap<String, Class> getOrderedCellTypesMap() {
+    public TreeMap<String, Class> getOrderedCellTypesMap() {
         TreeMap<String, Class> cellTypes = new TreeMap<>();
         cellTypes.put(SegregationCell.EMPTY, SegregationCell.class);
         cellTypes.put(SegregationCell.AGENT_A, SegregationCell.class);
