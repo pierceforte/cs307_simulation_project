@@ -51,11 +51,6 @@ public class SegregationSimModel extends SimModel<SegregationCell> {
     }
 
     @Override
-    protected String getConfigFileIdentifier() {
-        return CONFIG_FILE_PREFIX;
-    }
-
-    @Override
     protected List<SegregationCell> getNeighbors(SegregationCell cell) {
         return getGrid().getAllNeighbors(cell);
     }

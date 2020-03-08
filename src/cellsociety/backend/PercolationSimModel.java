@@ -40,11 +40,6 @@ public class PercolationSimModel extends SimModel<PercolationCell>{
     }
 
     @Override
-    protected String getConfigFileIdentifier() {
-        return CONFIG_FILE_PREFIX;
-    }
-
-    @Override
     protected List<PercolationCell> getNeighbors(PercolationCell cell) {
         return getGrid().getCardinalNeighbors(cell);
     }

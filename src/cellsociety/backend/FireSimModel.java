@@ -45,12 +45,6 @@ public class FireSimModel extends SimModel<FireCell> {
     }
 
     @Override
-    protected String getConfigFileIdentifier() {
-        return CONFIG_FILE_PREFIX;
-    }
-
-
-    @Override
     protected List<FireCell> getNeighbors(FireCell cell) {
         return getGrid().getCardinalNeighbors(cell);
     }

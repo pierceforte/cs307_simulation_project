@@ -83,12 +83,6 @@ public class WaTorSimModel extends SimModel <WaTorCell> {
         // clear the "next" grid to eliminate changes that have already been made
         initializeNextGrid();
     }
-
-    @Override
-    protected String getConfigFileIdentifier() {
-        return CONFIG_FILE_PREFIX;
-    }
-
     @Override
     protected List<WaTorCell> getNeighbors(WaTorCell cell) {
         return getGrid().getCardinalNeighbors(cell);

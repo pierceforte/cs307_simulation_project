@@ -43,8 +43,6 @@ public abstract class SimModel <T extends Cell>{
 
     protected abstract void updateStates(Grid<T> grid);
 
-    protected abstract String getConfigFileIdentifier();
-
     protected abstract List<T> getNeighbors(T cell);
 
 }

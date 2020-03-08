@@ -41,11 +41,6 @@ public class GOLSimModel extends SimModel<GOLCell> {
     }
 
     @Override
-    protected String getConfigFileIdentifier() {
-        return CONFIG_FILE_PREFIX;
-    }
-
-    @Override
     protected List<GOLCell> getNeighbors(GOLCell cell) {
         return getGrid().getAllNeighbors(cell);
     }

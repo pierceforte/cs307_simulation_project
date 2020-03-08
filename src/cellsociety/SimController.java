@@ -102,10 +102,6 @@ public class SimController {
         new ConfigSaver<>(model.getGrid(), fileName, author, description, model.getClass(), mySimResources, stateColors);
     }
 
-    public String getFilePath() {
-        return filePath;
-    }
-
     public ResourceBundle getSimResources() {
         return mySimResources;
     }
