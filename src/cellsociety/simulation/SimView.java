@@ -36,11 +36,10 @@ public class SimView {
     private Group cellViewsRoot;
 
     public SimView(SimController controller, ResourceBundle defaultResources, ResourceBundle simResources){
-        Locale locale = new Locale("en", "US");
         myDefaultResources = defaultResources;
         mySimResources = simResources;
         this.controller = controller;
-        gui = new UserGUI(controller, myDefaultResources, mySimResources);
+        gui = new UserGUI(controller, this, myDefaultResources, mySimResources);
         bPane = new BorderPane();
         createControls(controller.getModel().getOrderedCellTypesMap());
     }
@@ -69,6 +68,7 @@ public class SimView {
                 } else {
                     Color color = getColorFromSimProperties(cell.getState());
                     cellView.setFill(color);
+                    cellColors.put(cell.getState(), color);
                 }
 
                 cellViewIdNum++;
@@ -83,6 +83,10 @@ public class SimView {
 
     public BorderPane getRoot(){
         return bPane;
+    }
+
+    public Map<String, Color> getCellColors() {
+        return cellColors;
     }
 
     private void createControls(Map<String, Class> cellTypesMap){
@@ -135,7 +139,6 @@ public class SimView {
             picker.setStyle("-fx-color-label-visible: false;");
             Text cellType = new Text(mySimResources.getString("State" + state + "Title") + ":");
             hbox.getChildren().addAll(cellType, picker);
-
             picker.setOnAction(event -> cellColors.put(state, picker.getValue()));
         }
 

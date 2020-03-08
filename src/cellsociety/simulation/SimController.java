@@ -4,13 +4,11 @@ import cellsociety.MainController;
 import cellsociety.config.ConfigReader;
 import cellsociety.config.ConfigSaver;
 import javafx.scene.Node;
+import javafx.scene.paint.Color;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class SimController {
     public static final String CONFIG_FILE_SUFFIX = "Config.csv";
@@ -100,8 +98,8 @@ public class SimController {
         return isEnded;
     }
 
-    public void saveConfig(String fileName, String author, String description) {
-        new ConfigSaver<>(model.getGrid(), fileName, author, description, model.getClass());
+    public void saveConfig(String fileName, String author, String description, Map<String, Color> stateColors) {
+        new ConfigSaver<>(model.getGrid(), fileName, author, description, model.getClass(), mySimResources, stateColors);
     }
 
     public String getFilePath() {

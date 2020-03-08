@@ -50,9 +50,10 @@ public class SimSelector {
         File csvFile = new File(directoryChosen.getPath() + "/"
                 + directoryChosen.getName() + ConfigSaver.CSV_EXTENSION);
 
-        //File propertiesFile = new File(directoryChosen.getPath() + directoryChosen.getName() + ConfigSaver.PROPERTIES_EXTENSION);
+        File propertiesFile = new File(directoryChosen.getPath() + "/"
+                + directoryChosen.getName() + ConfigSaver.PROPERTIES_EXTENSION);
 
-        if (!ConfigSaver.DIRECTORY_TO_SIM_CLASS.containsKey(simTypeDirectory) || !csvFile.isFile() ) { //|| !propertiesFile.isFile()) {
+        if (!ConfigSaver.DIRECTORY_TO_SIM_CLASS.containsKey(simTypeDirectory) || !csvFile.isFile() || !propertiesFile.isFile()) {
             handleInvalidDirectory(simTypeDirectory);
         }
         else {
@@ -61,32 +62,33 @@ public class SimSelector {
     }
 
     private void handleInvalidDirectory(String simTypeDirectory) {
-        InputStage errorStage = new InputStage(myDefaultResources.getString("InvalidDir"), InputStage.DEFAULT_WIDTH, InputStage.DEFAULT_HEIGHT,
+        InputStage errorStage = new InputStage(myDefaultResources.getString("InvalidDir"), InputStage.DEFAULT_WIDTH, 350,
                 "invalidDirectoryPane");
         String message;
-        if (!ConfigSaver.DIRECTORY_TO_SIM_CLASS.containsKey(simTypeDirectory)) {
-            message = myDefaultResources.getString("DoesNotContainClass");
-            for (String key : ConfigSaver.DIRECTORY_TO_SIM_CLASS.keySet()) {
-                message += "resources/configs/" + key + "/, ";
-            }
-            message = message.substring(0, message.length()-2);
-        }
-        else {
-            message = myDefaultResources.getString("MustHaveSameNames");
-        }
-        errorStage.addErrorMessageToCenterX(message, 100);
 
         Button okButton = new Button(myDefaultResources.getString("Ok"));
         okButton.setId(myDefaultResources.getString("Ok"));
         okButton.setPrefWidth(100);
         okButton.setPrefHeight(30);
         okButton.setTranslateX(InputStage.DEFAULT_WIDTH/2 - okButton.getPrefWidth()/2);
-        okButton.setTranslateY(250);
 
+        if (!ConfigSaver.DIRECTORY_TO_SIM_CLASS.containsKey(simTypeDirectory)) {
+            message = myDefaultResources.getString("DoesNotContainClass");
+            for (String key : ConfigSaver.DIRECTORY_TO_SIM_CLASS.keySet()) {
+                message += "resources/configs/" + key + "/, ";
+            }
+            message = message.substring(0, message.length()-2);
+            okButton.setTranslateY(285);
+        }
+        else {
+            message = myDefaultResources.getString("MustHaveSameNames");
+            errorStage.setHeight(220);
+            okButton.setTranslateY(150);
+        }
+
+        errorStage.addErrorMessageToCenterX(message, 75);
         okButton.setOnAction(t -> errorStage.close());
-
         errorStage.addNodeToPane(okButton);
-
         errorStage.showAndWait();
     }
 }

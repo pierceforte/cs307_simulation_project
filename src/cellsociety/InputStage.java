@@ -91,6 +91,9 @@ public class InputStage {
     }
 
     public void addEllipsisIfNecessary(Text text, double maxHeight, int maxCharacters) {
+        if (maxCharacters > text.getText().length()) {
+            return;
+        }
         if (text.getLayoutBounds().getHeight() > maxHeight) {
             text.setText(text.getText().substring(0, maxCharacters) + "...");
         }
@@ -110,6 +113,11 @@ public class InputStage {
 
     public void close() {
         myStage.close();
+    }
+
+    public void setHeight(double height) {
+        this.height = height;
+        myStage.setHeight(height);
     }
 
     private  <T extends Node> void removeNodeFromPane(T node) {

@@ -18,11 +18,13 @@ import java.util.ResourceBundle;
  */
 public class UserGUI {
     private SimController controller;
+    private SimView view;
     private ResourceBundle myDefaultResources;
     private ResourceBundle mySimResources;
 
-    public UserGUI(SimController controller, ResourceBundle defaultResources, ResourceBundle simResources){
+    public UserGUI(SimController controller, SimView view, ResourceBundle defaultResources, ResourceBundle simResources){
         this.controller = controller;
+        this.view = view;
         myDefaultResources = defaultResources;
         mySimResources = simResources;
     }
@@ -62,31 +64,32 @@ public class UserGUI {
         stage.showAndWait();
     }
 
+    //TODO: Refactor (VERY similar to letUserSaveConfig())
     protected void createDetailsPane() {
         controller.pause();
-        InputStage stage = new InputStage(myDefaultResources.getString("DetailsPaneTitle"), InputStage.DEFAULT_WIDTH, 700
+        InputStage stage = new InputStage(myDefaultResources.getString("DetailsPaneTitle"), 500, 600
                 , "exitRequestPane");
         Button closeDetailsBttn = createButton(myDefaultResources.getString("Close"),
-                "closeDetailsBttn", InputStage.DEFAULT_WIDTH/2 - 100/2, 700-75, 100, 30);
+                "closeDetailsBttn", 500/2 - 100/2, 600-75, 100, 30);
 
         stage.addTextToCenterX(myDefaultResources.getString("SimulationType"), 20);
-        Text simType = stage.addTextToCenterX(mySimResources.getString("SimType"), 45);
-        stage.addEllipsisIfNecessary(simType, 50, 105);
+        Text simType = stage.addTextToCenterX(mySimResources.getString("SimType"), 40);
+        stage.addEllipsisIfNecessary(simType, 50, 180);
         simType.setFill(Color.PURPLE);
 
         stage.addTextToCenterX(myDefaultResources.getString("FileName"), 100);
-        Text fileName = stage.addTextToCenterX(mySimResources.getString("Title"), 125);
-        stage.addEllipsisIfNecessary(fileName, 70, 160);
+        Text fileName = stage.addTextToCenterX(mySimResources.getString("Title"), 120);
+        stage.addEllipsisIfNecessary(fileName, 60, 250);
         fileName.setFill(Color.PURPLE);
 
         stage.addTextToCenterX(myDefaultResources.getString("Author"), 200);
-        Text author = stage.addTextToCenterX(mySimResources.getString("Author"), 225);
-        stage.addEllipsisIfNecessary(author, 70, 160);
+        Text author = stage.addTextToCenterX(mySimResources.getString("Author"), 220);
+        stage.addEllipsisIfNecessary(author, 60, 250);
         author.setFill(Color.PURPLE);
 
         stage.addTextToCenterX(myDefaultResources.getString("Description"), 300);
-        Text description = stage.addTextToCenterX(mySimResources.getString("Description"), 325);
-        stage.addEllipsisIfNecessary(description, 330, 700);
+        Text description = stage.addTextToCenterX(mySimResources.getString("Description"), 320);
+        stage.addEllipsisIfNecessary(description, 120, 850);
         description.setFill(Color.PURPLE);
 
         closeDetailsBttn.setOnAction(t -> {
@@ -120,7 +123,7 @@ public class UserGUI {
             stage.removeErrorMessage();
             String errorMessage = fileNameVerifier.verify();
             if (errorMessage.equals(FileNameVerifier.NAME_IS_VALID)) {
-                controller.saveConfig(fileNameField.getText(), authorField.getText(), descriptionField.getText());
+                controller.saveConfig(fileNameField.getText(), authorField.getText(), descriptionField.getText(), view.getCellColors());
                 ensureUserWantsToQuit();
                 stage.close();
             }
