@@ -1,12 +1,8 @@
 package cellsociety.config;
 
+import cellsociety.backend.*;
 import cellsociety.cell.Cell;
 import cellsociety.grid.Grid;
-import cellsociety.backend.FireSimModel;
-import cellsociety.backend.GOLSimModel;
-import cellsociety.backend.SegregationSimModel;
-import cellsociety.backend.WaTorSimModel;
-import cellsociety.backend.PercolationSimModel;
 
 import java.io.*;
 import java.util.*;
@@ -20,14 +16,17 @@ public class ConfigSaver<T extends Cell> {
             WaTorSimModel.class, WaTorSimModel.CONFIG_FILE_PREFIX,
             SegregationSimModel.class, SegregationSimModel.CONFIG_FILE_PREFIX,
             FireSimModel.class, FireSimModel.CONFIG_FILE_PREFIX,
-            PercolationSimModel.class, PercolationSimModel.CONFIG_FILE_PREFIX
+            PercolationSimModel.class, PercolationSimModel.CONFIG_FILE_PREFIX,
+            RPSModel.class, RPSModel.CONFIG_FILE_PREFIX
     );
     public static final Map<String, Class> DIRECTORY_TO_SIM_CLASS = Map.of(
             GOLSimModel.CONFIG_FILE_PREFIX, GOLSimModel.class,
             WaTorSimModel.CONFIG_FILE_PREFIX, WaTorSimModel.class,
             SegregationSimModel.CONFIG_FILE_PREFIX, SegregationSimModel.class,
             FireSimModel.CONFIG_FILE_PREFIX, FireSimModel.class,
-            PercolationSimModel.CONFIG_FILE_PREFIX, PercolationSimModel.class);
+            PercolationSimModel.CONFIG_FILE_PREFIX, PercolationSimModel.class,
+            RPSModel.CONFIG_FILE_PREFIX, RPSModel.class
+    );
 
     public ConfigSaver(Grid<T> grid, String fileName, String author, String description, Class modelClass,
                        ResourceBundle copyBundle, Map<String, String> stateColors) {
@@ -62,14 +61,17 @@ public class ConfigSaver<T extends Cell> {
             }
             pw.close();
         } catch (FileNotFoundException e) {
+            // TODO: handle exception properly
+            e.printStackTrace();
             //logError(e);
             e.printStackTrace();
             System.exit(0);
         }
         catch (NullPointerException e) {
+            // TODO: handle exception properly
+            e.printStackTrace();
             //logError(e);
             // don't save file
-            e.printStackTrace();
         }
     }
 
@@ -94,15 +96,21 @@ public class ConfigSaver<T extends Cell> {
             propertiesToSave.store(new FileOutputStream(propertiesFileName), null);
 
         } catch (FileNotFoundException e) {
+            // TODO: handle exception properly
+            e.printStackTrace();
             //logError(e);
             e.printStackTrace();
             System.exit(0);
         }
         catch (NullPointerException e) {
+            // TODO: handle exception properly
+            e.printStackTrace();
             //logError(e);
             // don't save file
             e.printStackTrace();
         } catch (IOException e) {
+            // TODO: handle exception properly
+            e.printStackTrace();
             //logError(e)
             e.printStackTrace();
         }

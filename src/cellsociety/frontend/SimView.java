@@ -8,16 +8,18 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
 import cellsociety.cell.Cell;
 import cellsociety.cell.CellView;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 import java.util.*;
 
 public class SimView {
     public ResourceBundle myDefaultResources;
     public ResourceBundle mySimResources;
-    public static final int GRID_SIZE = 400;
+    public static final int GRID_SIZE = MainController.WIDTH;
+    public static final double CELL_GAP = 0;
     private SimController controller;
     private UserGUI userGUI;
     private ColorControlsGUI colorControlsGUI;
@@ -27,7 +29,6 @@ public class SimView {
     private Button stepBttn;
     private Button exitBttn;
     private Button detailsBttn;
-    private List<CellView> cellViews = new ArrayList<>();
     private Group cellViewsRoot;
 
     public SimView(SimController controller, ResourceBundle defaultResources, ResourceBundle simResources){
@@ -45,39 +46,33 @@ public class SimView {
 
     public <T extends Cell> Group update(Grid<T> grid) {
         bPane.getChildren().remove(cellViewsRoot);
-
-        /*for (int index = 0; index < cellViews.size(); index++) {
-            cellViews.set(index, null);
-        }
-        cellViews.clear();
-
-        System.gc();*/
-
         Group root = new Group();
         int rows = grid.getNumRows();
         int cols = grid.getNumCols();
+        GridPane gridView = new GridPane();
+        gridView.setHgap(CELL_GAP);
+        gridView.setVgap(CELL_GAP);
 
-        // divide by the large dimension so everything fits on screen
-        double size = ((double) MainController.WIDTH) / Math.max(cols, rows);
-        // TODO: get these to work (the calculations are correct, but changing xPos and yPos in cellView
-        //  doesn't do work
-        double xOffset = size * Math.max(0, rows - cols)/2;
-        double yOffset = size * Math.max(0, cols - rows)/2;
+        // TODO: figure out why this resize isn't fully working for wator with 72by72 cells
+        // divide by the largest dimension so everything fits on screen + space in between cells and
+        // subtract size of stroke (border) from size
+        double size = ((double) GRID_SIZE) / ((Math.max(cols, rows) + CELL_GAP)) - Cell.STROKE_WIDTH;
+        System.out.println(size);
+        System.out.println(size*(rows+Cell.STROKE_WIDTH));
 
-        cellViews = new ArrayList<>();
         int cellViewIdNum = 0;
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
                 T cell = grid.get(row, col);
-                CellView cellView = new CellView(cell, size, xOffset, yOffset, cellViewIdNum);
-                colorControlsGUI.setCellFill(cell, cellView);
-                colorControlsGUI.setCellBorder(cell, cellView);
-                cellView.setOnMouseClicked(event -> controller.handleClick(cellView.getRow(), cellView.getCol()));
-                cellViews.add(cellView);
-                cellViewIdNum++;
+                cell.getView().setWidth(size);
+                cell.getView().setHeight(size);
+                cell.getView().setOnMouseClicked(event -> controller.handleClick(cell.getRow(), cell.getCol()));
+                gridView.add(cell.getView(), cell.getCol(), cell.getRow());
+                colorControlsGUI.setCellFill(cell);
+                colorControlsGUI.setCellBorder(cell);
             }
         }
-        root.getChildren().addAll(cellViews);
+        root.getChildren().add(gridView);
         bPane.setCenter(root);
         cellViewsRoot = root;
         return root;

@@ -1,7 +1,6 @@
 package cellsociety.frontend;
 
 import cellsociety.cell.Cell;
-import cellsociety.cell.CellView;
 import javafx.scene.Scene;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.MenuButton;
@@ -16,10 +15,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.function.BiConsumer;
 
 public class ColorControlsGUI {
@@ -52,38 +48,47 @@ public class ColorControlsGUI {
         return hbox;
     }
 
-    public void setCellFill(Cell cell, CellView cellView) {
+    public void setCellFill(Cell cell) {
         String state = cell.getState();
         String fill = cellFills.get(state);
         Color color;
         try {
             if (isFillAnImage(fill)) {
                 Image image = getImageAndAddToMap(state, fill);
-                cellView.setFill(image);
+                cell.setFill(image);
                 return;
             }
             else {
                 color = Color.web(fill);
             }
         } catch (Exception e) {
+            // TODO: handle exception properly
+            e.printStackTrace();
             //logError(e);
             color = getRandomColor();
         }
-        cellView.setFill(color);
+        cell.setFill(color);
     }
 
     public HashMap<String, String> getCellFills() {
         return cellFills;
     }
 
-    protected void setCellBorder(Cell cell, CellView cellView) {
+    protected void setCellBorder(Cell cell) {
         String state = cell.getState();
         Color borderColor = cellBorders.get(state);
-        cellView.setStroke(borderColor);
+        cell.setStroke(borderColor);
     }
 
     private MenuButton buildMenuButton(String state) {
-        String cellType = mySimResources.getString("State" + state + "Title");
+        String cellType;
+        try {
+            cellType = mySimResources.getString("State" + state + "Title");
+        } catch (MissingResourceException e) {
+            // TODO: handle exception properly
+            e.printStackTrace();
+            cellType = "Invalid Title: " + state;
+        }
         MenuButton menu = new MenuButton(cellType);
         stateToMenuMap.put(state, menu);
         setMenuIconFill(state);
@@ -118,6 +123,8 @@ public class ColorControlsGUI {
         try {
             color = Color.web(cellFills.get(state));
         } catch (Exception e) {
+            // TODO: handle exception properly
+            e.printStackTrace();
             color = Color.BLACK; // Set to black if not defined
         }
         return color;
@@ -147,6 +154,8 @@ public class ColorControlsGUI {
                 convertColorPropertyToColor(fill);
             }
         } catch (Exception e) {
+            // TODO: handle exception properly
+            e.printStackTrace();
             // log & display error
             fill = getRandomColor().toString();
         }
@@ -159,6 +168,8 @@ public class ColorControlsGUI {
             String borderColorString = mySimResources.getString("State" + state + "Border");
             borderColor = convertColorPropertyToColor(borderColorString);
         } catch (Exception e) {
+            // TODO: handle exception properly
+            e.printStackTrace();
             // log & display error
             borderColor = Color.BLACK;
         }
@@ -182,6 +193,8 @@ public class ColorControlsGUI {
                 color = Color.web(fill);
             }
         } catch (Exception e){
+            // TODO: handle exception properly
+            e.printStackTrace();
             color = getRandomColor();
         }
         icon.setFill(color);

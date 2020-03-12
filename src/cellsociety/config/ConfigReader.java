@@ -28,6 +28,8 @@ public class ConfigReader {
             return buildListOfCellLists(file);
         } catch (FileNotFoundException e)
         {
+            // TODO: handle exception properly
+            e.printStackTrace();
             //System.out.println("Could not write Exception to file");
             logError(e);
             System.exit(0);
@@ -85,6 +87,8 @@ public class ConfigReader {
             fStream.close();
         }
         catch (Exception ie) {
+            // TODO: handle exception properly
+            e.printStackTrace();
             throw new RuntimeException("Could not write Exception to file", ie);
         }
     }

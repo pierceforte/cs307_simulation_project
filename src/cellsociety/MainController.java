@@ -17,7 +17,9 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class MainController extends Application {
     public static final String STYLESHEET = "style.css";
@@ -48,6 +50,12 @@ public class MainController extends Application {
 
     @Override
     public void start(Stage stage) {
+        /*
+
+        USE THE FOLLOWING LINE TO GENERATE A RANDOM CONFIG
+
+         */
+        //printRandomConfig(24,24,3);
         Image introScreenImage = new Image(getClass().getClassLoader().getResourceAsStream(INTRO_SCREEN_IMG_NAME));
         ImageView introScreenNode = new ImageView(introScreenImage);
         introScreenNode.setFitHeight(HEIGHT);
@@ -160,4 +168,25 @@ public class MainController extends Application {
         launch(args);
     }
 
+    private void printRandomConfig(int rows, int cols, double vals) {
+        List<List<Integer>> list = new ArrayList<>();
+
+        for (int i = 0; i < rows; i++) {
+            list.add(new ArrayList());
+            for (int j = 0; j < cols; j++) {
+                int randomInteger = (int) (vals * Math.random());
+                list.get(i).add(randomInteger);
+            }
+        }
+
+
+        for (int i = 0; i < rows; i++) {
+            System.out.println();
+            System.out.print(list.get(i).get(0));
+            for (int j = 1; j < cols; j++) {
+                System.out.print(","+list.get(i).get(j));
+            }
+        }
+        System.exit(0);
+    }
 }

@@ -37,42 +37,11 @@ public class WaTorSimModel extends SimModel <WaTorCell> {
         // we do this because otherwise, a fish can only be eaten by a shark
         // if it is blocked from moving. we also would like to assume that
         // sharks are faster than fish
-        for (int randRow = 0; randRow < randomGrid.getNumRows(); randRow++) {
-            for (int randCol = 0; randCol < randomGrid.getNumCols(); randCol++) {
-                WaTorCell cell = randomGrid.get(randRow, randCol);
-                if (cell instanceof SharkCell) {
-                    nextGrid = cell.setWhatToDoNext(getNeighbors(cell), nextGrid);
-                    if (((SharkCell) cell).getPosOfFishToEatNext() != null) {
-                        posOfFishThatWillBeEaten.add(((SharkCell) cell).getPosOfFishToEatNext());
-                    }
-                    int cellRow = cell.getRow();
-                    int cellCol = cell.getCol();
-                    grid.set(cellRow, cellCol, new EmptyCell(cellRow, cellCol));
-                    randomGrid.set(randRow, randCol, new EmptyCell(cellRow, cellCol));
-                }
-            }
-        }
+        setNextStateForSharks(grid, randomGrid, posOfFishThatWillBeEaten);
         // get rid of fish that will be eaten
-        for (int randRow = 0; randRow < randomGrid.getNumRows(); randRow++) {
-            for (int randCol = 0; randCol < randomGrid.getNumCols(); randCol++) {
-                WaTorCell cell = randomGrid.get(randRow, randCol);
-                for (List<Integer> posOfFishToBeEaten : posOfFishThatWillBeEaten) {
-                    int cellRow = cell.getRow();
-                    int cellCol = cell.getCol();
-                    if (cellRow == posOfFishToBeEaten.get(0) && cellCol  == posOfFishToBeEaten.get(1)) {
-                        grid.set(cellRow, cellCol, new EmptyCell(cellRow, cellCol));
-                        randomGrid.set(randRow, randCol, new EmptyCell(cellRow, cellCol));
-                    }
-                }
-            }
-        }
+        removeFishThatWillBeEaten(grid, randomGrid, posOfFishThatWillBeEaten);
         // then let fish that won't be eaten move
-        for (int randRow = 0; randRow < randomGrid.getNumRows(); randRow++) {
-            for (int randCol = 0; randCol < randomGrid.getNumCols(); randCol++) {
-                WaTorCell cell = randomGrid.get(randRow, randCol);
-                nextGrid = cell.setWhatToDoNext(getNeighbors(cell), nextGrid);
-            }
-        }
+        setNextStateForRemainingFish(randomGrid);
     }
 
     // TODO: eliminate duplication here and in SegregationSimModel
@@ -100,6 +69,49 @@ public class WaTorSimModel extends SimModel <WaTorCell> {
         for (int row = 0; row < nextGrid.getNumRows(); row++) {
             for (int col = 0; col < nextGrid.getNumCols(); col++) {
                 nextGrid.set(row, col, new EmptyCell(row, col));
+            }
+        }
+    }
+
+    private void setNextStateForSharks(Grid<WaTorCell> grid, Grid<WaTorCell> randomGrid, Set<List<Integer>> posOfFishThatWillBeEaten) {
+        for (int randRow = 0; randRow < randomGrid.getNumRows(); randRow++) {
+            for (int randCol = 0; randCol < randomGrid.getNumCols(); randCol++) {
+                WaTorCell cell = randomGrid.get(randRow, randCol);
+                if (cell instanceof SharkCell) {
+                    nextGrid = cell.setWhatToDoNext(getNeighbors(cell), nextGrid);
+                    if (((SharkCell) cell).getPosOfFishToEatNext() != null) {
+                        posOfFishThatWillBeEaten.add(((SharkCell) cell).getPosOfFishToEatNext());
+                    }
+                    int cellRow = cell.getRow();
+                    int cellCol = cell.getCol();
+                    grid.set(cellRow, cellCol, new EmptyCell(cellRow, cellCol));
+                    randomGrid.set(randRow, randCol, new EmptyCell(cellRow, cellCol));
+                }
+            }
+        }
+    }
+
+    private void removeFishThatWillBeEaten(Grid<WaTorCell> grid, Grid<WaTorCell> randomGrid, Set<List<Integer>> posOfFishThatWillBeEaten) {
+        for (int randRow = 0; randRow < randomGrid.getNumRows(); randRow++) {
+            for (int randCol = 0; randCol < randomGrid.getNumCols(); randCol++) {
+                WaTorCell cell = randomGrid.get(randRow, randCol);
+                for (List<Integer> posOfFishToBeEaten : posOfFishThatWillBeEaten) {
+                    int cellRow = cell.getRow();
+                    int cellCol = cell.getCol();
+                    if (cellRow == posOfFishToBeEaten.get(0) && cellCol  == posOfFishToBeEaten.get(1)) {
+                        grid.set(cellRow, cellCol, new EmptyCell(cellRow, cellCol));
+                        randomGrid.set(randRow, randCol, new EmptyCell(cellRow, cellCol));
+                    }
+                }
+            }
+        }
+    }
+
+    private void setNextStateForRemainingFish(Grid<WaTorCell> randomGrid) {
+        for (int randRow = 0; randRow < randomGrid.getNumRows(); randRow++) {
+            for (int randCol = 0; randCol < randomGrid.getNumCols(); randCol++) {
+                WaTorCell cell = randomGrid.get(randRow, randCol);
+                nextGrid = cell.setWhatToDoNext(getNeighbors(cell), nextGrid);
             }
         }
     }

@@ -480,6 +480,8 @@ public class CellSocietyTest extends DukeApplicationTest {
             long lineCount = Files.lines(Paths.get(ConfigReader.ERROR_LOG)).count();
             return lineCount;
         } catch (IOException e) {
+            // TODO: handle exception properly
+            e.printStackTrace();
             //Assert.fail("Exception " + e);
         }
         return -1;

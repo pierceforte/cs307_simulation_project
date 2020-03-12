@@ -3,6 +3,7 @@ package cellsociety.cell;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 
 /**
@@ -36,7 +37,18 @@ public class CellView <T extends Cell> extends Rectangle {
         return cell.getCol();
     }
 
+    private Polygon createPolygon() {
+        Polygon polygon = new Polygon();
 
+        // comparing to 6 is enough to ensure every angle is used once here
+        // since (5/6) * 2 * PI < 6 < 2 * PI
+        //for (double rad = 0; rad < 6; rad += HEX_RAD_DELTA) {
+            //polygon.getPoints().addAll(Math.cos(rad) * radius + centerX, Math.sin(rad) * radius + centerY);
+        //}
+
+        return polygon;
+
+    }
 
 
 
