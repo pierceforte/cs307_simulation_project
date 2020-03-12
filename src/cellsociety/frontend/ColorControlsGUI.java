@@ -7,10 +7,10 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -20,21 +20,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.function.BiConsumer;
 
 public class ColorControlsGUI {
     public static final double MENU_ICON_SIZE = 25;
+    public static final String IMAGE_PROPERTY_ID = "image:";
+
     private ResourceBundle myDefaultResources;
     private ResourceBundle mySimResources;
     private HashMap<String, String> cellFills;
+    private HashMap<String, Color> cellBorders;
     // helps with runtime (we only have to load in an image once with this)
     private HashMap<String, Image> stateToImageMap = new HashMap<>();
     private Stage setColorStage = new Stage();
     private Map<String, MenuButton> stateToMenuMap = new HashMap<>();
 
-    public ColorControlsGUI(ResourceBundle defaultResources, ResourceBundle simResources, Map<String, Class> orderedCellTypesMap){
+    public ColorControlsGUI(ResourceBundle defaultResources, ResourceBundle simResources, Map<String, Class> orderedCellStatesMap){
         myDefaultResources = defaultResources;
         mySimResources = simResources;
-        initializeCellFills(orderedCellTypesMap);
+        initializeCellStyleMaps(orderedCellStatesMap);
     }
 
     //TODO: maybe eliminate the dependency on cellTypesMap and find a way to use properties file.
@@ -55,7 +59,6 @@ public class ColorControlsGUI {
         try {
             if (isFillAnImage(fill)) {
                 Image image = getImageAndAddToMap(state, fill);
-                //System.out.println(image.getUrl());
                 cellView.setFill(image);
                 return;
             }
@@ -63,7 +66,7 @@ public class ColorControlsGUI {
                 color = Color.web(fill);
             }
         } catch (Exception e) {
-            System.out.println("here");
+            //logError(e);
             color = getRandomColor();
         }
         cellView.setFill(color);
@@ -73,19 +76,27 @@ public class ColorControlsGUI {
         return cellFills;
     }
 
+    protected void setCellBorder(Cell cell, CellView cellView) {
+        String state = cell.getState();
+        Color borderColor = cellBorders.get(state);
+        cellView.setStroke(borderColor);
+    }
+
     private MenuButton buildMenuButton(String state) {
         String cellType = mySimResources.getString("State" + state + "Title");
         MenuButton menu = new MenuButton(cellType);
         stateToMenuMap.put(state, menu);
         setMenuIconFill(state);
-        ColorPicker picker = createColorPicker(state);
-        return addEventHandlersToMenuButton(menu, picker, state);
+        setMenuIconBorder(state);
+        ColorPicker colorPicker = createColorPicker(state, getInitColor(state), (p, c) -> handleColorPickerAction(p, c));
+        ColorPicker borderPicker = createColorPicker(state, getInitBorder(state), (p, c) -> handleBorderPickerAction(p, c));
+        return addEventHandlersToMenuButton(menu, colorPicker, borderPicker, state);
     }
 
-    private MenuButton addEventHandlersToMenuButton(MenuButton menu, ColorPicker picker, String state) {
+    private MenuButton addEventHandlersToMenuButton(MenuButton menu, ColorPicker colorPicker, ColorPicker borderPicker, String state) {
         MenuItem setColor = new MenuItem(myDefaultResources.getString("SetColor"));
         setColor.setOnAction(event -> {
-            handleSetColorRequest(picker);
+            handleSetColorRequest(colorPicker);
         });
 
         MenuItem setImage = new MenuItem(myDefaultResources.getString("SetImage"));
@@ -93,11 +104,16 @@ public class ColorControlsGUI {
             handleSetImageRequest(state);
         });
 
-        menu.getItems().addAll(setColor, setImage);
+        MenuItem setBorder = new MenuItem(myDefaultResources.getString("SetBorder"));
+        setBorder.setOnAction(event -> {
+            handleSetColorRequest(borderPicker);
+        });
+
+        menu.getItems().addAll(setColor, setImage, setBorder);
         return menu;
     }
 
-    private Color getInitColorFromProperties(String state) {
+    private Color getInitColor(String state) {
         Color color;
         try {
             color = Color.web(cellFills.get(state));
@@ -107,34 +123,58 @@ public class ColorControlsGUI {
         return color;
     }
 
-    private void initializeCellFills(Map<String, Class> orderedCellTypesMap) {
+    private Color getInitBorder(String state) {
+        return cellBorders.get(state);
+    }
+
+    private void initializeCellStyleMaps(Map<String, Class> orderedCellStatesMap) {
         cellFills = new HashMap<>();
-        for (String state : orderedCellTypesMap.keySet()) {
-            String fill = mySimResources.getString("State" + state);
-            try {
-                if (isFillAnImage(fill)) {
-                    getImageAndAddToMap(state, fill);
-                }
-                else {
-                    convertFillPropertyToColor(fill);
-                }
-            } catch (Exception e) {
-                fill = getRandomColor().toString();
-            }
-            cellFills.put(state, fill);
+        cellBorders = new HashMap<>();
+        for (String state : orderedCellStatesMap.keySet()) {
+            initializeCellFills(state);
+            initializeCellBorders(state);
         }
+    }
+
+    private void initializeCellFills(String state) {
+        String fill;
+        try {
+            fill = mySimResources.getString("State" + state);
+            if (isFillAnImage(fill)) {
+                getImageAndAddToMap(state, fill);
+            }
+            else {
+                convertColorPropertyToColor(fill);
+            }
+        } catch (Exception e) {
+            // log & display error
+            fill = getRandomColor().toString();
+        }
+        cellFills.put(state, fill);
+    }
+
+    private void initializeCellBorders(String state) {
+        Color borderColor;
+        try {
+            String borderColorString = mySimResources.getString("State" + state + "Border");
+            borderColor = convertColorPropertyToColor(borderColorString);
+        } catch (Exception e) {
+            // log & display error
+            borderColor = Color.BLACK;
+        }
+        cellBorders.put(state, borderColor);
     }
 
     private void setMenuIconFill(String state) {
         MenuButton menu = stateToMenuMap.get(state);
         String fill = cellFills.get(state);
         Color color;
+        Rectangle icon = new Rectangle(MENU_ICON_SIZE, MENU_ICON_SIZE);
         try {
             if (isFillAnImage(fill)) {
                 Image image = getImageAndAddToMap(state, fill);
-                ImageView icon = new ImageView(image);
-                icon.setFitWidth(MENU_ICON_SIZE);
-                icon.setFitHeight(MENU_ICON_SIZE);
+                ImagePattern imagePattern = new ImagePattern(image);
+                icon.setFill(imagePattern);
                 menu.setGraphic(icon);
                 return;
             }
@@ -144,20 +184,25 @@ public class ColorControlsGUI {
         } catch (Exception e){
             color = getRandomColor();
         }
-        Rectangle icon = new Rectangle(MENU_ICON_SIZE, MENU_ICON_SIZE);
         icon.setFill(color);
         menu.setGraphic(icon);
     }
 
+    private void setMenuIconBorder(String state) {
+        MenuButton menu = stateToMenuMap.get(state);
+        Rectangle icon = (Rectangle) menu.getGraphic();
+        icon.setStroke(cellBorders.get(state));
+    }
+
     private boolean isFillAnImage(String fill) {
-        return fill.substring(0,6).equals("image:");
+        return fill.substring(0,IMAGE_PROPERTY_ID.length()).equals(IMAGE_PROPERTY_ID);
     }
 
     private Image convertFillPropertyToImage(String fill) {
-        return new Image(fill.substring(6));
+        return new Image(fill.substring(IMAGE_PROPERTY_ID.length()));
     }
 
-    private Color convertFillPropertyToColor(String fill) {
+    private Color convertColorPropertyToColor(String fill) {
         return Color.web(fill);
     }
 
@@ -168,14 +213,11 @@ public class ColorControlsGUI {
         return stateToImageMap.get(state);
     }
 
-    private ColorPicker createColorPicker(String state) {
-        Color color = getInitColorFromProperties(state);
-        ColorPicker picker = new ColorPicker(color);
+    private ColorPicker createColorPicker(String state, Color initColor, BiConsumer<ColorPicker, String> action) {
+        ColorPicker picker = new ColorPicker(initColor);
         picker.setPrefWidth(150);
         picker.setPrefHeight(35);
-        picker.setOnAction(event -> {
-            handleColorPickerAction(picker, state);
-        });
+        picker.setOnAction(event -> action.accept(picker, state));
         return picker;
     }
 
@@ -183,6 +225,13 @@ public class ColorControlsGUI {
         setColorStage.close();
         cellFills.put(state, picker.getValue().toString());
         setMenuIconFill(state);
+        setMenuIconBorder(state);
+    }
+
+    private void handleBorderPickerAction(ColorPicker picker, String state) {
+        setColorStage.close();
+        cellBorders.put(state, picker.getValue());
+        setMenuIconBorder(state);
     }
 
     private void handleSetImageRequest(String state) {
@@ -200,8 +249,9 @@ public class ColorControlsGUI {
         }
         String imagePath = imageFile.toURI().toString();
         stateToImageMap.put(state, new Image(imagePath));
-        cellFills.put(state, "image:"+imagePath);
+        cellFills.put(state, IMAGE_PROPERTY_ID+imagePath);
         setMenuIconFill(state);
+        setMenuIconBorder(state);
     }
 
     private void handleSetColorRequest(ColorPicker picker) {
@@ -216,5 +266,4 @@ public class ColorControlsGUI {
     private Color getRandomColor() {
         return Color.color(Math.random(), Math.random(), Math.random());
     }
-
 }

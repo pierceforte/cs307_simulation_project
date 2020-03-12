@@ -16,7 +16,6 @@ public class CellView <T extends Cell> extends Rectangle {
         super(xOffset + cell.getCol() * size, yOffset + cell.getRow() * size, size, size);
         this.cell = cell;
         setId("cellView" + idNum);
-        getStyleClass().add("cell");
     }
 
     public void setFill(Image image) {

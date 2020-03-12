@@ -20,7 +20,7 @@ public class FireSimModel extends SimModel<FireCell> {
     }
 
     @Override
-    public TreeMap<String, Class> getOrderedCellTypesMap() {
+    public TreeMap<String, Class> getOrderedCellStatesMap() {
         TreeMap<String, Class> cellTypes = new TreeMap<>();
         cellTypes.put(FireCell.EMPTY, EmptyCell.class);
         cellTypes.put(FireCell.TREE, TreeCell.class);

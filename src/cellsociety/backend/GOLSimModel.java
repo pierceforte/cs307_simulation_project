@@ -15,7 +15,7 @@ public class GOLSimModel extends SimModel<GOLCell> {
     }
 
     @Override
-    public TreeMap<String, Class> getOrderedCellTypesMap() {
+    public TreeMap<String, Class> getOrderedCellStatesMap() {
         TreeMap<String, Class> cellTypes = new TreeMap<>();
         cellTypes.put(GOLCell.DEAD, GOLCell.class);
         cellTypes.put(GOLCell.ALIVE, GOLCell.class);

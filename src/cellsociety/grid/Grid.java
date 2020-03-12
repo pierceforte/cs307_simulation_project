@@ -5,9 +5,11 @@ import cellsociety.cell.Cell;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class Grid<T extends Cell> {
     private List<List<T>> cells = new ArrayList<>();
@@ -115,17 +117,7 @@ public class Grid<T extends Cell> {
         }
     }
 
-    private boolean constructorHasStateParam(Class cellClass) {
-        try {
-            cellClass.getConstructor(String.class, int.class, int.class);
-            return true;
-        }
-        catch (NoSuchMethodException e) {
-            return false;
-        }
-    }
-
-    private T createCell(String state, Map<String, Class> cellTypeMap, int row, int col) {
+    public T createCell(String state, Map<String, Class> cellTypeMap, int row, int col) {
         Class cellClass = cellTypeMap.get(state);
         try {
             Constructor<?> constructor;
@@ -143,6 +135,34 @@ public class Grid<T extends Cell> {
             //logError(e);
             System.exit(0);
             return null;
+        }
+    }
+
+    public void shuffle() {
+        // 1. Add all values in single dimension list
+        List<T> allValues = cells.stream()
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+
+        // 2. Shuffle all those values
+        Collections.shuffle(allValues);
+
+        // 3. Re-create the multidimensional List
+        List<List<T>> shuffledValues = new ArrayList<>();
+        for (int i = 0; i < allValues.size(); i = i + getNumCols()) {
+            shuffledValues.add(allValues.subList(i, i+getNumCols()));
+        }
+
+        cells = shuffledValues;
+    }
+
+    private boolean constructorHasStateParam(Class cellClass) {
+        try {
+            cellClass.getConstructor(String.class, int.class, int.class);
+            return true;
+        }
+        catch (NoSuchMethodException e) {
+            return false;
         }
     }
 

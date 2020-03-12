@@ -15,7 +15,7 @@ public class PercolationSimModel extends SimModel<PercolationCell>{
     }
 
     @Override
-    public TreeMap<String, Class> getOrderedCellTypesMap() {
+    public TreeMap<String, Class> getOrderedCellStatesMap() {
         TreeMap<String, Class> cellTypes = new TreeMap<>();
         cellTypes.put(PercolationCell.OPEN, PercolationCell.class);
         cellTypes.put(PercolationCell.CLOSED, PercolationCell.class);

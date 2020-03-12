@@ -17,7 +17,7 @@ public class WaTorSimModel extends SimModel <WaTorCell> {
     }
 
     @Override
-    public TreeMap<String, Class> getOrderedCellTypesMap() {
+    public TreeMap<String, Class> getOrderedCellStatesMap() {
         TreeMap<String, Class> cellTypes = new TreeMap<>();
         cellTypes.put(WaTorCell.EMPTY, EmptyCell.class);
         cellTypes.put(WaTorCell.FISH, FishCell.class);
@@ -28,42 +28,49 @@ public class WaTorSimModel extends SimModel <WaTorCell> {
     @Override
     protected void setNextStates(Grid<WaTorCell> grid) {
         Set<List<Integer>> posOfFishThatWillBeEaten = new HashSet<>();
+        // randomize order of update; it is important to note that a cell's row and col (instance variables in
+        // cell class) are independent from their row and col in the Grid object, so we can randomize the grid
+        // without actually changing where each cell is located
+        Grid<WaTorCell> randomGrid = new Grid(grid);
+        randomGrid.shuffle();
         // give priority to sharks by letting them choose where to go first.
         // we do this because otherwise, a fish can only be eaten by a shark
         // if it is blocked from moving. we also would like to assume that
-        // sharks are faster than fish.
-
-        for (int row = 0; row < grid.getNumRows(); row++) {
-            for (int col = 0; col < grid.getNumCols(); col++) {
-                WaTorCell cell = grid.get(row, col);
+        // sharks are faster than fish
+        for (int randRow = 0; randRow < randomGrid.getNumRows(); randRow++) {
+            for (int randCol = 0; randCol < randomGrid.getNumCols(); randCol++) {
+                WaTorCell cell = randomGrid.get(randRow, randCol);
                 if (cell instanceof SharkCell) {
                     nextGrid = cell.setWhatToDoNext(getNeighbors(cell), nextGrid);
                     if (((SharkCell) cell).getPosOfFishToEatNext() != null) {
                         posOfFishThatWillBeEaten.add(((SharkCell) cell).getPosOfFishToEatNext());
                     }
+                    int cellRow = cell.getRow();
+                    int cellCol = cell.getCol();
+                    grid.set(cellRow, cellCol, new EmptyCell(cellRow, cellCol));
+                    randomGrid.set(randRow, randCol, new EmptyCell(cellRow, cellCol));
                 }
             }
         }
-
-
         // get rid of fish that will be eaten
-        for (int row = 0; row < grid.getNumRows(); row++) {
-            for (int col = 0; col < grid.getNumCols(); col++) {
+        for (int randRow = 0; randRow < randomGrid.getNumRows(); randRow++) {
+            for (int randCol = 0; randCol < randomGrid.getNumCols(); randCol++) {
+                WaTorCell cell = randomGrid.get(randRow, randCol);
                 for (List<Integer> posOfFishToBeEaten : posOfFishThatWillBeEaten) {
-                    if (row == posOfFishToBeEaten.get(0) && col == posOfFishToBeEaten.get(1)) {
-                        grid.set(row, col, new EmptyCell(row, col));
+                    int cellRow = cell.getRow();
+                    int cellCol = cell.getCol();
+                    if (cellRow == posOfFishToBeEaten.get(0) && cellCol  == posOfFishToBeEaten.get(1)) {
+                        grid.set(cellRow, cellCol, new EmptyCell(cellRow, cellCol));
+                        randomGrid.set(randRow, randCol, new EmptyCell(cellRow, cellCol));
                     }
                 }
             }
         }
-
         // then let fish that won't be eaten move
-        for (int row = 0; row < grid.getNumRows(); row++) {
-            for (int col = 0; col < grid.getNumCols(); col++) {
-                WaTorCell cell = grid.get(row, col);
-                if (cell.getState().equals(WaTorCell.FISH)) {
-                    nextGrid = cell.setWhatToDoNext(getNeighbors(cell), nextGrid);
-                }
+        for (int randRow = 0; randRow < randomGrid.getNumRows(); randRow++) {
+            for (int randCol = 0; randCol < randomGrid.getNumCols(); randCol++) {
+                WaTorCell cell = randomGrid.get(randRow, randCol);
+                nextGrid = cell.setWhatToDoNext(getNeighbors(cell), nextGrid);
             }
         }
     }

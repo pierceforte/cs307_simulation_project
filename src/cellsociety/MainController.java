@@ -3,6 +3,7 @@ import cellsociety.backend.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -115,13 +116,19 @@ public class MainController extends Application {
     }
 
     public void step(double elapsedTime) {
-        if (isMySimulationActive) {
-            if (mySimController.isEnded()) {
-                returnToIntroScreen();
+        try {
+            if (isMySimulationActive) {
+                if (mySimController.isEnded()) {
+                    returnToIntroScreen();
+                }
+                else {
+                    mySimController.update(false);
+                }
             }
-            else {
-                mySimController.update(false);
-            }
+        } catch (OutOfMemoryError e) {
+            //logError(e);
+            System.out.println("Caught mem error");
+            mySimController.setIsEnded(true);
         }
     }
 

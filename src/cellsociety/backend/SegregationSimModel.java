@@ -18,7 +18,7 @@ public class SegregationSimModel extends SimModel<SegregationCell> {
     }
 
     @Override
-    public TreeMap<String, Class> getOrderedCellTypesMap() {
+    public TreeMap<String, Class> getOrderedCellStatesMap() {
         TreeMap<String, Class> cellTypes = new TreeMap<>();
         cellTypes.put(SegregationCell.EMPTY, SegregationCell.class);
         cellTypes.put(SegregationCell.AGENT_A, SegregationCell.class);
