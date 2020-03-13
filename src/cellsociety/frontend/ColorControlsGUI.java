@@ -55,7 +55,7 @@ public class ColorControlsGUI {
         try {
             if (isFillAnImage(fill)) {
                 Image image = getImageAndAddToMap(state, fill);
-                cell.setFill(image);
+                cell.getView().setFill(image);
                 return;
             }
             else {
@@ -63,21 +63,20 @@ public class ColorControlsGUI {
             }
         } catch (Exception e) {
             // TODO: handle exception properly
-            e.printStackTrace();
             //logError(e);
             color = getRandomColor();
         }
-        cell.setFill(color);
+        cell.getView().setFill(color);
+    }
+
+    public void setCellBorder(Cell cell) {
+        String state = cell.getState();
+        Color borderColor = cellBorders.get(state);
+        cell.getView().setStroke(borderColor);
     }
 
     public HashMap<String, String> getCellFills() {
         return cellFills;
-    }
-
-    protected void setCellBorder(Cell cell) {
-        String state = cell.getState();
-        Color borderColor = cellBorders.get(state);
-        cell.setStroke(borderColor);
     }
 
     private MenuButton buildMenuButton(String state) {
