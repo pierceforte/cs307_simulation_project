@@ -49,7 +49,7 @@ public class SimController {
         }
         initializeResources(csvFilePath);
         view = new SimView(this, myDefaultResources, mySimResources);
-        isActive = true;
+        isActive = false;
     }
 
     public void start() {

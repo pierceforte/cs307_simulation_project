@@ -12,7 +12,7 @@ import java.util.List;
 public class HexagonGridView <T extends Cell> extends GridView {
     public static final int NUM_SIDES = 6;
     public static final double ROTATION = Math.PI / 2;
-    public static final double CELL_SIZE_FACTOR = 1;
+    public static final double CELL_SIZE_FACTOR = 1.2;
     public static final double HEIGHT_FACTOR = Math.sqrt(0.75);
     public static final int COL_SPAN = 3;
     public static final int ROW_SPAN = 2;
@@ -24,9 +24,11 @@ public class HexagonGridView <T extends Cell> extends GridView {
     }
 
     @Override
-    protected void setCellShapeAndAddToGridView(Cell cell, int row, int col) {
+    protected void setCellShapeAndAddToGridView(Cell cell, int row, int col, double strokeWidth) {
         points = createPoints(NUM_SIDES, ROTATION);
+        clearPointsFromCellView(cell);
         addPointsToCellView(cell, points);
+        cell.getView().setStrokeWidth(strokeWidth);
         int offset = col % 2;
         getGridPane().add(cell.getView(), 2 * col, 2 * row + offset, COL_SPAN, ROW_SPAN);
     }

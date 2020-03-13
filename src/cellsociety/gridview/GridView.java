@@ -16,12 +16,14 @@ import java.util.List;
 public abstract class GridView<T extends Cell>{
     public static final int GRID_SIZE = MainController.WIDTH;
     public static final double CELL_GAP = 0;
+    public static final double CELL_STROKE_WIDTH_FACTOR = 1.0 / 25.0;
 
     private GridPane gridPane;
     private int rows;
     private int cols;
     private double cellSize;
     private double cellHeight;
+    private double cellStrokeWidth;
     private List<RowConstraints> rowConstraints = new ArrayList<>();
     private List<ColumnConstraints> colConstraints = new ArrayList<>();
     private ColumnConstraints finalColConstraints;
@@ -37,7 +39,9 @@ public abstract class GridView<T extends Cell>{
         gridPane = new GridPane();
         gridPane.setHgap(CELL_GAP);
         gridPane.setVgap(CELL_GAP);
-        cellSize = ((double) GRID_SIZE) / ((Math.max(cols, rows) + CELL_GAP)) - CellView.STROKE_WIDTH;
+        double cellSizeWithoutStroke = ((double) GRID_SIZE) / ((Math.max(cols, rows) + CELL_GAP));
+        cellStrokeWidth = cellSizeWithoutStroke * CELL_STROKE_WIDTH_FACTOR;
+        cellSize = cellSizeWithoutStroke - cellStrokeWidth;
         adjustCellSize(cellSizeFactor);
         setCellHeight(heightFactor);
         addConstraints();
@@ -103,7 +107,7 @@ public abstract class GridView<T extends Cell>{
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
                 T cell = grid.get(row, col);
-                setCellShapeAndAddToGridView(cell, row, col);
+                setCellShapeAndAddToGridView(cell, row, col, cellStrokeWidth);
                 updateGUI(cell);
             }
         }
@@ -130,7 +134,12 @@ public abstract class GridView<T extends Cell>{
         cellView.getPoints().addAll(points);
     }
 
-    protected abstract void setCellShapeAndAddToGridView(T cell, int row, int col);
+    protected void clearPointsFromCellView(T cell) {
+        CellView cellView = cell.getView();
+        cellView.getPoints().clear();
+    }
+
+    protected abstract void setCellShapeAndAddToGridView(T cell, int row, int col, double strokeWidth);
 
     protected abstract void addConstraints();
 

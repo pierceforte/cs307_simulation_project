@@ -8,11 +8,11 @@ import javafx.scene.shape.Polygon;
 /**
  * Initial class for cellView
  */
-public class CellView <T extends Cell> extends Polygon {
-    public static final int STROKE_WIDTH = 1;
+public class CellView extends Polygon {
+    public static final int DEFAULT_STROKE_WIDTH = 1;
 
     public CellView() {
-        setStrokeWidth(STROKE_WIDTH);
+
     }
 
     public void setFill(Image image) {

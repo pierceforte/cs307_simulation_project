@@ -1,5 +1,6 @@
 package cellsociety;
 import cellsociety.backend.*;
+import cellsociety.config.ConfigReader;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -16,6 +17,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,8 +28,7 @@ public class MainController extends Application {
     public static final String STYLESHEET = "style.css";
     public static final String TITLE = "Cell Society";
     public static final int WIDTH = 600;
-    public static final int GRID_HEIGHT = 600;
-    public static final int HEIGHT = 680;
+    public static final int HEIGHT = 720;
     public static final Paint BACKGROUND = Color.BEIGE;
     public static final int FRAMES_PER_SECOND = 5;
     public static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
@@ -41,10 +43,6 @@ public class MainController extends Application {
     private Stage myStage;
     private Pane myIntroPane;
     private Timeline myAnimation;
-    private Text myPressToBeginText;
-    private Text myTimeText;
-    private double myTime;
-    private SimModel mySimModel;
     private SimController mySimController;
     private boolean isMySimulationActive = false;
 
@@ -55,7 +53,7 @@ public class MainController extends Application {
         USE THE FOLLOWING LINE TO GENERATE A RANDOM CONFIG
 
          */
-        //printRandomConfig(24,24,3);
+        //printRandomConfig(500,500,2);
         Image introScreenImage = new Image(getClass().getClassLoader().getResourceAsStream(INTRO_SCREEN_IMG_NAME));
         ImageView introScreenNode = new ImageView(introScreenImage);
         introScreenNode.setFitHeight(HEIGHT);
@@ -128,8 +126,7 @@ public class MainController extends Application {
             if (isMySimulationActive) {
                 if (mySimController.isEnded()) {
                     returnToIntroScreen();
-                }
-                else {
+                } else {
                     mySimController.update(false);
                 }
             }
@@ -138,14 +135,6 @@ public class MainController extends Application {
             System.out.println("Caught mem error");
             mySimController.setIsEnded(true);
         }
-    }
-
-    public void clearRoot() {
-        myRoot.getChildren().clear();
-    }
-
-    public <T extends Node> void addToRoot(T node) {
-        myRoot.getChildren().add(node);
     }
 
     public SimController getCurSimController() {
@@ -179,13 +168,27 @@ public class MainController extends Application {
             }
         }
 
+        try {
+            PrintWriter pw = new PrintWriter("randomConfig.csv");
+            pw.println(rows + ConfigReader.SPLIT_REGEX + cols);
 
-        for (int i = 0; i < rows; i++) {
-            System.out.println();
-            System.out.print(list.get(i).get(0));
-            for (int j = 1; j < cols; j++) {
-                System.out.print(","+list.get(i).get(j));
+            for (int row = 0; row < rows; row++) {
+                if (cols == 0) {
+                    break;
+                }
+                String line = "" + list.get(row).get(0);
+                for (int col = 1; col < cols; col++) {
+                    line += ConfigReader.SPLIT_REGEX + list.get(row).get(col);
+                }
+                pw.println(line);
             }
+            pw.close();
+        } catch (FileNotFoundException e) {
+            // TODO: handle exception properly
+            e.printStackTrace();
+            //logError(e);
+            e.printStackTrace();
+            System.exit(0);
         }
         System.exit(0);
     }
