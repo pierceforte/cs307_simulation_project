@@ -53,7 +53,7 @@ public class MainController extends Application {
         USE THE FOLLOWING LINE TO GENERATE A RANDOM CONFIG
 
          */
-        //printRandomConfig(500,500,2);
+        //printRandomConfig(100,100,3);
         Image introScreenImage = new Image(getClass().getClassLoader().getResourceAsStream(INTRO_SCREEN_IMG_NAME));
         ImageView introScreenNode = new ImageView(introScreenImage);
         introScreenNode.setFitHeight(HEIGHT);

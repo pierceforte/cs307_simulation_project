@@ -4,8 +4,6 @@ import cellsociety.SimController;
 import cellsociety.cell.Cell;
 import cellsociety.frontend.ColorControlsGUI;
 import cellsociety.grid.Grid;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.RowConstraints;
 
 import java.util.List;
 
@@ -30,23 +28,29 @@ public class TriangleGridView <T extends Cell> extends GridView {
         upPoints = createPoints(NUM_SIDES, UP_ROTATION);
         downPoints = createPoints(NUM_SIDES, DOWN_ROTATION);
         clearPointsFromCellView(cell);
-        if (row % 2 != 0 ^ col % 2 == 0) {
-            addPointsToCellView(cell, upPoints);
-        } else {
-            addPointsToCellView(cell, downPoints);
-        }
+        addPointsToTriangles(cell, row, col);
         cell.getView().setStrokeWidth(strokeWidth);
-        getGridPane().add(cell.getView(), 2 * col, 2 * row, COL_SPAN, ROW_SPAN);
+        getGridPane().add(cell.getView(), COL_INDEX_FACTOR*col, ROW_INDEX_FACTOR*row, COL_SPAN, ROW_SPAN);
     }
 
     @Override
     protected void addConstraints() {
-        RowConstraints finalRowConstraints = addRowConstraintsAndSetFillHeight(getCellHeight() / 2.4);
         addRowConstraintsAndSetFillHeight(getCellHeight() / 2.4);
-        ColumnConstraints finalColConstraints = addColConstraintsAndSetFillWidth(getCellSize() / 4.0);
+        addRowConstraintsAndSetFillHeight(getCellHeight() / 2.4);
+        addColConstraintsAndSetFillWidth(getCellSize() / 4.0);
         addColConstraintsAndSetFillWidth(getCellSize() / 7.0);
+    }
 
-        setFinalRowConstraints(finalRowConstraints);
-        setFinalColConstraints(finalColConstraints);
+    private void addPointsToTriangles(Cell cell, int row, int col) {
+        if (isTriangleUpright(row, col)) {
+            addPointsToCellView(cell, upPoints);
+        }
+        else {
+            addPointsToCellView(cell, downPoints);
+        }
+    }
+
+    private boolean isTriangleUpright(int row, int col) {
+        return row % 2 != 0 ^ col % 2 == 0;
     }
 }

@@ -17,6 +17,8 @@ public abstract class GridView<T extends Cell>{
     public static final int GRID_SIZE = MainController.WIDTH;
     public static final double CELL_GAP = 0;
     public static final double CELL_STROKE_WIDTH_FACTOR = 1.0 / 25.0;
+    public static final int COL_INDEX_FACTOR = 2;
+    public static final int ROW_INDEX_FACTOR = 2;
 
     private GridPane gridPane;
     private int rows;
@@ -26,8 +28,6 @@ public abstract class GridView<T extends Cell>{
     private double cellStrokeWidth;
     private List<RowConstraints> rowConstraints = new ArrayList<>();
     private List<ColumnConstraints> colConstraints = new ArrayList<>();
-    private ColumnConstraints finalColConstraints;
-    private RowConstraints finalRowContraints;
     private SimController simController;
     private ColorControlsGUI colorControlsGUI;
 
@@ -84,14 +84,6 @@ public abstract class GridView<T extends Cell>{
         }
     }
 
-    protected void setFinalRowConstraints(RowConstraints rc) {
-        finalRowContraints = rc;
-    }
-
-    protected void setFinalColConstraints(ColumnConstraints cc) {
-        finalColConstraints = cc;
-    }
-
     protected List<Double> createPoints(int numSides, double rotation) {
         List<Double> points = new ArrayList<>();
         for (int i = 0; i < numSides * 2; i += 2) {
@@ -111,8 +103,12 @@ public abstract class GridView<T extends Cell>{
                 updateGUI(cell);
             }
         }
-        gridPane.getRowConstraints().add(finalRowContraints);
-        gridPane.getColumnConstraints().add(finalColConstraints);
+        if (!rowConstraints.isEmpty()) {
+            gridPane.getRowConstraints().add(rowConstraints.get(0));
+        }
+        if (!colConstraints.isEmpty()) {
+            gridPane.getColumnConstraints().add(colConstraints.get(0));
+        }
     }
 
     protected void updateGUI(T cell) {

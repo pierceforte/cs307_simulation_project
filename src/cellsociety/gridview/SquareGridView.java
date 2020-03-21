@@ -17,6 +17,8 @@ public class SquareGridView<T extends Cell> extends GridView {
     public static final double CELL_SIZE_FACTOR = 1.5;
     public static final double HEIGHT_FACTOR = Math.sqrt(0.75);
     public static final double CONSTRAINT_QUOTIENT = 2.9;
+    public static final int COL_SPAN = 3;
+    public static final int ROW_SPAN = 3;
 
     private List<Double> points;
 
@@ -30,17 +32,14 @@ public class SquareGridView<T extends Cell> extends GridView {
         clearPointsFromCellView(cell);
         addPointsToCellView(cell, points);
         cell.getView().setStrokeWidth(strokeWidth);
-        getGridPane().add(cell.getView(), 2*col, 2*row, 3, 3);
+        getGridPane().add(cell.getView(), COL_INDEX_FACTOR*col, ROW_INDEX_FACTOR*row, COL_SPAN, ROW_SPAN);
     }
 
     @Override
     protected void addConstraints() {
-        RowConstraints finalRowConstraints = addRowConstraintsAndSetFillHeight(getCellSize() / CONSTRAINT_QUOTIENT);
         addRowConstraintsAndSetFillHeight(getCellSize() / CONSTRAINT_QUOTIENT);
-        ColumnConstraints finalColConstraints = addColConstraintsAndSetFillWidth(getCellSize() / CONSTRAINT_QUOTIENT);
+        addRowConstraintsAndSetFillHeight(getCellSize() / CONSTRAINT_QUOTIENT);
         addColConstraintsAndSetFillWidth(getCellSize() / CONSTRAINT_QUOTIENT);
-
-        setFinalRowConstraints(finalRowConstraints);
-        setFinalColConstraints(finalColConstraints);
+        addColConstraintsAndSetFillWidth(getCellSize() / CONSTRAINT_QUOTIENT);
     }
 }

@@ -30,17 +30,14 @@ public class HexagonGridView <T extends Cell> extends GridView {
         addPointsToCellView(cell, points);
         cell.getView().setStrokeWidth(strokeWidth);
         int offset = col % 2;
-        getGridPane().add(cell.getView(), 2 * col, 2 * row + offset, COL_SPAN, ROW_SPAN);
+        getGridPane().add(cell.getView(), COL_INDEX_FACTOR*col, ROW_INDEX_FACTOR*row + offset, COL_SPAN, ROW_SPAN);
     }
 
     @Override
     protected void addConstraints() {
-        RowConstraints finalRowConstraints = addRowConstraintsAndSetFillHeight(getCellHeight() / 2.0);
         addRowConstraintsAndSetFillHeight(getCellHeight() / 2.0);
-        ColumnConstraints finalColConstraints = addColConstraintsAndSetFillWidth(getCellSize() / 4.0);
+        addRowConstraintsAndSetFillHeight(getCellHeight() / 2.0);
+        addColConstraintsAndSetFillWidth(getCellSize() / 4.0);
         addColConstraintsAndSetFillWidth(getCellSize() / 2.0);
-
-        setFinalRowConstraints(finalRowConstraints);
-        setFinalColConstraints(finalColConstraints);
     }
 }
