@@ -1,14 +1,26 @@
 package cellsociety.backend;
 
 import cellsociety.SimController;
-import cellsociety.cell.RPSCell;
+import cellsociety.cell.rps.RPSCell;
 import cellsociety.grid.Grid;
 
 import java.util.*;
 
+/**
+ * This class inherits from the abstract class SimModel, implementing the backend for the Rock, Paper, Scissors simulation.
+ *
+ * This class defines the rules for each update, relying on the RPSCell and its different implementations.
+ *
+ * @author Pierce Forte
+ */
 public class RPSModel extends SimModel<RPSCell> {
     public static final String CONFIG_FILE_PREFIX = "RPS";
 
+    /**
+     * The constructor to create a Rock, Paper, Scissors simulation's backend.
+     * @param cellStates the initial cell states, as collected from the csv file
+     * @param simController the SimController used to interact with the frontend
+     */
     public RPSModel(List<List<String>> cellStates, SimController simController) {
         super(cellStates, simController);
     }

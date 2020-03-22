@@ -1,16 +1,28 @@
 package cellsociety.backend;
 
 import cellsociety.SimController;
-import cellsociety.cell.GOL.GOLCell;
+import cellsociety.cell.gol.GOLCell;
 import cellsociety.grid.Grid;
 
 import java.util.List;
 import java.util.TreeMap;
 
-public class GOLSimModel extends SimModel<GOLCell> {
+/**
+ * This class inherits from the abstract class SimModel, implementing the backend for the Game of Life simulation.
+ *
+ * This class defines the rules for each update, relying on the GOLCELL and its different implementations.
+ *
+ * @author Pierce Forte
+ */
+public class GOLModel extends SimModel<GOLCell> {
     public static final String CONFIG_FILE_PREFIX = "GOL";
 
-    public GOLSimModel(List<List<String>> cells, SimController simController) {
+    /**
+     * The constructor to create a Game of Life simulation's backend.
+     * @param cells the initial cell states, as collected from the csv file
+     * @param simController the SimController used to interact with the frontend
+     */
+    public GOLModel(List<List<String>> cells, SimController simController) {
         super(cells, simController);
     }
 

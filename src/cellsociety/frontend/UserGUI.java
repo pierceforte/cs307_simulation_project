@@ -13,8 +13,18 @@ import java.util.ResourceBundle;
 
 
 /**
- * Initializes stage components that prompt for user input/control of simulations
- * TODO: Implement inheritance hierarchy
+ * This class is used to create the basic user interface with buttons for interacting with the simulation.
+ *
+ * Users can play, pause, step through, exit, change the speed of, and view a description of a simulation.
+ *
+ * This class is dependent on the resource bundles for all simulations and the specific simulation, the
+ * SimView for the current simulation, and the SimController for the current simulation.
+ *
+ * Note that if this project had not been ended early due to COVID-19, a high priority next step would have
+ * been to refactor this class and implement an inheritance hierarchy.
+ *
+ * @author Pierce Forte
+ * @author Mary Jiang
  */
 public class UserGUI {
     private SimController controller;
@@ -22,21 +32,18 @@ public class UserGUI {
     private ResourceBundle myDefaultResources;
     private ResourceBundle mySimResources;
 
+    /**
+     * The constructor to create a UserGUI.
+     * @param controller The controller that handles the interaction with the backend of the simulation
+     * @param view The SimView associated with the UserGUI
+     * @param defaultResources The default resources used for all simulations
+     * @param simResources The resources specific to the current simulation
+     */
     public UserGUI(SimController controller, SimView view, ResourceBundle defaultResources, ResourceBundle simResources){
         this.controller = controller;
         this.view = view;
         myDefaultResources = defaultResources;
         mySimResources = simResources;
-    }
-
-    private Button createButton(String text, String id, double xPos, double yPos, double width, double height) {
-        Button button = new Button(text);
-        button.setTranslateX(xPos);
-        button.setTranslateY(yPos);
-        button.setPrefWidth(width);
-        button.setPrefHeight(height);
-        button.setId(id);
-        return button;
     }
 
     protected void handleExitRequest() {
@@ -99,6 +106,16 @@ public class UserGUI {
 
         stage.addNodesToPane(List.of(closeDetailsBttn));
         stage.showAndWait();
+    }
+
+    private Button createButton(String text, String id, double xPos, double yPos, double width, double height) {
+        Button button = new Button(text);
+        button.setTranslateX(xPos);
+        button.setTranslateY(yPos);
+        button.setPrefWidth(width);
+        button.setPrefHeight(height);
+        button.setId(id);
+        return button;
     }
 
     private void letUserSaveConfig() {

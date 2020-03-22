@@ -7,10 +7,24 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * This abstract class inherits from the abstract class WaTorCell.
+ *
+ * This class's purpose is to provide duplicate functionality to the two living Wa-Tor cell types.
+ * For example, these living cells (FishCell and SharkCell) have the ability to move and reproduce.
+ *
+ * @author Pierce Forte
+ */
 public abstract class LivingWaTorCell extends WaTorCell {
 
     private int reproductionTimer = 0;
 
+    /**
+     * The constructor to create a LivingWaTorCell's backend.
+     * @param state The state (or "type") of the cell to be created
+     * @param row The row in which the cell is located
+     * @param col The column in which the cell is located
+     */
     public LivingWaTorCell(String state, int row, int col) {
         super(state, row, col);
     }

@@ -8,12 +8,30 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+/**
+ * This class is used to create the grid's backend for each simulation.
+ *
+ * It is important to note that the Grid is entirely independent from the simulation backend, so
+ * only one implementation is needed for any type of simulation.
+ *
+ * This class is dependent on the ordered cell types for the given simulation type, which is defined
+ * by the specific Cell implementation.
+ *
+ * Note that if this project had not been ended early due to COVID-19, a high priority next step would have
+ * been to refactor this class.
+ *
+ * @author Pierce Forte
+ */
 public class Grid<T extends Cell> {
     private List<List<T>> cells = new ArrayList<>();
     private int topRow;
     private int topCol;
     private int numStates;
 
+    /**
+     * The constructor to create a Grid.
+     * @param gridToCopy The grid to be copied into the new grid
+     */
     public Grid(Grid<T> gridToCopy) {
         for (int row = 0; row < gridToCopy.getNumRows(); row++) {
             cells.add(new ArrayList<>());
@@ -25,6 +43,11 @@ public class Grid<T extends Cell> {
         setNumStates();
     }
 
+    /**
+     * The constructor to create a Grid.
+     * @param cellStates The cell states to be used to create the grid
+     * @param cellTypeMap The map from cell state to the associated class
+     */
     public Grid(List<List<String>> cellStates, Map<String, Class> cellTypeMap) {
         for (int row = 0; row < cellStates.size(); row++) {
             cells.add(new ArrayList<>());
@@ -37,31 +60,58 @@ public class Grid<T extends Cell> {
         setTopRowAndCol();
     }
 
-    //TODO: delete this method
+    /**
+     * Get a list of all the cells in the grid.
+     * @return A list of all the cells in the grid.
+     *
+     * TODO: delete this method
+     */
     public List<List<T>> getCells() {
         return cells;
     }
 
+    /**
+     * Get a cell from the grid at a given row and column.
+     * @param row The row of the requested cell
+     * @param col The column of the requested cell
+     * @return The requested cell
+     */
     public T get(int row, int col){
         return cells.get(row).get(col);
     }
 
+    /**
+     * Set a cell in the grid to a given row and column.
+     * @param row The row of the cell to be set
+     * @param col The column of the cell to be set
+     * @param cell The cell to be set
+     * @param <C> The type of cell
+     */
     public <C extends T> void set(int row, int col, C cell){
         cells.get(row).set(col, cell);
     }
 
+    /**
+     * Get the number of rows in the grid.
+     * @return The number of rows in the grid
+     */
     public int getNumRows(){
         return cells.size();
     }
 
+    /**
+     * Get the number of columns in the grid.
+     * @return The number of columns in the grid
+     */
     public int getNumCols(){
         return cells.get(0).size();
     }
 
-    public int getNumStates() {
-        return numStates;
-    }
-
+    /**
+     * Get the orthogonal neighbors of a cell.
+     * @param cell The cell to get the neighbors for
+     * @return The orthogonal neighbors of the cell
+     */
     public List<T> getAllNeighbors(T cell) {
         List<T> neighbors = new ArrayList<>();
         neighbors.addAll(getCardinalNeighbors(cell));
@@ -69,7 +119,12 @@ public class Grid<T extends Cell> {
         return neighbors;
     }
 
-    // TODO: eliminate duplication of first 3 lines
+    /**
+     * Get the cardinal neighbors of a cell.
+     * @param cell The cell to get the neighbors for
+     * @return The cardinal neighbors of the cell
+     * TODO: eliminate duplication of first 3 lines
+     */
     public List<T> getCardinalNeighbors(T cell) {
         List<T> cardinalNeighbors = new ArrayList<>();
         int row = cell.getRow();
@@ -91,6 +146,11 @@ public class Grid<T extends Cell> {
         return cardinalNeighbors;
     }
 
+    /**
+     * Get the diagonal neighbors of a cell.
+     * @param cell The cell to get the neighbors for
+     * @return The diagonal neighbors of the cell
+     */
     public List<T> getDiagonalNeighbors(T cell) {
         List<T> diagonalNeighbors = new ArrayList<>();
         int row = cell.getRow();
@@ -112,6 +172,10 @@ public class Grid<T extends Cell> {
         return diagonalNeighbors;
     }
 
+    /**
+     * Execute a consumer function for all cells in the grid.
+     * @param lambda The consumer function to execute
+     */
     public void executeForAllCells(Consumer<T> lambda) {
         for (List<T> row : cells) {
             for (T cell : row) {
@@ -120,6 +184,14 @@ public class Grid<T extends Cell> {
         }
     }
 
+    /**
+     * Create a cell
+     * @param state The state of the cell
+     * @param cellTypeMap The map that provides the associated class for the cell
+     * @param row The row of the cell
+     * @param col The column of the cell
+     * @return The created cell
+     */
     public T createCell(String state, Map<String, Class> cellTypeMap, int row, int col) {
         Class cellClass = cellTypeMap.get(state);
         try {
@@ -143,6 +215,12 @@ public class Grid<T extends Cell> {
         }
     }
 
+    /**
+     * Randomly shuffle the grid.
+     *
+     * Note: code was gathered from StackOverflow at
+     * https://stackoverflow.com/questions/47995662/shuffle-multidimensional-list-arraylist-linkedlist/47995772#47995772
+     */
     public void shuffle() {
         // 1. Add all values in single dimension list
         List<T> allValues = cells.stream()

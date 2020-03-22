@@ -7,6 +7,11 @@ import cellsociety.grid.Grid;
 
 import java.util.List;
 
+/**
+ * This class implements the abstract class GridView with a grid of triangles.
+ *
+ * @author Pierce Forte
+ */
 public class TriangleGridView <T extends Cell> extends GridView {
     public static final int NUM_SIDES = 3;
     public static final double UP_ROTATION = Math.PI;
@@ -19,6 +24,12 @@ public class TriangleGridView <T extends Cell> extends GridView {
     private List<Double> upPoints;
     private List<Double> downPoints;
 
+    /**
+     * The constructor to create a GridView of triangle shaped cells.
+     * @param grid The grid backend to be displayed.
+     * @param simController The simController used to handle fronted-backend interactions
+     * @param colorControlsGUI The colorControlsGUI that handles the interface for the cell color's
+     */
     public TriangleGridView(Grid<T> grid, SimController simController, ColorControlsGUI colorControlsGUI) {
         super(grid, simController, colorControlsGUI, CELL_SIZE_FACTOR, HEIGHT_FACTOR);
     }

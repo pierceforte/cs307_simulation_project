@@ -2,8 +2,8 @@ package cellsociety;
 
 import cellsociety.cell.Cell;
 import cellsociety.grid.Grid;
-import cellsociety.cell.GOL.GOLCell;
-import cellsociety.backend.GOLSimModel;
+import cellsociety.cell.gol.GOLCell;
+import cellsociety.backend.GOLModel;
 import cellsociety.backend.SimModel;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +16,7 @@ public class GOLTest extends CellSocietyTest {
 
     @Test
     public void testGOLGridPopulation() {
-        testGridPopulation(GOLSimModel.class, "GOLConfig");
+        testGridPopulation(GOLModel.class, "GOLConfig");
     }
 
     @Test
@@ -36,23 +36,23 @@ public class GOLTest extends CellSocietyTest {
     @Test
     public void testGOLCellBirth() {
         // test that a dead cell with 3 neighbors becomes alive
-        testGOLCellStateChange(0, 7, cellsociety.cell.GOL.GOLCell.DEAD, cellsociety.cell.GOL.GOLCell.ALIVE);
+        testGOLCellStateChange(0, 7, GOLCell.DEAD, GOLCell.ALIVE);
     }
 
     @Test
     public void testGOLCellStaysAlive() {
         // test a cell with 2 neighbors
-        testGOLCellStateChange(0, 10, cellsociety.cell.GOL.GOLCell.ALIVE, cellsociety.cell.GOL.GOLCell.ALIVE);
+        testGOLCellStateChange(0, 10, GOLCell.ALIVE, GOLCell.ALIVE);
         // test a cell with 3 neighbors
-        testGOLCellStateChange(11, 3, cellsociety.cell.GOL.GOLCell.ALIVE, cellsociety.cell.GOL.GOLCell.ALIVE);
+        testGOLCellStateChange(11, 3, GOLCell.ALIVE, GOLCell.ALIVE);
     }
 
     @Test
     public void testGOLCellStaysDead() {
         // test a dead cell with less than 3 neighbors (in this case, 2)
-        testGOLCellStateChange(0, 5, cellsociety.cell.GOL.GOLCell.DEAD, cellsociety.cell.GOL.GOLCell.DEAD);
+        testGOLCellStateChange(0, 5, GOLCell.DEAD, GOLCell.DEAD);
         // test a dead cell with more than 3 neighbors (in this case, 4)
-        testGOLCellStateChange(0, 9, cellsociety.cell.GOL.GOLCell.DEAD, cellsociety.cell.GOL.GOLCell.DEAD);
+        testGOLCellStateChange(0, 9, GOLCell.DEAD, GOLCell.DEAD);
     }
 
     /*
@@ -63,59 +63,59 @@ public class GOLTest extends CellSocietyTest {
      */
     @Test
     public void testGOLBeehiveConfig() {
-        SimModel simModel = createModelFromFile(GOLSimModel.class,
+        SimModel simModel = createModelFromFile(GOLModel.class,
                 GOL_CONFIG_TESTS_PATH + "beehive/beehive" + CONFIG_TESTS_EXTENSION);
         testGOLStillLifes(simModel);
     }
 
     @Test
     public void testGOLBlockConfig() {
-        SimModel simModel = createModelFromFile(GOLSimModel.class,
+        SimModel simModel = createModelFromFile(GOLModel.class,
                 GOL_CONFIG_TESTS_PATH + "block/block" + CONFIG_TESTS_EXTENSION);
         testGOLStillLifes(simModel);
     }
 
     @Test
     public void testGOLBoatConfig() {
-        SimModel simModel = createModelFromFile(GOLSimModel.class,
+        SimModel simModel = createModelFromFile(GOLModel.class,
                 GOL_CONFIG_TESTS_PATH + "boat/boat" + CONFIG_TESTS_EXTENSION);
         testGOLStillLifes(simModel);
     }
 
     @Test
     public void testGOLLoafConfig() {
-        SimModel simModel = createModelFromFile(GOLSimModel.class,
+        SimModel simModel = createModelFromFile(GOLModel.class,
                 GOL_CONFIG_TESTS_PATH + "loaf/loaf" + CONFIG_TESTS_EXTENSION);
         testGOLStillLifes(simModel);
     }
 
     @Test
     public void testGOLTubConfig() {
-        SimModel simModel = createModelFromFile(GOLSimModel.class,
+        SimModel simModel = createModelFromFile(GOLModel.class,
                 GOL_CONFIG_TESTS_PATH + "tub/tub" + CONFIG_TESTS_EXTENSION);
         testGOLStillLifes(simModel);
     }
 
     @Test
     public void testGOLBlinkerConfig() {
-        SimModel simModel1 = createModelFromFile(GOLSimModel.class,
+        SimModel simModel1 = createModelFromFile(GOLModel.class,
                 GOL_CONFIG_TESTS_PATH + "blinker1/blinker1" + CONFIG_TESTS_EXTENSION);
-        SimModel simModel2 = createModelFromFile(GOLSimModel.class,
+        SimModel simModel2 = createModelFromFile(GOLModel.class,
                 GOL_CONFIG_TESTS_PATH + "blinker2/blinker2" + CONFIG_TESTS_EXTENSION);
         testGOLStateLoops(List.of(simModel1, simModel2));
     }
 
     @Test
     public void testGOLGliderConfig() {
-        SimModel simModel1 = createModelFromFile(GOLSimModel.class,
+        SimModel simModel1 = createModelFromFile(GOLModel.class,
                 GOL_CONFIG_TESTS_PATH + "glider1/glider1" + CONFIG_TESTS_EXTENSION);
-        SimModel simModel2 = createModelFromFile(GOLSimModel.class,
+        SimModel simModel2 = createModelFromFile(GOLModel.class,
                 GOL_CONFIG_TESTS_PATH + "glider2/glider2" + CONFIG_TESTS_EXTENSION);
-        SimModel simModel3 = createModelFromFile(GOLSimModel.class,
+        SimModel simModel3 = createModelFromFile(GOLModel.class,
                 GOL_CONFIG_TESTS_PATH + "glider3/glider3" + CONFIG_TESTS_EXTENSION);
-        SimModel simModel4 = createModelFromFile(GOLSimModel.class,
+        SimModel simModel4 = createModelFromFile(GOLModel.class,
                 GOL_CONFIG_TESTS_PATH + "glider4/glider4" + CONFIG_TESTS_EXTENSION);
-        SimModel simModel5 = createModelFromFile(GOLSimModel.class,
+        SimModel simModel5 = createModelFromFile(GOLModel.class,
                 GOL_CONFIG_TESTS_PATH + "glider5/glider5" + CONFIG_TESTS_EXTENSION);
         testGOLStateLoops(List.of(simModel1, simModel2, simModel3, simModel4, simModel5));
     }
@@ -153,7 +153,7 @@ public class GOLTest extends CellSocietyTest {
     }
 
     private void testGOLCellStateChange(int row, int col, String initialState, String updatedStated) {
-        createModelFromStart(GOLSimModel.class);
+        createModelFromStart(GOLModel.class);
         Grid cells = getMySimModel().getGrid();
 
         // get a cell
@@ -167,7 +167,7 @@ public class GOLTest extends CellSocietyTest {
     }
 
     private void testGOLCellDeath(int row, int col) {
-        testGOLCellStateChange(row, col, cellsociety.cell.GOL.GOLCell.ALIVE, cellsociety.cell.GOL.GOLCell.DEAD);
+        testGOLCellStateChange(row, col, GOLCell.ALIVE, GOLCell.DEAD);
     }
 
 }

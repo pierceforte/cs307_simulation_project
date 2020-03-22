@@ -13,6 +13,22 @@ import javafx.scene.layout.RowConstraints;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This abstract class is used to create the grid's frontend for each simulation.
+ *
+ * It is important to note that the GridView is entirely independent from the simulation backend, so
+ * only one implementation is needed for any type of simulation.
+ *
+ * This class is dependent on the resource bundles for all simulations and the specific simulation, as well as
+ * the Grid backend for the current simulation.
+ *
+ * This class is more complex than necessary, but this is because it has three implementations that
+ * can greatly improve the user's experience. The three subclasses are grids made up of squares, hexagons,
+ * and triangles; these are the only three shapes that tessellate, and they allow for a more interesting
+ * presentation of the simulations.
+ *
+ * @author Pierce Forte
+ */
 public abstract class GridView<T extends Cell>{
     public static final int GRID_SIZE = MainController.WIDTH;
     public static final double CELL_GAP = 0;
@@ -31,6 +47,14 @@ public abstract class GridView<T extends Cell>{
     private SimController simController;
     private ColorControlsGUI colorControlsGUI;
 
+    /**
+     * The constructor to create a GridView.
+     * @param grid The grid backend to be displayed.
+     * @param simController The simController used to handle fronted-backend interactions
+     * @param colorControlsGUI The colorControlsGUI that handles the interface for the cell color's
+     * @param cellSizeFactor The factor to change the size of the cells in the view
+     * @param heightFactor The factor to change the height of the cells in the view
+     */
     public GridView(Grid<T> grid, SimController simController, ColorControlsGUI colorControlsGUI, double cellSizeFactor, double heightFactor) {
         this.rows = grid.getNumRows();
         this.cols = grid.getNumCols();
@@ -49,6 +73,10 @@ public abstract class GridView<T extends Cell>{
         createView(grid);
     }
 
+    /**
+     * Get the pane that represents the GridView.
+     * @return The pane that represents the GridView
+     */
     public GridPane getGridPane() {
         return gridPane;
     }

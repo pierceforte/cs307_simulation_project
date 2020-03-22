@@ -7,27 +7,45 @@ import cellsociety.grid.Grid;
 import java.io.*;
 import java.util.*;
 
+/**
+ * This class is used to save a simulation's configuration to a CSV and properties file.
+ *
+ * Note that if this project had not been ended early due to COVID-19, a high priority next step would have
+ * been to refactor this class.
+ *
+ * @author Pierce Forte
+ */
 public class ConfigSaver<T extends Cell> {
     public static final String PATH_TO_CONFIGS = "resources/configs/";
     public static final String CSV_EXTENSION = ".csv";
     public static final String PROPERTIES_EXTENSION = ".properties";
     public static final Map<Class, String> SIM_CLASS_NAME_TO_DIRECTORY = Map.of(
-            GOLSimModel.class, GOLSimModel.CONFIG_FILE_PREFIX,
-            WaTorSimModel.class, WaTorSimModel.CONFIG_FILE_PREFIX,
-            SegregationSimModel.class, SegregationSimModel.CONFIG_FILE_PREFIX,
-            FireSimModel.class, FireSimModel.CONFIG_FILE_PREFIX,
-            PercolationSimModel.class, PercolationSimModel.CONFIG_FILE_PREFIX,
+            GOLModel.class, GOLModel.CONFIG_FILE_PREFIX,
+            WaTorModel.class, WaTorModel.CONFIG_FILE_PREFIX,
+            SegregationModel.class, SegregationModel.CONFIG_FILE_PREFIX,
+            FireModel.class, FireModel.CONFIG_FILE_PREFIX,
+            PercolationModel.class, PercolationModel.CONFIG_FILE_PREFIX,
             RPSModel.class, RPSModel.CONFIG_FILE_PREFIX
     );
     public static final Map<String, Class> DIRECTORY_TO_SIM_CLASS = Map.of(
-            GOLSimModel.CONFIG_FILE_PREFIX, GOLSimModel.class,
-            WaTorSimModel.CONFIG_FILE_PREFIX, WaTorSimModel.class,
-            SegregationSimModel.CONFIG_FILE_PREFIX, SegregationSimModel.class,
-            FireSimModel.CONFIG_FILE_PREFIX, FireSimModel.class,
-            PercolationSimModel.CONFIG_FILE_PREFIX, PercolationSimModel.class,
+            GOLModel.CONFIG_FILE_PREFIX, GOLModel.class,
+            WaTorModel.CONFIG_FILE_PREFIX, WaTorModel.class,
+            SegregationModel.CONFIG_FILE_PREFIX, SegregationModel.class,
+            FireModel.CONFIG_FILE_PREFIX, FireModel.class,
+            PercolationModel.CONFIG_FILE_PREFIX, PercolationModel.class,
             RPSModel.CONFIG_FILE_PREFIX, RPSModel.class
     );
 
+    /**
+     * The constructor to create a ConfigSaver.
+     * @param grid The grid of cells to be saved
+     * @param fileName The name of the file to be saved
+     * @param author The author of this grid
+     * @param description The description for this grid
+     * @param modelClass The class for this grid's simulation type
+     * @param copyBundle The bundle to be copied into a new properties file
+     * @param stateColors The colors of each cell type
+     */
     public ConfigSaver(Grid<T> grid, String fileName, String author, String description, Class modelClass,
                        ResourceBundle copyBundle, Map<String, String> stateColors) {
         String simDirectory = SIM_CLASS_NAME_TO_DIRECTORY.get(modelClass);

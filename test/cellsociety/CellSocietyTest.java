@@ -1,11 +1,11 @@
 package cellsociety;
 
 import cellsociety.cell.Cell;
-import cellsociety.cell.GOL.GOLCell;
+import cellsociety.cell.gol.GOLCell;
 import cellsociety.config.ConfigReader;
 import cellsociety.config.ConfigSaver;
 import cellsociety.grid.Grid;
-import cellsociety.backend.GOLSimModel;
+import cellsociety.backend.GOLModel;
 import cellsociety.backend.SimModel;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
@@ -100,7 +100,7 @@ public class CellSocietyTest extends DukeApplicationTest {
         // assert that exit button is not present before simulation is started
         assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, () -> lookup("#exitBttn").query());
 
-        startApplicationFromFile(GOLSimModel.class, "resources/configs/GOL/GOLConfig/GOLConfig.csv");
+        startApplicationFromFile(GOLModel.class, "resources/configs/GOL/GOLConfig/GOLConfig.csv");
 
         // assert button is now present
         assertNotNull(lookup("#exitBttn").query());
@@ -180,7 +180,7 @@ public class CellSocietyTest extends DukeApplicationTest {
         assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, () -> lookup("#pauseBttn").query());
         assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, () -> lookup("#playBttn").query());
         // begin a simulation (here we use a GOL simulation)
-        startApplicationFromFile(GOLSimModel.class, "resources/configs/GOL/GOLConfig/GOLConfig.csv");
+        startApplicationFromFile(GOLModel.class, "resources/configs/GOL/GOLConfig/GOLConfig.csv");
         // assert that pause and play buttons are now present
         assertNotNull(lookup("#pauseBttn").query());
         assertNotNull(lookup("#playBttn").query());
@@ -214,13 +214,13 @@ public class CellSocietyTest extends DukeApplicationTest {
         assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, () -> lookup("#stepBttn").query());
 
         System.out.println("resources/" + GOLTest.GOL_CONFIG_TESTS_PATH + "glider1" + CONFIG_TESTS_EXTENSION);
-        startPausedApplicationFromFile(GOLSimModel.class, "resources/" + GOLTest.GOL_CONFIG_TESTS_PATH + "glider1/glider1" + CONFIG_TESTS_EXTENSION);
+        startPausedApplicationFromFile(GOLModel.class, "resources/" + GOLTest.GOL_CONFIG_TESTS_PATH + "glider1/glider1" + CONFIG_TESTS_EXTENSION);
 
         // get the initial grid
         Grid<GOLCell> grid = myMainController.getCurSimController().getModel().getGrid();
 
         // get the expected grid after one step
-        SimModel simModel2 = createModelFromFile(GOLSimModel.class,
+        SimModel simModel2 = createModelFromFile(GOLModel.class,
                 GOLTest.GOL_CONFIG_TESTS_PATH + "glider2/glider2" + CONFIG_TESTS_EXTENSION);
         Grid<GOLCell> expectedGrid = simModel2.getGrid();
 
@@ -448,7 +448,7 @@ public class CellSocietyTest extends DukeApplicationTest {
             public void start(Stage stage) {
                 setMyStage(stage);
                 getMyStage().show();
-                setMyAnimation(getMyStage());
+                setMyAnimation();
                 beginSimulation(simModelClass, csvFilePath);
             }
         };
@@ -463,7 +463,7 @@ public class CellSocietyTest extends DukeApplicationTest {
             public void start(Stage stage) {
                 setMyStage(stage);
                 getMyStage().show();
-                setMyAnimation(getMyStage());
+                setMyAnimation();
                 beginSimulation(simModelClass, csvFilePath);
                 setMySimulationActiveStatus(false);
             }
@@ -543,7 +543,7 @@ public class CellSocietyTest extends DukeApplicationTest {
     }
 
     private void testInputPathToExitRequestPane() {
-        startApplicationFromFile(GOLSimModel.class, "resources/configs/GOL/GOLConfig/GOLConfig.csv");
+        startApplicationFromFile(GOLModel.class, "resources/configs/GOL/GOLConfig/GOLConfig.csv");
 
         // assert exit button is present
         assertNotNull(lookup("#exitBttn").query());

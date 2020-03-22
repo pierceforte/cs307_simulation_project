@@ -7,12 +7,29 @@ import cellsociety.grid.Grid;
 import java.util.List;
 import java.util.TreeMap;
 
-public class SegregationSimModel extends SimModel<SegregationCell> {
+/**
+ * This class inherits from the abstract class SimModel, implementing the backend for the Segregation simulation.
+ *
+ * This class defines the rules for each update, relying on the SegregationCell and its different implementations.
+ *
+ * It is important to note that this simulation implements a "next grid"; because cells move to random locations on each
+ * update if they are not currently satisfied, it is essential to keep track of which random locations have already
+ * been taken. This process still results in a two-pass system (where cells choose where to move independently of where
+ * other cells **are**), but the cells do not choose where to move independently of where they **will be**.
+ *
+ * @author Pierce Forte
+ */
+public class SegregationModel extends SimModel<SegregationCell> {
     public static final String CONFIG_FILE_PREFIX = "Segregation";
 
     private Grid<SegregationCell> nextGrid;
 
-    public SegregationSimModel(List<List<String>> cellStates, SimController simController) {
+    /**
+     * The constructor to create a Segregation simulation's backend.
+     * @param cellStates the initial cell states, as collected from the csv file
+     * @param simController the SimController used to interact with the frontend
+     */
+    public SegregationModel(List<List<String>> cellStates, SimController simController) {
         super(cellStates, simController);
         initializeNextGrid();
     }

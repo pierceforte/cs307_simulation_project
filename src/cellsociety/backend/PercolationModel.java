@@ -6,11 +6,23 @@ import cellsociety.grid.Grid;
 
 import java.util.List;
 import java.util.TreeMap;
-
-public class PercolationSimModel extends SimModel<PercolationCell>{
+/**
+ * This class inherits from the abstract class SimModel, implementing the backend for the Percolation simulation.
+ *
+ * This class defines the rules for each update, relying on the PercolationCell and its different implementations.
+ *
+ * @author Pierce Forte
+ * @author Donald Groh
+ */
+public class PercolationModel extends SimModel<PercolationCell>{
     public static final String CONFIG_FILE_PREFIX = "Percolation";
 
-    public PercolationSimModel(List<List<String>> cellStates, SimController simController) {
+    /**
+     * The constructor to create a Percolation simulation's backend.
+     * @param cellStates the initial cell states, as collected from the csv file
+     * @param simController the SimController used to interact with the frontend
+     */
+    public PercolationModel(List<List<String>> cellStates, SimController simController) {
         super(cellStates, simController);
     }
 

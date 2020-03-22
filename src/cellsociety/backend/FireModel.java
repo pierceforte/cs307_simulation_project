@@ -10,12 +10,12 @@ import cellsociety.grid.Grid;
 import java.util.List;
 import java.util.TreeMap;
 
-public class FireSimModel extends SimModel<FireCell> {
+public class FireModel extends SimModel<FireCell> {
     // TODO: make probCatch and probTree adjustable/initializable
     public static final String CONFIG_FILE_PREFIX = "Fire";
 
 
-    public FireSimModel(List<List<String>> cells, SimController simController){
+    public FireModel(List<List<String>> cells, SimController simController){
         super(cells, simController);
     }
 

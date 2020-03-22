@@ -1,7 +1,7 @@
 package cellsociety;
 
 import cellsociety.backend.SimModel;
-import cellsociety.backend.WaTorSimModel;
+import cellsociety.backend.WaTorModel;
 import cellsociety.cell.wator.FishCell;
 import cellsociety.cell.wator.SharkCell;
 import cellsociety.cell.wator.WaTorCell;
@@ -16,12 +16,12 @@ public class WaTorTest extends CellSocietyTest {
 
     @Test
     public void testWaTorGridPopulation() {
-        testGridPopulation(WaTorSimModel.class, "WaTorConfig");
+        testGridPopulation(WaTorModel.class, "WaTorConfig");
     }
 
     @Test
     public void testSharkToEatFish() {
-        SimModel simModel = createModelFromFile(WaTorSimModel.class,
+        SimModel simModel = createModelFromFile(WaTorModel.class,
                 WATOR_CONFIG_TESTS_PATH + "shark_to_eat_fish/shark_to_eat_fish" + CONFIG_TESTS_EXTENSION);
         Grid<WaTorCell> grid = simModel.getGrid();
 
@@ -44,7 +44,7 @@ public class WaTorTest extends CellSocietyTest {
 
     @Test
     public void testFishMovesProperly() {
-        SimModel simModel = createModelFromFile(WaTorSimModel.class,
+        SimModel simModel = createModelFromFile(WaTorModel.class,
                 WATOR_CONFIG_TESTS_PATH + "single_fish/single_fish" + CONFIG_TESTS_EXTENSION);
         Grid<WaTorCell> grid = simModel.getGrid();
 
@@ -59,7 +59,7 @@ public class WaTorTest extends CellSocietyTest {
 
     @Test
     public void testFishReproduction() {
-        SimModel simModel = createModelFromFile(WaTorSimModel.class,
+        SimModel simModel = createModelFromFile(WaTorModel.class,
                 WATOR_CONFIG_TESTS_PATH + "single_fish/single_fish" + CONFIG_TESTS_EXTENSION);
         Grid<WaTorCell> grid = simModel.getGrid();
 
@@ -77,7 +77,7 @@ public class WaTorTest extends CellSocietyTest {
 
     @Test
     public void testSharkDeath() {
-        SimModel simModel = createModelFromFile(WaTorSimModel.class,
+        SimModel simModel = createModelFromFile(WaTorModel.class,
                 WATOR_CONFIG_TESTS_PATH + "single_shark/single_shark" + CONFIG_TESTS_EXTENSION);
         Grid<WaTorCell> grid = simModel.getGrid();
 

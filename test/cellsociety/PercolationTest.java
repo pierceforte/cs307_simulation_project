@@ -1,6 +1,6 @@
 package cellsociety;
 
-import cellsociety.backend.PercolationSimModel;
+import cellsociety.backend.PercolationModel;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -10,7 +10,7 @@ public class PercolationTest extends CellSocietyTest {
 
     @Test
     public void testPercolationGridPopulation() {
-        testGridPopulation(PercolationSimModel.class, "PercolationConfig");
+        testGridPopulation(PercolationModel.class, "PercolationConfig");
     }
 
     @Test
