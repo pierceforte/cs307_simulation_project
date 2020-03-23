@@ -9,7 +9,7 @@ import java.util.function.Function;
  * This class defines the rules for how each GOLCell is updated in the grid based on its current state.
  * This class is well designed because of its simplicity; all that needs to be done here is add in the rules for the Game of Life cells, for all of the other Cell attributes/functionality is already available in the Cell superclass. As can be seen below, the rules are implemented rather cleanly, and cells can be updated based on their state through well-named, single-purpose methods.
  * Note that this class's superclass – Cell – is included in the masterpiece as well and more information regarding the methods in this class can be found there.
- * Note that the following was done to refactor this class: magic values that referred to rules of the game – like number of numbers necessary for a cell to become alive – were replaced with constants.
+ * Note that the following was done to refactor this class: magic values that referred to rules of the game – like number of neighbors necessary for a cell to become alive – were replaced with constants.
  * @author Pierce Forte
  */
 public class GOLCell extends Cell {
