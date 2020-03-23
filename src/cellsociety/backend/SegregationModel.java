@@ -27,10 +27,9 @@ public class SegregationModel extends SimModel<SegregationCell> {
     /**
      * The constructor to create a Segregation simulation's backend.
      * @param cellStates the initial cell states, as collected from the csv file
-     * @param simController the SimController used to interact with the frontend
      */
-    public SegregationModel(List<List<String>> cellStates, SimController simController) {
-        super(cellStates, simController);
+    public SegregationModel(List<List<String>> cellStates) {
+        super(cellStates);
         initializeNextGrid();
     }
 
@@ -45,13 +44,7 @@ public class SegregationModel extends SimModel<SegregationCell> {
 
     @Override
     protected void setNextStates(Grid<SegregationCell> grid) {
-        // TODO: try to put this in executeForAll runnable
-        for (int row = 0; row < grid.getNumRows(); row++) {
-            for (int col = 0; col < grid.getNumCols(); col++) {
-                SegregationCell cell = grid.get(row,col);
-                cell.setWhatToDoNext(getNeighbors(cell), nextGrid);
-            }
-        }
+        grid.executeForAllCells(cell -> cell.setWhatToDoNext(getNeighbors(cell), nextGrid));
     }
 
     @Override

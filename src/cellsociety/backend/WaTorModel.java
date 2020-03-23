@@ -30,10 +30,9 @@ public class WaTorModel extends SimModel <WaTorCell> {
     /**
      * The constructor to create a Wa-Tor simulation's backend.
      * @param cellStates the initial cell states, as collected from the csv file
-     * @param simController the SimController used to interact with the frontend
      */
-    public WaTorModel(List<List<String>> cellStates, SimController simController) {
-        super(cellStates, simController);
+    public WaTorModel(List<List<String>> cellStates) {
+        super(cellStates);
         initializeNextGrid();
     }
 

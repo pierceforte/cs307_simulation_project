@@ -56,8 +56,8 @@ public class SimController {
         ConfigReader data = new ConfigReader(csvFilePath);
         List<List<String>> listOfCells = data.getCellList();
         try {
-            Constructor<?> constructor = simTypeClassName.getConstructor(List.class, SimController.class);
-            this.model = (SimModel) constructor.newInstance(listOfCells, this);
+            Constructor<?> constructor = simTypeClassName.getConstructor(List.class);
+            this.model = (SimModel) constructor.newInstance(listOfCells);
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             System.exit(0);
         }

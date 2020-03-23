@@ -15,8 +15,8 @@ public class FireModel extends SimModel<FireCell> {
     public static final String CONFIG_FILE_PREFIX = "Fire";
 
 
-    public FireModel(List<List<String>> cells, SimController simController){
-        super(cells, simController);
+    public FireModel(List<List<String>> cells){
+        super(cells);
     }
 
     @Override
@@ -30,13 +30,7 @@ public class FireModel extends SimModel<FireCell> {
 
     @Override
     protected void setNextStates(Grid<FireCell> grid) {
-        // TODO: try to put this in executeForAll runnable
-        for (int row = 0; row < grid.getNumRows(); row++) {
-            for (int col = 0; col < grid.getNumCols(); col++) {
-                FireCell cell = grid.get(row,col);
-                cell.setWhatToDoNext(getNeighbors(cell));
-            }
-        }
+        grid.executeForAllCells(cell -> cell.setWhatToDoNext(getNeighbors(cell)));
     }
 
     @Override

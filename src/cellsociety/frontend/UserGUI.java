@@ -17,7 +17,7 @@ import java.util.ResourceBundle;
  *
  * Users can play, pause, step through, exit, change the speed of, and view a description of a simulation.
  *
- * This class is dependent on the resource bundles for all simulations and the specific simulation, the
+ * Thzis class is dependent on the resource bundles for all simulations and the specific simulation, the
  * SimView for the current simulation, and the SimController for the current simulation.
  *
  * Note that if this project had not been ended early due to COVID-19, a high priority next step would have

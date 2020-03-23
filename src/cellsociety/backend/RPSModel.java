@@ -19,10 +19,9 @@ public class RPSModel extends SimModel<RPSCell> {
     /**
      * The constructor to create a Rock, Paper, Scissors simulation's backend.
      * @param cellStates the initial cell states, as collected from the csv file
-     * @param simController the SimController used to interact with the frontend
      */
-    public RPSModel(List<List<String>> cellStates, SimController simController) {
-        super(cellStates, simController);
+    public RPSModel(List<List<String>> cellStates) {
+        super(cellStates);
     }
 
     @Override
@@ -40,13 +39,7 @@ public class RPSModel extends SimModel<RPSCell> {
 
     @Override
     protected void setNextStates(Grid<RPSCell> grid) {
-        // TODO: try to put this in executeForAll runnable
-        for (int row = 0; row < grid.getNumRows(); row++) {
-            for (int col = 0; col < grid.getNumCols(); col++) {
-                RPSCell cell = grid.get(row,col);
-                cell.setWhatToDoNext(getNeighbors(cell));
-            }
-        }
+        grid.executeForAllCells(cell -> cell.setWhatToDoNext(getNeighbors(cell)));
     }
 
     @Override

@@ -20,10 +20,9 @@ public class PercolationModel extends SimModel<PercolationCell>{
     /**
      * The constructor to create a Percolation simulation's backend.
      * @param cellStates the initial cell states, as collected from the csv file
-     * @param simController the SimController used to interact with the frontend
      */
-    public PercolationModel(List<List<String>> cellStates, SimController simController) {
-        super(cellStates, simController);
+    public PercolationModel(List<List<String>> cellStates) {
+        super(cellStates);
     }
 
     @Override
@@ -37,17 +36,11 @@ public class PercolationModel extends SimModel<PercolationCell>{
 
     @Override
     protected void setNextStates(Grid<PercolationCell> grid) {
-        for (int row = 0; row < grid.getNumRows(); row++) {
-            for (int col = 0; col < grid.getNumCols(); col++) {
-                PercolationCell cell = grid.get(row,col);
-                cell.setWhatToDoNext(getNeighbors(cell));
-            }
-        }
+        grid.executeForAllCells(cell -> cell.setWhatToDoNext(getNeighbors(cell)));
     }
 
     @Override
     protected void updateStates(Grid<PercolationCell> grid) {
-        // update actual states of current grid
         grid.executeForAllCells(cell -> cell.updateState());
     }
 
