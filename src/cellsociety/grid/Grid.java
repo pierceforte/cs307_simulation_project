@@ -4,15 +4,15 @@ import cellsociety.cell.Cell;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class Grid<T extends Cell> {
     private List<List<T>> cells = new ArrayList<>();
     private int topRow;
     private int topCol;
+    private int numStates;
 
     public Grid(Grid<T> gridToCopy) {
         for (int row = 0; row < gridToCopy.getNumRows(); row++) {
@@ -22,6 +22,7 @@ public class Grid<T extends Cell> {
             }
         }
         setTopRowAndCol();
+        setNumStates();
     }
 
     public Grid(List<List<String>> cellStates, Map<String, Class> cellTypeMap) {
@@ -55,6 +56,10 @@ public class Grid<T extends Cell> {
 
     public int getNumCols(){
         return cells.get(0).size();
+    }
+
+    public int getNumStates() {
+        return numStates;
     }
 
     public List<T> getAllNeighbors(T cell) {
@@ -115,17 +120,7 @@ public class Grid<T extends Cell> {
         }
     }
 
-    private boolean constructorHasStateParam(Class cellClass) {
-        try {
-            cellClass.getConstructor(String.class, int.class, int.class);
-            return true;
-        }
-        catch (NoSuchMethodException e) {
-            return false;
-        }
-    }
-
-    private T createCell(String state, Map<String, Class> cellTypeMap, int row, int col) {
+    public T createCell(String state, Map<String, Class> cellTypeMap, int row, int col) {
         Class cellClass = cellTypeMap.get(state);
         try {
             Constructor<?> constructor;
@@ -140,15 +135,55 @@ public class Grid<T extends Cell> {
             }
             return cell;
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            // TODO: handle exception properly
+            e.printStackTrace();
             //logError(e);
             System.exit(0);
             return null;
         }
     }
 
+    public void shuffle() {
+        // 1. Add all values in single dimension list
+        List<T> allValues = cells.stream()
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+
+        // 2. Shuffle all those values
+        Collections.shuffle(allValues);
+
+        // 3. Re-create the multidimensional List
+        List<List<T>> shuffledValues = new ArrayList<>();
+        for (int i = 0; i < allValues.size(); i = i + getNumCols()) {
+            shuffledValues.add(allValues.subList(i, i+getNumCols()));
+        }
+
+        cells = shuffledValues;
+    }
+
+    private boolean constructorHasStateParam(Class cellClass) {
+        try {
+            cellClass.getConstructor(String.class, int.class, int.class);
+            return true;
+        }
+        catch (NoSuchMethodException e) {
+            return false;
+        }
+    }
+
     private void setTopRowAndCol() {
         topRow = getNumRows()-1;
         topCol = getNumCols()-1;
+    }
+
+    private void setNumStates() {
+        Set<String> states = new HashSet<>();
+        for (List<T> row : cells) {
+            for (T cell : row) {
+                states.add(cell.getState());
+            }
+        }
+        numStates = states.size();
     }
 
 }

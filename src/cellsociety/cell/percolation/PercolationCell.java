@@ -21,7 +21,6 @@ public class PercolationCell extends Cell{
     }
 
     public void setWhatToDoNext(List<cellsociety.cell.percolation.PercolationCell> neighbors){
-        System.out.println(getState());
         handleCell.get(getState()).accept(neighbors);
     }
 

@@ -1,8 +1,10 @@
 package cellsociety;
-import cellsociety.simulation.*;
+import cellsociety.backend.*;
+import cellsociety.config.ConfigReader;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.*;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -15,15 +17,18 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class MainController extends Application {
     public static final String STYLESHEET = "style.css";
     public static final String TITLE = "Cell Society";
     public static final int WIDTH = 600;
-    public static final int GRID_HEIGHT = 600;
-    public static final int HEIGHT = 630;
+    public static final int HEIGHT = 720;
     public static final Paint BACKGROUND = Color.BEIGE;
     public static final int FRAMES_PER_SECOND = 5;
     public static final int MILLISECOND_DELAY = 1000 / FRAMES_PER_SECOND;
@@ -38,10 +43,6 @@ public class MainController extends Application {
     private Stage myStage;
     private Pane myIntroPane;
     private Timeline myAnimation;
-    private Text myPressToBeginText;
-    private Text myTimeText;
-    private double myTime;
-    private SimModel mySimModel;
     private SimController mySimController;
     private boolean isMySimulationActive = false;
 
@@ -68,8 +69,8 @@ public class MainController extends Application {
         setMyAnimation(myStage);
     }
 
-    public Group getMyRoot() {
-        return myRoot;
+    public void setMySimulationActiveStatus(boolean activeStatus) {
+        isMySimulationActive = activeStatus;
     }
 
     public void setMyStage(Stage stage) {
@@ -107,6 +108,7 @@ public class MainController extends Application {
         myRoot.getChildren().add(mySimController.getViewRoot());
         myScene = new Scene(myRoot, WIDTH, HEIGHT, BACKGROUND);
         myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode(), myRoot));
+        myStage.setTitle(mySimController.getSimResources().getString("Title"));
 
         //testing adding of css styles
         myScene.getStylesheets().add(STYLESHEET);
@@ -114,22 +116,19 @@ public class MainController extends Application {
     }
 
     public void step(double elapsedTime) {
-        if (isMySimulationActive) {
-            if (mySimController.isEnded()) {
-                returnToIntroScreen();
+        try {
+            if (isMySimulationActive) {
+                if (mySimController.isEnded()) {
+                    returnToIntroScreen();
+                } else {
+                    mySimController.update(false);
+                }
             }
-            else {
-                mySimController.update(false);
-            }
+        } catch (OutOfMemoryError e) {
+            //logError(e);
+            System.out.println("Caught mem error");
+            mySimController.setIsEnded(true);
         }
-    }
-
-    public void clearRoot() {
-        myRoot.getChildren().clear();
-    }
-
-    public <T extends Node> void addToRoot(T node) {
-        myRoot.getChildren().add(node);
     }
 
     public SimController getCurSimController() {
@@ -151,5 +150,4 @@ public class MainController extends Application {
     {
         launch(args);
     }
-
 }

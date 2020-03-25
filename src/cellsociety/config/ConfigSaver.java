@@ -1,20 +1,10 @@
 package cellsociety.config;
 
+import cellsociety.backend.*;
 import cellsociety.cell.Cell;
 import cellsociety.grid.Grid;
-import cellsociety.simulation.FireSimModel;
-import cellsociety.simulation.GOLSimModel;
-import cellsociety.simulation.SegregationSimModel;
-import cellsociety.simulation.WaTorSimModel;
-import cellsociety.simulation.PercolationSimModel;
-import cellsociety.simulation.RPSModel;
-
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 
 public class ConfigSaver<T extends Cell> {
     public static final String PATH_TO_CONFIGS = "resources/configs/";
@@ -26,8 +16,8 @@ public class ConfigSaver<T extends Cell> {
             SegregationSimModel.class, SegregationSimModel.CONFIG_FILE_PREFIX,
             RPSModel.class, RPSModel.CONFIG_FILE_PREFIX,
             FireSimModel.class, FireSimModel.CONFIG_FILE_PREFIX,
-    PercolationSimModel.class, PercolationSimModel.CONFIG_FILE_PREFIX
-            );
+            PercolationSimModel.class, PercolationSimModel.CONFIG_FILE_PREFIX,
+    );
 
     public static final Map<String, Class> DIRECTORY_TO_SIM_CLASS = Map.of(
             GOLSimModel.CONFIG_FILE_PREFIX, GOLSimModel.class,
@@ -35,13 +25,15 @@ public class ConfigSaver<T extends Cell> {
             SegregationSimModel.CONFIG_FILE_PREFIX, SegregationSimModel.class,
             RPSModel.CONFIG_FILE_PREFIX, RPSModel.class,
             FireSimModel.CONFIG_FILE_PREFIX, FireSimModel.class,
-            PercolationSimModel.CONFIG_FILE_PREFIX, PercolationSimModel.class);
+            PercolationSimModel.CONFIG_FILE_PREFIX, PercolationSimModel.class,
+    );
 
-    public ConfigSaver(Grid<T> grid, String fileName, String author, String description, Class modelClass) {
+    public ConfigSaver(Grid<T> grid, String fileName, String author, String description, Class modelClass,
+                       ResourceBundle copyBundle, Map<String, String> stateColors) {
         String simDirectory = SIM_CLASS_NAME_TO_DIRECTORY.get(modelClass);
         new File(PATH_TO_CONFIGS + simDirectory + "/" + fileName).mkdir();
         saveCSV(grid, fileName, simDirectory);
-        saveProperties(fileName, author, description, simDirectory);
+        saveProperties(fileName, author, description, simDirectory, copyBundle, stateColors);
     }
     
     // TODO: the saved config file will only contain the state of the cell. We need to determine if this is okay; for a simulation
@@ -69,18 +61,58 @@ public class ConfigSaver<T extends Cell> {
             }
             pw.close();
         } catch (FileNotFoundException e) {
+            // TODO: handle exception properly
+            e.printStackTrace();
             //logError(e);
             e.printStackTrace();
             System.exit(0);
         }
         catch (NullPointerException e) {
+            // TODO: handle exception properly
+            e.printStackTrace();
             //logError(e);
             // don't save file
-            e.printStackTrace();
         }
     }
 
-    private void saveProperties(String fileName, String author, String description, String simDirectory) {
+    private void saveProperties(String fileName, String author, String description, String simDirectory,
+                                ResourceBundle copyBundle, Map<String, String> stateColors) {
+        try {
+            Properties propertiesToSave = new Properties();
 
+            for (String key : copyBundle.keySet()) {
+                propertiesToSave.put(key, copyBundle.getString(key));
+            }
+
+            propertiesToSave.put("Title",fileName);
+            propertiesToSave.put("Author",author);
+            propertiesToSave.put("Description",description);
+            propertiesToSave.put("CSVfile",fileName + CSV_EXTENSION);
+            for (String key : stateColors.keySet()) {
+                propertiesToSave.put("State" + key, stateColors.get(key));
+            }
+
+            String propertiesFileName = "resources/configs/" + simDirectory + "/" + fileName + "/" + fileName + PROPERTIES_EXTENSION;
+            propertiesToSave.store(new FileOutputStream(propertiesFileName), null);
+
+        } catch (FileNotFoundException e) {
+            // TODO: handle exception properly
+            e.printStackTrace();
+            //logError(e);
+            e.printStackTrace();
+            System.exit(0);
+        }
+        catch (NullPointerException e) {
+            // TODO: handle exception properly
+            e.printStackTrace();
+            //logError(e);
+            // don't save file
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO: handle exception properly
+            e.printStackTrace();
+            //logError(e)
+            e.printStackTrace();
+        }
     }
 }

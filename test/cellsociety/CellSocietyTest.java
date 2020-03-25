@@ -5,14 +5,11 @@ import cellsociety.cell.GOL.GOLCell;
 import cellsociety.config.ConfigReader;
 import cellsociety.config.ConfigSaver;
 import cellsociety.grid.Grid;
-import cellsociety.simulation.GOLSimModel;
-import cellsociety.simulation.SimController;
-import cellsociety.simulation.SimModel;
+import cellsociety.backend.GOLSimModel;
+import cellsociety.backend.SimModel;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.Test;
 
@@ -20,18 +17,14 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.security.Key;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CellSocietyTest extends DukeApplicationTest {
 
-    public static final String GOL_CONFIG_TESTS_PATH = "test_configs/GOL/";
-    public static final String GOL_CONFIG_TESTS_EXTENSION = ".csv";
+    public static final String CONFIG_TESTS_EXTENSION = ".csv";
 
     private MainController myMainController;
     private SimController mySimController;
@@ -205,29 +198,57 @@ public class CellSocietyTest extends DukeApplicationTest {
         assertFalse(myMainController.getCurSimController().isActive());
 
         // check that cells during the pause are the same as the cells before the pause
-        for (int row = 0; row < grid.getNumRows(); row++) {
-            System.out.println();
-            for (int col = 0; col < grid.getNumCols(); col++) {
-                assertEquals(prePauseCellStates.get(row).get(col), grid.get(row, col).getState());
-            }
-        }
+        assertStatesListAndGridEqual(prePauseCellStates, grid);
 
         // play and check that simulation is active
         fireButtonEvent(playButton);
         assertTrue(myMainController.getCurSimController().isActive());
         step();
 
+        assertStatesListAndGridNotEqual(prePauseCellStates, grid);
+    }
+
+    @Test
+    public void testStepButton() {
+        // assert step button is not yet present
+        assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, () -> lookup("#stepBttn").query());
+
+        System.out.println("resources/" + GOLTest.GOL_CONFIG_TESTS_PATH + "glider1" + CONFIG_TESTS_EXTENSION);
+        startPausedApplicationFromFile(GOLSimModel.class, "resources/" + GOLTest.GOL_CONFIG_TESTS_PATH + "glider1/glider1" + CONFIG_TESTS_EXTENSION);
+
+        // get the initial grid
+        Grid<GOLCell> grid = myMainController.getCurSimController().getModel().getGrid();
+
+        // get the expected grid after one step
+        SimModel simModel2 = createModelFromFile(GOLSimModel.class,
+                GOLTest.GOL_CONFIG_TESTS_PATH + "glider2/glider2" + CONFIG_TESTS_EXTENSION);
+        Grid<GOLCell> expectedGrid = simModel2.getGrid();
+
+        // assert that the grids are different before step
         boolean notTheSame = false;
         for (int row = 0; row < grid.getNumRows(); row++) {
-            System.out.println();
             for (int col = 0; col < grid.getNumCols(); col++) {
-                if (!prePauseCellStates.get(row).get(col).equals(grid.get(row, col).getState())) {
+                if (!grid.get(row, col).getState().equals(expectedGrid.get(row, col).getState())) {
                     notTheSame = true;
                     break;
                 }
             }
         }
         assertTrue(notTheSame);
+
+        // assert step button exists
+        assertNotNull(lookup("#stepBttn").query());
+        Button stepBttn = lookup("#stepBttn").query();
+
+        // initiate step
+        fireButtonEvent(stepBttn);
+
+        // assert that the expected grid after one step is the same as the current grid after pressing step button
+        for (int row = 0; row < grid.getNumRows(); row++) {
+            for (int col = 0; col < grid.getNumCols(); col++) {
+                assertEquals(grid.get(row, col).getState(), expectedGrid.get(row, col).getState());
+            }
+        }
     }
 
     // TODO: find a way to interact with file chooser from test
@@ -272,7 +293,6 @@ public class CellSocietyTest extends DukeApplicationTest {
 
         // assert that ensure quit pane is now closed
         assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, () -> lookup("#ensureQuitPane").query());
-
     }
 
     @Test
@@ -378,13 +398,12 @@ public class CellSocietyTest extends DukeApplicationTest {
 
         // assert that save config pane is no longer present
         assertThrows(org.testfx.service.query.EmptyNodeQueryException.class, () -> lookup("#saveConfigPane").query());
-
     }
 
     protected SimModel createModelFromFile(Class simTypeClassName, String initialConfigFile) {
         final SimController[] simController = new SimController[1];
         javafxRun(() -> {
-            simController[0] = new SimController(GOLSimModel.class, new MainController(), initialConfigFile);
+            simController[0] = new SimController(simTypeClassName, new MainController(), initialConfigFile);
         });
         return simController[0].getModel();
     }
@@ -430,7 +449,23 @@ public class CellSocietyTest extends DukeApplicationTest {
                 setMyStage(stage);
                 getMyStage().show();
                 setMyAnimation(getMyStage());
-                myMainController.beginSimulation(simModelClass, csvFilePath);
+                beginSimulation(simModelClass, csvFilePath);
+            }
+        };
+        javafxRun(() -> myMainController.start(new Stage()));
+    }
+
+    // TODO: eliminate duplication here
+    protected <T extends SimModel> void startPausedApplicationFromFile(Class<T> simModelClass, String csvFilePath) {
+        // start application
+        myMainController = new MainController(){
+            @Override
+            public void start(Stage stage) {
+                setMyStage(stage);
+                getMyStage().show();
+                setMyAnimation(getMyStage());
+                beginSimulation(simModelClass, csvFilePath);
+                setMySimulationActiveStatus(false);
             }
         };
         javafxRun(() -> myMainController.start(new Stage()));
@@ -445,6 +480,8 @@ public class CellSocietyTest extends DukeApplicationTest {
             long lineCount = Files.lines(Paths.get(ConfigReader.ERROR_LOG)).count();
             return lineCount;
         } catch (IOException e) {
+            // TODO: handle exception properly
+            e.printStackTrace();
             //Assert.fail("Exception " + e);
         }
         return -1;
@@ -480,11 +517,29 @@ public class CellSocietyTest extends DukeApplicationTest {
 
         assertEquals(data.getManualQuantityOfColumns(),data.getQuantityOfColumns());
         assertEquals(data.getManualQuantityOfRows(),data.getQuantityOfRows());
-        for (int row = 0; row < gridFromModel.getNumRows(); row++) {
-            for (int col = 0; col < gridFromModel.getNumCols(); col++) {
-                assertEquals(cellStatesFromFile.get(row).get(col), gridFromModel.get(row, col).getState());
+        assertStatesListAndGridEqual(cellStatesFromFile, gridFromModel);
+    }
+
+    protected <T extends Cell> void assertStatesListAndGridEqual(List<List<String>> cellStates, Grid<T> grid) {
+        for (int row = 0; row < grid.getNumRows(); row++) {
+            for (int col = 0; col < grid.getNumCols(); col++) {
+                assertEquals(cellStates.get(row).get(col), grid.get(row, col).getState());
             }
         }
+    }
+
+    protected <T extends Cell> void assertStatesListAndGridNotEqual(List<List<String>> cellStates, Grid<T> grid) {
+        boolean notTheSame = false;
+        for (int row = 0; row < grid.getNumRows(); row++) {
+            System.out.println();
+            for (int col = 0; col < grid.getNumCols(); col++) {
+                if (!cellStates.get(row).get(col).equals(grid.get(row, col).getState())) {
+                    notTheSame = true;
+                    break;
+                }
+            }
+        }
+        assertTrue(notTheSame);
     }
 
     private void testInputPathToExitRequestPane() {

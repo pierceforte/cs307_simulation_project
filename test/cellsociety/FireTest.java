@@ -1,19 +1,12 @@
 package cellsociety;
 
-import cellsociety.cell.Cell;
-import cellsociety.cell.Fire.BurningCell;
 import cellsociety.cell.Fire.EmptyCell;
 import cellsociety.cell.Fire.FireCell;
 import cellsociety.cell.Fire.TreeCell;
-import cellsociety.config.ConfigReader;
-import cellsociety.config.ConfigSaver;
 import cellsociety.grid.Grid;
-import cellsociety.simulation.FireSimModel;
-import cellsociety.simulation.GOLSimModel;
-import cellsociety.simulation.SimModel;
+import cellsociety.backend.FireSimModel;
+import cellsociety.backend.SimModel;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 public class FireTest extends CellSocietyTest {
 
@@ -49,8 +42,6 @@ public class FireTest extends CellSocietyTest {
         model.update();
         testCellChangeState(0, 0, empty.getState(), FireCell.TREE, model);
     }
-
-
 
     @Test
     public void testBurningCellExtinguish(){

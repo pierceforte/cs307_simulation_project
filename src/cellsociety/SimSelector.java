@@ -1,8 +1,7 @@
 package cellsociety;
 
 import cellsociety.config.ConfigSaver;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import cellsociety.frontend.InputStage;
 import javafx.scene.control.Button;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -16,16 +15,17 @@ public class SimSelector {
 
     private MainController myMainController;
     private Button mySimSelectorButton;
-    private ResourceBundle myResources;
+    private ResourceBundle myDefaultResources;
 
     public SimSelector(MainController mainController) {
         myMainController = mainController;
         Locale locale = new Locale("en", "US");
-        myResources = ResourceBundle.getBundle("default", locale);
+        myDefaultResources = ResourceBundle.getBundle("default", locale);
     }
 
     public Button createSelectorButton() {
-        mySimSelectorButton = new Button(myResources.getString("SelectSim"));
+        mySimSelectorButton = new Button(myDefaultResources.getString("SelectSim"));
+        mySimSelectorButton.setId("fileSelectorButton");
         mySimSelectorButton.setPrefWidth(150);
         mySimSelectorButton.setPrefHeight(30);
         mySimSelectorButton.setTranslateX(MainController.WIDTH/2 - mySimSelectorButton.getPrefWidth()/2);
@@ -51,9 +51,10 @@ public class SimSelector {
         File csvFile = new File(directoryChosen.getPath() + "/"
                 + directoryChosen.getName() + ConfigSaver.CSV_EXTENSION);
 
-        //File propertiesFile = new File(directoryChosen.getPath() + directoryChosen.getName() + ConfigSaver.PROPERTIES_EXTENSION);
+        File propertiesFile = new File(directoryChosen.getPath() + "/"
+                + directoryChosen.getName() + ConfigSaver.PROPERTIES_EXTENSION);
 
-        if (!ConfigSaver.DIRECTORY_TO_SIM_CLASS.containsKey(simTypeDirectory) || !csvFile.isFile() ) { //|| !propertiesFile.isFile()) {
+        if (!ConfigSaver.DIRECTORY_TO_SIM_CLASS.containsKey(simTypeDirectory) || !csvFile.isFile() || !propertiesFile.isFile()) {
             handleInvalidDirectory(simTypeDirectory);
         }
         else {
@@ -62,36 +63,33 @@ public class SimSelector {
     }
 
     private void handleInvalidDirectory(String simTypeDirectory) {
-        InputStage errorStage = new InputStage(myResources.getString("InvalidDir"), InputStage.DEFAULT_WIDTH, InputStage.DEFAULT_HEIGHT,
+        InputStage errorStage = new InputStage(myDefaultResources.getString("InvalidDir"), InputStage.DEFAULT_WIDTH, 350,
                 "invalidDirectoryPane");
         String message;
+
+        Button okButton = new Button(myDefaultResources.getString("Ok"));
+        okButton.setId(myDefaultResources.getString("Ok"));
+        okButton.setPrefWidth(100);
+        okButton.setPrefHeight(30);
+        okButton.setTranslateX(InputStage.DEFAULT_WIDTH/2 - okButton.getPrefWidth()/2);
+
         if (!ConfigSaver.DIRECTORY_TO_SIM_CLASS.containsKey(simTypeDirectory)) {
-            message = myResources.getString("DoesNotContainClass");
+            message = myDefaultResources.getString("DoesNotContainClass");
             for (String key : ConfigSaver.DIRECTORY_TO_SIM_CLASS.keySet()) {
                 message += "resources/configs/" + key + "/, ";
             }
             message = message.substring(0, message.length()-2);
+            okButton.setTranslateY(285);
         }
         else {
-            message = myResources.getString("MustHaveSameNames");
+            message = myDefaultResources.getString("MustHaveSameNames");
+            errorStage.setHeight(220);
+            okButton.setTranslateY(150);
         }
-        errorStage.addErrorMessageToCenterX(message, 100);
 
-        Button okButton = new Button();
-        okButton.setId(myResources.getString("Ok"));
-        okButton.setPrefWidth(100);
-        okButton.setPrefHeight(30);
-        okButton.setTranslateX(InputStage.DEFAULT_WIDTH/2 - okButton.getPrefWidth()/2);
-        okButton.setTranslateY(250);
-
-        okButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent t) {
-                errorStage.close();
-            }
-        });
-
+        errorStage.addErrorMessageToCenterX(message, 75);
+        okButton.setOnAction(t -> errorStage.close());
         errorStage.addNodeToPane(okButton);
-
         errorStage.showAndWait();
     }
 }
