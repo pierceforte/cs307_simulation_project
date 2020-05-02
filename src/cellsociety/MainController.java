@@ -48,6 +48,12 @@ public class MainController extends Application {
 
     @Override
     public void start(Stage stage) {
+        /*
+
+        USE THE FOLLOWING LINE TO GENERATE A RANDOM CONFIG
+
+         */
+        //printRandomConfig(100,100,3);
         Image introScreenImage = new Image(getClass().getClassLoader().getResourceAsStream(INTRO_SCREEN_IMG_NAME));
         ImageView introScreenNode = new ImageView(introScreenImage);
         introScreenNode.setFitHeight(HEIGHT);
@@ -149,5 +155,41 @@ public class MainController extends Application {
     public static void main(String[] args)
     {
         launch(args);
+    }
+
+    private void printRandomConfig(int rows, int cols, double vals) {
+        List<List<Integer>> list = new ArrayList<>();
+
+        for (int i = 0; i < rows; i++) {
+            list.add(new ArrayList());
+            for (int j = 0; j < cols; j++) {
+                int randomInteger = (int) (vals * Math.random());
+                list.get(i).add(randomInteger);
+            }
+        }
+
+        try {
+            PrintWriter pw = new PrintWriter("randomConfig.csv");
+            pw.println(rows + ConfigReader.SPLIT_REGEX + cols);
+
+            for (int row = 0; row < rows; row++) {
+                if (cols == 0) {
+                    break;
+                }
+                String line = "" + list.get(row).get(0);
+                for (int col = 1; col < cols; col++) {
+                    line += ConfigReader.SPLIT_REGEX + list.get(row).get(col);
+                }
+                pw.println(line);
+            }
+            pw.close();
+        } catch (FileNotFoundException e) {
+            // TODO: handle exception properly
+            e.printStackTrace();
+            //logError(e);
+            e.printStackTrace();
+            System.exit(0);
+        }
+        System.exit(0);
     }
 }
