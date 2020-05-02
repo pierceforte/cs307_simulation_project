@@ -1,4 +1,4 @@
-package cellsociety.cell.Fire;
+package cellsociety.cell.fire;
 
 import java.util.List;
 

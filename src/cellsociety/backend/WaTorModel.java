@@ -6,13 +6,33 @@ import cellsociety.grid.Grid;
 
 import java.util.*;
 
-public class WaTorSimModel extends SimModel <WaTorCell> {
+/**
+ * This class inherits from the abstract class SimModel, implementing the backend for the Wa-Tor simulation.
+ *
+ * This class defines the rules for each update, relying on the WaTorCell and its different implementations.
+ *
+ * It is important to note that this simulation implements a "next grid"; because cells move to random locations on each
+ * update, it is essential to keep track of which random locations have already been taken. This process still results in
+ * a two-pass system (where cells choose where to move independently of where other cells **are**), but the cells do not
+ * choose where to move independently of where they **will be**.
+ *
+ * It also important to note the assumption that Shark cells are granted the opportunity to move first; this assumption
+ * was made because it is assumed that sharks are faster than fish, and, otherwise, sharks could only eat fish if the
+ * fish were cornered in (because the fish would move otherwise).
+ *
+ * @author Pierce Forte
+ */
+public class WaTorModel extends SimModel <WaTorCell> {
     public static final String CONFIG_FILE_PREFIX = "WaTor";
 
     private Grid<WaTorCell> nextGrid;
 
-    public WaTorSimModel(List<List<String>> cellStates, SimController simController) {
-        super(cellStates, simController);
+    /**
+     * The constructor to create a Wa-Tor simulation's backend.
+     * @param cellStates the initial cell states, as collected from the csv file
+     */
+    public WaTorModel(List<List<String>> cellStates) {
+        super(cellStates);
         initializeNextGrid();
     }
 

@@ -3,7 +3,7 @@ package cellsociety;
 
 import cellsociety.cell.Cell;
 import cellsociety.grid.Grid;
-import cellsociety.simulation.RPSModel;
+import cellsociety.backend.RPSModel;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,9 +17,9 @@ public class RPSTest extends CellSocietyTest {
 
     @Test
     public void teststate(){
-        testRPSCellStateChange(4,4,"5","9");
+        testRPSCellStateChange(4,4,"7","7");
 
-        testRPSCellStateChange(2,1,"8","8");
+        testRPSCellStateChange(2,1,"2","2");
     }
     private void testRPSCellStateChange(int row, int col, String initialState, String updatedStated) {
         createModelFromStart(RPSModel.class);

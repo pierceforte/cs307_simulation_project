@@ -15,6 +15,21 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
+/**
+ * This class is used to create the frontend for each simulation, along with a user interface.
+ *
+ * It is important to note that the SimView is entirely independent from the simulation backend, so
+ * only one implementation is needed for any type of simulation.
+ *
+ * This class is dependent on the resource bundles for all simulations and the specific simulation, the
+ * MainController for the application, and the SimController for the current simulation.
+ *
+ * Note that if this project had not been ended early due to COVID-19, a high priority next step would have
+ * been to refactor this class.
+ *
+ * @author Pierce Forte
+ * @author Mary Jiang
+ */
 public class SimView {
     public static final Class DEFAULT_GRID_VIEW_SUBCLASS = SquareGridView.class;
 
@@ -27,6 +42,12 @@ public class SimView {
     private Group cellViewsRoot;
     private Class cellShapeClass;
 
+    /**
+     * The constructor to create a SimView.
+     * @param controller The controller that handles the interaction with the backend of the simulation
+     * @param defaultResources The default resources used for all simulations
+     * @param simResources The resources specific to the current simulation
+     */
     public SimView(SimController controller, ResourceBundle defaultResources, ResourceBundle simResources) {
         myDefaultResources = defaultResources;
         mySimResources = simResources;
@@ -39,6 +60,12 @@ public class SimView {
         cellShapeClass = DEFAULT_GRID_VIEW_SUBCLASS;
     }
 
+    /**
+     * Update the front end.
+     * @param grid The grid of cells to be displayed
+     * @param <T> The type of cells in the grid
+     * @return The Group that contains the grid to be placed on screen
+     */
     public <T extends Cell> Group update(Grid<T> grid) {
         bPane.getChildren().remove(cellViewsRoot);
         Group root = new Group();
@@ -50,11 +77,19 @@ public class SimView {
         return root;
     }
 
+    /**
+     * Get the root for the SimView
+     * @return The root for the SimView
+     */
     public BorderPane getRoot() {
         return bPane;
     }
 
-    // TODO: idk if this is the best way to do this
+    /**
+     * Get the cell fills for the cells in the grid.
+     * @return The cell fills for the cells in the grid.
+     * TODO: determine if there is a better way to access these cell fills
+     */
     public Map<String, String> getCellFills() {
         return colorControlsGUI.getCellFills();
     }

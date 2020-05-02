@@ -4,6 +4,15 @@ import cellsociety.grid.Grid;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class inherits from the abstract class LivingWaTorCell.
+ *
+ * This class's purpose is to update the shark cells in the grid. Sharks must choose where to move on each update,
+ * reproduce after a set time period, and keep track of their energy, which is gathered by eating fish. If a shark
+ * runs out of energy, it dies.
+ *
+ * @author Pierce Forte
+ */
 public class SharkCell extends LivingWaTorCell{
     public static final String STATE = WaTorCell.SHARK;
     public static final int CHRONONS_TO_REPRODUCE = 5;
@@ -13,15 +22,28 @@ public class SharkCell extends LivingWaTorCell{
     private List<Integer> posOfFishToEatNext;
     private int energy;
 
+    /**
+     * The constructor to create a SharkCells's backend.
+     * @param row The row in which the cell is located
+     * @param col The column in which the cell is located
+     */
     public SharkCell(int row, int col) {
         super(STATE, row, col);
         energy = DEFAULT_SHARK_ENERGY;
     }
 
+    /**
+     * Get how much energy the shark has.
+     * @return How much energy the shark has
+     */
     public int getEnergy() {
         return energy;
     }
 
+    /**
+     * Get the position of the fish that this shark will eat next
+     * @return The row, column pair of the fish to be eaten
+     */
     public List<Integer> getPosOfFishToEatNext() {
         return posOfFishToEatNext;
     }

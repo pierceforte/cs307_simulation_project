@@ -1,19 +1,18 @@
 package cellsociety;
 
-import cellsociety.cell.Fire.EmptyCell;
-import cellsociety.cell.Fire.FireCell;
-import cellsociety.cell.Fire.TreeCell;
+import cellsociety.cell.fire.EmptyCell;
+import cellsociety.cell.fire.FireCell;
+import cellsociety.cell.fire.TreeCell;
 import cellsociety.grid.Grid;
-import cellsociety.backend.FireSimModel;
+import cellsociety.backend.FireModel;
 import cellsociety.backend.SimModel;
 import org.junit.jupiter.api.Test;
 
 public class FireTest extends CellSocietyTest {
 
-
     @Test
     public void testFireSpreadWithBurningNeighbour() {
-        SimModel model = createModelFromStart(FireSimModel.class);
+        SimModel model = createModelFromStart(FireModel.class);
         setMySimModel(model);
         Grid grid = getMySimModel().getGrid();
         TreeCell tree = (TreeCell)grid.get(3, 4); //cell beside initial burning cell
@@ -23,7 +22,7 @@ public class FireTest extends CellSocietyTest {
 
     @Test
     public void testFireSpreadNoBurningNeighbour() {
-        SimModel model = createModelFromStart(FireSimModel.class);
+        SimModel model = createModelFromStart(FireModel.class);
         setMySimModel(model);
         Grid grid = getMySimModel().getGrid();
         TreeCell tree = (TreeCell)grid.get(1, 1);
@@ -34,7 +33,7 @@ public class FireTest extends CellSocietyTest {
 
     @Test
     public void testTreeSpawn() {
-        SimModel model = createModelFromStart(FireSimModel.class);
+        SimModel model = createModelFromStart(FireModel.class);
         setMySimModel(model);
         Grid grid = getMySimModel().getGrid();
         EmptyCell empty = (EmptyCell)grid.get(0, 0); //empty cell
@@ -45,13 +44,13 @@ public class FireTest extends CellSocietyTest {
 
     @Test
     public void testBurningCellExtinguish(){
-        testCellChangeState(4, 4, FireCell.BURNING, FireCell.EMPTY, createModelFromStart(FireSimModel.class));
+        testCellChangeState(4, 4, FireCell.BURNING, FireCell.EMPTY, createModelFromStart(FireModel.class));
     }
 
 
     @Test
     public void testFireGridPopulation() {
-        testGridPopulation(FireSimModel.class, "FireConfig");
+        testGridPopulation(FireModel.class, "FireConfig");
     }
 
 

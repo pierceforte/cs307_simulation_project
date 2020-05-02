@@ -2,7 +2,7 @@ package cellsociety;
 
 import cellsociety.cell.segregation.SegregationCell;
 import cellsociety.grid.Grid;
-import cellsociety.backend.SegregationSimModel;
+import cellsociety.backend.SegregationModel;
 import cellsociety.backend.SimModel;
 import org.junit.jupiter.api.Test;
 
@@ -10,17 +10,22 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * Testing suite for this Segregation Simulation.
+ *
+ * @author Pierce Forte
+ */
 public class SegregationTest extends CellSocietyTest {
     public static final String SEGREGATION_CONFIG_TESTS_PATH = "test_configs/Segregation/";
 
     @Test
     public void testSegregationGridPopulation() {
-        testGridPopulation(SegregationSimModel.class, "SegregationConfig");
+        testGridPopulation(SegregationModel.class, "SegregationConfig");
     }
 
     @Test
     public void testSatisfiedInitConfig() {
-        SimModel simModel = createModelFromFile(SegregationSimModel.class,
+        SimModel simModel = createModelFromFile(SegregationModel.class,
                 SEGREGATION_CONFIG_TESTS_PATH + "satisfied_agents/satisfied_agents" + CONFIG_TESTS_EXTENSION);
         Grid<SegregationCell> grid = simModel.getGrid();
         List<List<String>> initStates = getListOfCellStates(grid);
@@ -30,7 +35,7 @@ public class SegregationTest extends CellSocietyTest {
 
     @Test
     public void testUnsatisfiedInitConfig() {
-        SimModel simModel = createModelFromFile(SegregationSimModel.class,
+        SimModel simModel = createModelFromFile(SegregationModel.class,
                 SEGREGATION_CONFIG_TESTS_PATH + "unsatisfied_agents/unsatisfied_agents" + CONFIG_TESTS_EXTENSION);
         Grid<SegregationCell> grid = simModel.getGrid();
         List<List<String>> initStates = getListOfCellStates(grid);
@@ -40,7 +45,7 @@ public class SegregationTest extends CellSocietyTest {
 
     @Test
     public void testUnsatisfiedMovement() {
-        SimModel simModel = createModelFromFile(SegregationSimModel.class,
+        SimModel simModel = createModelFromFile(SegregationModel.class,
                 SEGREGATION_CONFIG_TESTS_PATH + "known_unsatisfied_movement/known_unsatisfied_movement" + CONFIG_TESTS_EXTENSION);
         Grid<SegregationCell> grid = simModel.getGrid();
         // assert agent B and empty cell are in correct initial positions

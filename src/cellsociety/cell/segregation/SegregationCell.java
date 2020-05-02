@@ -1,4 +1,4 @@
-package cellsociety.cell.Segregation;
+package cellsociety.cell.segregation;
 
 import cellsociety.cell.Cell;
 import cellsociety.grid.Grid;
@@ -9,6 +9,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 
+/**
+ * This class inherits from the abstract class Cell, implementing the backend for the Segregation cells.
+ *
+ * This class defines the rules for how each SegregationCell is updated in the grid based on its current state.
+ *
+ * It is assumed that cells are satisfied when 75% of their neighbors are of the same type. Likewise, it is assumed that
+ * an Empty neighbor cell does not affect this satisfaction, BUT if a cell's neighbors are all Empty, the cell will NOT be
+ * satisfied.
+ *
+ * @author Pierce Forte
+ */
 public class SegregationCell extends Cell {
     public static final String EMPTY = "0";
     public static final String AGENT_A = "1";
@@ -20,10 +31,21 @@ public class SegregationCell extends Cell {
             AGENT_A, (neighbors, nextGrid) -> handleAgentCell(neighbors, nextGrid),
             AGENT_B, (neighbors, nextGrid) -> handleAgentCell(neighbors, nextGrid));
 
+    /**
+     * The constructor to create a SegregationCell's backend.
+     * @param state The state (or "type") of the cell to be created
+     * @param row The row in which the cell is located
+     * @param col The column in which the cell is located
+     */
     public SegregationCell(String state, int row, int col) {
         super(state, row, col);
     }
 
+    /**
+     * Set what the cell should do next.
+     * @param neighbors A list of this cell's neighbors
+     * @param nextGrid The grid to keep track of which next positions have already been taken
+     */
     public Grid<SegregationCell> setWhatToDoNext(List<SegregationCell> neighbors, Grid<SegregationCell> nextGrid){
         return handleCell.get(getState()).apply(neighbors, nextGrid);
     }

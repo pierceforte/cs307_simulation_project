@@ -11,18 +11,34 @@ import java.nio.file.Paths;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/**
+ * This class provides the interface for the user to select which simulation to start.
+ *
+ * Note that if this project had not been ended early due to COVID-19, a high priority next step would have
+ * been to refactor this class.
+ *
+ * @author Pierce Forte
+ */
 public class SimSelector {
 
     private MainController myMainController;
     private Button mySimSelectorButton;
     private ResourceBundle myDefaultResources;
 
+    /**
+     * The constructor to create a SimSelector.
+     * @param mainController The MainController for the application
+     */
     public SimSelector(MainController mainController) {
         myMainController = mainController;
         Locale locale = new Locale("en", "US");
         myDefaultResources = ResourceBundle.getBundle("default", locale);
     }
 
+    /**
+     * Create a button to select a simulation.
+     * @return A button to select a simulation
+     */
     public Button createSelectorButton() {
         mySimSelectorButton = new Button(myDefaultResources.getString("SelectSim"));
         mySimSelectorButton.setId("fileSelectorButton");

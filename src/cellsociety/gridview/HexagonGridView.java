@@ -4,11 +4,14 @@ import cellsociety.SimController;
 import cellsociety.cell.Cell;
 import cellsociety.frontend.ColorControlsGUI;
 import cellsociety.grid.Grid;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.RowConstraints;
 
 import java.util.List;
 
+/**
+ * This class implements the abstract class GridView with a grid of hexagons.
+ *
+ * @author Pierce Forte
+ */
 public class HexagonGridView <T extends Cell> extends GridView {
     public static final int NUM_SIDES = 6;
     public static final double ROTATION = Math.PI / 2;
@@ -19,6 +22,12 @@ public class HexagonGridView <T extends Cell> extends GridView {
 
     private List<Double> points;
 
+    /**
+     * The constructor to create a GridView of hexagon shaped cells.
+     * @param grid The grid backend to be displayed.
+     * @param simController The simController used to handle fronted-backend interactions
+     * @param colorControlsGUI The colorControlsGUI that handles the interface for the cell color's
+     */
     public HexagonGridView(Grid<T> grid, SimController simController, ColorControlsGUI colorControlsGUI) {
         super(grid, simController, colorControlsGUI, CELL_SIZE_FACTOR, HEIGHT_FACTOR);
     }

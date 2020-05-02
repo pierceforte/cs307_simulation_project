@@ -1,4 +1,4 @@
-package cellsociety.cell.Fire;
+package cellsociety.cell.fire;
 
 import cellsociety.cell.Cell;
 

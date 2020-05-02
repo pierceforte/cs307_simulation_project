@@ -24,6 +24,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * This class provides the main method to launch the application, and it provides the functionality to
+ * continually step, effectively "playing" the application.
+ *
+ * Note that if this project had not been ended early due to COVID-19, a high priority next step would have
+ * been to refactor this class.
+ *
+ * @author Pierce Forte
+ */
 public class MainController extends Application {
     public static final String STYLESHEET = "style.css";
     public static final String TITLE = "Cell Society";
@@ -72,22 +81,37 @@ public class MainController extends Application {
         myStage.setScene(introScene);
         myStage.setTitle(TITLE);
         myStage.show();
-        setMyAnimation(myStage);
+        setMyAnimation();
     }
 
+    /**
+     * Set whether a simulation is active or not.
+     * @param activeStatus Whether a simulation is active or not
+     */
     public void setMySimulationActiveStatus(boolean activeStatus) {
         isMySimulationActive = activeStatus;
     }
 
+    /**
+     * Set the stage for the application.
+     * @param stage The stage to be set
+     */
     public void setMyStage(Stage stage) {
         myStage = stage;
     }
 
+    /**
+     * Get the stage for the application.
+     * @return The stage for the application
+     */
     public Stage getMyStage() {
         return myStage;
     }
 
-    public void setMyAnimation(Stage s) {
+    /**
+     * Set the animation for the application.
+     */
+    public void setMyAnimation() {
         KeyFrame frame = new KeyFrame(Duration.millis(MILLISECOND_DELAY), e -> step(SECOND_DELAY));
         myAnimation = new Timeline();
         myAnimation.setCycleCount(Timeline.INDEFINITE);
@@ -95,32 +119,30 @@ public class MainController extends Application {
         myAnimation.play();
     }
 
+    /**
+     * Change the animation speed.
+     * @param change The factor to change the speed by
+     */
     public void changeAnimationSpeed(double change){
         myAnimation.setRate(FRAMES_PER_SECOND * change);
     }
 
+    /**
+     * Start a simulation.
+     * @param simTypeClassName The type of simulation
+     * @param csvFilePath The path to the initial CSV config
+     * @param <T> The type of simulation's class
+     */
     public <T extends SimModel> void beginSimulation(Class<T> simTypeClassName, String csvFilePath) {
         Scene simulationScene = setupSimulation(simTypeClassName, csvFilePath);
         myStage.setScene(simulationScene);
         isMySimulationActive = true;
     }
 
-    private <T extends SimModel> Scene setupSimulation(Class<T> simTypeClassName, String csvFilePath) {
-        myRoot = new Group();
-        String [] csvFilePathFromResources = csvFilePath.split("/");
-        String validCsvFilePath = String.join("/",
-                Arrays.copyOfRange(csvFilePathFromResources, csvFilePathFromResources.length-4, csvFilePathFromResources.length));
-        mySimController = new SimController(simTypeClassName, this, validCsvFilePath);
-        myRoot.getChildren().add(mySimController.getViewRoot());
-        myScene = new Scene(myRoot, WIDTH, HEIGHT, BACKGROUND);
-        myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode(), myRoot));
-        myStage.setTitle(mySimController.getSimResources().getString("Title"));
-
-        //testing adding of css styles
-        myScene.getStylesheets().add(STYLESHEET);
-        return myScene;
-    }
-
+    /**
+     * Step through and update the application.
+     * @param elapsedTime The time that each step takes
+     */
     public void step(double elapsedTime) {
         try {
             if (isMySimulationActive) {
@@ -137,8 +159,28 @@ public class MainController extends Application {
         }
     }
 
+    /**
+     * Get the current SimController.
+     * @return The current SimController
+     */
     public SimController getCurSimController() {
         return mySimController;
+    }
+
+    private <T extends SimModel> Scene setupSimulation(Class<T> simTypeClassName, String csvFilePath) {
+        myRoot = new Group();
+        String [] csvFilePathFromResources = csvFilePath.split("/");
+        String validCsvFilePath = String.join("/",
+                Arrays.copyOfRange(csvFilePathFromResources, csvFilePathFromResources.length-4, csvFilePathFromResources.length));
+        mySimController = new SimController(simTypeClassName, this, validCsvFilePath);
+        myRoot.getChildren().add(mySimController.getViewRoot());
+        myScene = new Scene(myRoot, WIDTH, HEIGHT, BACKGROUND);
+        myScene.setOnKeyPressed(e -> handleKeyInput(e.getCode(), myRoot));
+        myStage.setTitle(mySimController.getSimResources().getString("Title"));
+
+        //testing adding of css styles
+        myScene.getStylesheets().add(STYLESHEET);
+        return myScene;
     }
 
     private void returnToIntroScreen() {

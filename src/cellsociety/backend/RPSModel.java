@@ -1,111 +1,50 @@
-package cellsociety.simulation;
+package cellsociety.backend;
 
-import cellsociety.cell.GOL.GOLCell;
-import cellsociety.cell.RPS.RPSCell;
+import cellsociety.cell.rps.RPSCell;
 import cellsociety.grid.Grid;
 
 import java.util.*;
 
-public class RPSModel extends SimModel<RPSCell>{
+/**
+ * This class inherits from the abstract class SimModel, implementing the backend for the Rock, Paper, Scissors simulation.
+ *
+ * This class defines the rules for each update, relying on the RPSCell and its different implementations.
+ *
+ * @author Pierce Forte
+ */
+public class RPSModel extends SimModel<RPSCell> {
     public static final String CONFIG_FILE_PREFIX = "RPS";
 
-
-
-    protected int threshold = 3;
-
-    private List<List<RPSCell>> playablehands = new ArrayList<>();
-
-    public RPSModel(List<List<String>> cellStates, SimController simController) {
-        super(cellStates, simController);
-        playablehands = createGrid(cellStates);
+    /**
+     * The constructor to create a Rock, Paper, Scissors simulation's backend.
+     * @param cellStates the initial cell states, as collected from the csv file
+     */
+    public RPSModel(List<List<String>> cellStates) {
+        super(cellStates);
     }
 
     @Override
-    protected Map<String, Class> getCellTypesMap() {
-        return Map.of(RPSCell.STATE, RPSCell.class);
+    public TreeMap<String, Class> getOrderedCellStatesMap() {
+        TreeMap<String, Class> cellTypes = new TreeMap<>();
+        // kind of hacky, but not requiring RPSCell class to maintain certain states
+        // would require us to find a new way of creating cells based on state
+        // (not really a problem here since all states correlate to one class, but
+        // needed for sims like WaTor which have multiple classes for cells)
+        for (String state : RPSCell.STATES) {
+            cellTypes.put(state, RPSCell.class);
+        }
+        return cellTypes;
     }
 
     @Override
     protected void setNextStates(Grid<RPSCell> grid) {
-
+        grid.executeForAllCells(cell -> cell.setWhatToDoNext(getNeighbors(cell)));
     }
 
     @Override
     protected void updateStates(Grid<RPSCell> grid) {
+        grid.executeForAllCells(cell -> cell.updateState());
 
-    }
-
-    //@Override
-    protected List<List<RPSCell>> createGrid(List<List<String>> cellStates) {
-        List<List<RPSCell>> rpsgrid = new ArrayList<>();
-        for (int row = 0; row < cellStates.size(); row++) {
-            rpsgrid.add(new ArrayList<>());
-            for (int col = 0; col < cellStates.size(); col++) {
-                RPSCell cell;
-                cell = new RPSCell(cellStates.get(row).get(col), row, col);
-                rpsgrid.get(row).add(cell);
-            }
-        }
-        return rpsgrid;
-    }
-
-    //@Override
-    protected void setNextStates(List<List<RPSCell>> cells) {
-        for(List<RPSCell> row : cells){
-            for (RPSCell cell : row){
-                determineAndSetNextState(cell, getNeighbors(cell));
-            }
-        }
-
-    }
-
-    //@Override
-    protected void determineAndSetNextState(RPSCell cell, List<RPSCell> neighbors) {
-        Map<String,Integer> getstatemap = new HashMap<>();
-        for(RPSCell neighborcell :neighbors){
-            getstatemap.putIfAbsent(neighborcell.getState(),0);
-            getstatemap.put(neighborcell.getState(),getstatemap.get(neighborcell.getState())+1);
-        }
-
-        List<Integer> values = new ArrayList<>();
-        Collections.addAll(getstatemap.values());
-        Collections.sort(values);
-        Collections.reverse(values);
-        String chosenkey=cell.getState();
-        int keychecker = 0;
-
-
-        for (int nval:values){
-            for(String key : getstatemap.keySet() ){
-                if(nval==getstatemap.get(key)){
-                    chosenkey = key;
-                    keychecker+=1;
-                }
-            }
-            if(nval < threshold){
-                if(cell.getState().hashCode() < chosenkey.hashCode()) {
-                    cell.setNextState(chosenkey);
-                }
-            }
-        }
-        if(keychecker==0){
-            cell.setNextState(chosenkey);
-        }
-    }
-
-   // @Override
-    protected void updateStates(List<List<RPSCell>> cells) {
-        for (List<RPSCell> row : cells) {
-            for (RPSCell cell : row) {
-                cell.updateState();
-            }
-        }
-
-    }
-
-    @Override
-    protected String getConfigFileIdentifier() {
-        return CONFIG_FILE_PREFIX;
     }
 
     @Override
@@ -113,6 +52,4 @@ public class RPSModel extends SimModel<RPSCell>{
         return getGrid().getAllNeighbors(cell);
     }
 
-
 }
-

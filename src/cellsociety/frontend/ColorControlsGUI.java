@@ -18,6 +18,22 @@ import java.io.File;
 import java.util.*;
 import java.util.function.BiConsumer;
 
+/**
+ * This class is used to provide the user interface for changing a cell's appearance on screen.
+ *
+ * This class creates the buttons for changing each cell's color, border, and image fill. It also
+ * takes strong measures to handle/prevent errors when invalid choices are made, and it provides a clean,
+ * understandable interface for the user.
+ *
+ * This class is dependent on the resource bundles for all simulations and the specific simulation, as well
+ * as the ordered cell types for the given simulation type, which are defined by the specific Cell implementation.
+ *
+ * Note that if this project had not been ended early due to COVID-19, a high priority next step would have
+ * been to refactor this class and handle some formatting issues (particularly those presented when a large
+ * number of cell types are present).
+ *
+ * @author Pierce Forte
+ */
 public class ColorControlsGUI {
     public static final double MENU_ICON_SIZE = 25;
     public static final String IMAGE_PROPERTY_ID = "image:";
@@ -31,15 +47,26 @@ public class ColorControlsGUI {
     private Stage setColorStage = new Stage();
     private Map<String, MenuButton> stateToMenuMap = new HashMap<>();
 
+    /**
+     * The constructor to create a ColorControlsGUI.
+     * @param defaultResources The default resources used for all simulations
+     * @param simResources The resources specific to the current simulation
+     * @param orderedCellStatesMap A map from cell states to their associated classes
+     */
     public ColorControlsGUI(ResourceBundle defaultResources, ResourceBundle simResources, Map<String, Class> orderedCellStatesMap){
         myDefaultResources = defaultResources;
         mySimResources = simResources;
         initializeCellStyleMaps(orderedCellStatesMap);
     }
 
-    //TODO: maybe eliminate the dependency on cellTypesMap and find a way to use properties file.
-    //  Not that hard, but might be even more brittle (have to look through all the keys and check
-    //  for ones with a certain prefix (currently "State"))
+    /**
+     * Create the color controls that the user can interact with.
+     * @param cellTypesMap A map from cell states to their associated classes
+     * @return An HBox of the color controls
+     * TODO: maybe eliminate the dependency on cellTypesMap and find a way to use properties file.
+     *  Not that hard, but might be even more brittle (have to look through all the keys and check
+     *  for ones with a certain prefix (currently "State"))
+     */
     public HBox createColorControls(Map<String, Class> cellTypesMap){
         HBox hbox = new HBox(5);
         for (String state : cellTypesMap.keySet()) {
@@ -48,6 +75,10 @@ public class ColorControlsGUI {
         return hbox;
     }
 
+    /**
+     * Set the fill for a given cell.
+     * @param cell The given cell
+     */
     public void setCellFill(Cell cell) {
         String state = cell.getState();
         String fill = cellFills.get(state);
@@ -69,12 +100,20 @@ public class ColorControlsGUI {
         cell.getView().setFill(color);
     }
 
+    /**
+     * Set the border for a given cell.
+     * @param cell The given cell
+     */
     public void setCellBorder(Cell cell) {
         String state = cell.getState();
         Color borderColor = cellBorders.get(state);
         cell.getView().setStroke(borderColor);
     }
 
+    /**
+     * Get a map of all cell fills.
+     * @return A map from cell type to cell fill
+     */
     public HashMap<String, String> getCellFills() {
         return cellFills;
     }

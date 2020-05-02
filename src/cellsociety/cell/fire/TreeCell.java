@@ -1,6 +1,5 @@
-package cellsociety.cell.Fire;
+package cellsociety.cell.fire;
 import java.util.List;
-import java.util.Random;
 
 public class TreeCell extends FireCell{
     public static final String STATE = FireCell.TREE;

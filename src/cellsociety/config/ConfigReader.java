@@ -5,6 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * This class is used to read in an a simulation's initial configuration from a CSV file.
+ *
+ * Note that if this project had not been ended early due to COVID-19, a high priority next step would have
+ * been to create a static class for some of the methods in this class, if not all of them. Most notably, the logError
+ * method would have been made into a static class to allow for error handling throughout the project.
+ *
+ * @author Pierce Forte
+ * @author Donald Groh
+ */
 public class ConfigReader {
     public static final int NUM_ROWS_INDEX = 0;
     public static final int NUM_COLS_INDEX = 1;
@@ -17,10 +27,18 @@ public class ConfigReader {
     private int manualQuantityOfRows;
     private int manualQuantityOfColumns;
 
+    /**
+     * The constructor to create a ConfigReader.
+     * @param fileOfCells The name of the csv file containing an initial configuration
+     */
     public ConfigReader(String fileOfCells) {
         simulationInitialLayout = fileOfCells;
     }
 
+    /**
+     * Get the list of cells in the configuration file.
+     * @return The list of cells in the configuration file
+     */
     @SuppressWarnings("ThrowablePrintedToSystemOut")
     public List<List<String>> getCellList() {
         try {
